@@ -52,6 +52,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("&Save")
                 onTriggered: actionSave             // Add the Save function here
+
             }
             MenuItem {
                 text: qsTr("&Exit")
