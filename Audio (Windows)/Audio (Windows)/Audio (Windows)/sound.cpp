@@ -13,18 +13,18 @@ Details: Implementation - Contains functions for Windows sound API (sound record
 #include "sound.h"
 
 // BUFFERS
-short iBigBuf[SAMPLES_SEC * RECORD_TIME];
+short iBigBuf[SAMPLES_SEC * RECORD_TIME];		// Array to store audio data
 long  lBigBufSize = SAMPLES_SEC * RECORD_TIME;	// total number of samples
 
-// output and input channel parameters 
-static	int			g_nSamplesPerSec = SAMPLES_SEC;
-static	int			g_nBitsPerSample = 16;
-static	HWAVEOUT	HWaveOut;				/* Handle of opened WAVE Out and In device */
-static  HWAVEIN		HWaveIn;
-static	WAVEFORMATEX WaveFormat;			/* WAVEFORMATEX structure for reading in the WAVE fmt chunk */
-static  WAVEHDR	WaveHeader[NFREQUENCIES];	/* WAVEHDR structures - 1 per buffer */
-static  WAVEHDR	WaveHeaderSilence;
-static  WAVEHDR WaveHeaderIn;
+// output and input channel parameters, all static to sound.cpp
+static	int			g_nSamplesPerSec = SAMPLES_SEC;	// Define number of audio samples per second
+static	int			g_nBitsPerSample = 16;			// Define number of bits per sample
+static	HWAVEOUT	HWaveOut;						// Handle of opened WAVE Out and In device
+static  HWAVEIN		HWaveIn;						// Handle of opened WAVE In and OUT device
+static	WAVEFORMATEX WaveFormat;					// WAVEFORMATEX structure for reading in the WAVE fmt chunk
+static  WAVEHDR	WaveHeader[NFREQUENCIES];			// WAVEHDR structures - 1 per buffer //
+static  WAVEHDR	WaveHeaderSilence;					// Structure to insert silence between audio segments
+static  WAVEHDR WaveHeaderIn;						// Buffer to collect audio data from input
 
 /* PLAYBACK FUNCTIONS */
 /* ********************************************************************************************* */
@@ -36,32 +36,32 @@ int	InitializePlayback(void)
 	SetupFormat(&WaveFormat);
 	// open the playback device
 	rc = waveOutOpen(&HWaveOut, WAVE_MAPPER, &WaveFormat, (DWORD)NULL, 0, CALLBACK_NULL);
-	if (rc) {
+	if (rc) {																				//If statment error check
 		printf("Unable to open Output sound Device! Error %x.", rc);
-		return(0);
+		return(0);				//Retuen zero if initializing failed
 	}
-	return(1);
+	return(1);					//Return one if initilaizing worked
 }
 
 int PlayBuffer(short *piBuf, long lSamples)
 {
 	static	WAVEFORMATEX WaveFormat;	/* WAVEFORMATEX structure for reading in the WAVE fmt chunk */
 	static  WAVEHDR	WaveHeader;			/* WAVEHDR structure for this buffer */
-	MMRESULT	mmErr;
-	int		rc;
+	MMRESULT	mmErr;					// 
+	int		rc;							//
 
 	// stop previous note (just in case)
-	waveOutReset(HWaveOut);   // is this good?
+	waveOutReset(HWaveOut);   // reset the audio output device
 
 	// get the header ready for playback
-	WaveHeader.lpData = (char *)piBuf;
-	WaveHeader.dwBufferLength = lSamples * sizeof(short);
-	rc = waveOutPrepareHeader(HWaveOut, &WaveHeader, sizeof(WAVEHDR));
-	if (rc) {
+	WaveHeader.lpData = (char *)piBuf;									// Set the data to the audio buffer		
+	WaveHeader.dwBufferLength = lSamples * sizeof(short);				// Set the buffer length in bytes
+	rc = waveOutPrepareHeader(HWaveOut, &WaveHeader, sizeof(WAVEHDR));	// Prepare the header
+	if (rc) {															// If statment error flag
 		printf("Failed preparing WAVEHDR, error 0x%x.", rc);
 		return(0);
 	}
-	WaveHeader.dwFlags &= ~(WHDR_BEGINLOOP | WHDR_ENDLOOP);
+	WaveHeader.dwFlags &= ~(WHDR_BEGINLOOP | WHDR_ENDLOOP);				// 
 
 	// play the buffer. This is NON-blocking.
 	mmErr = waveOutWrite(HWaveOut, &WaveHeader, sizeof(WAVEHDR));
@@ -114,23 +114,23 @@ int InitializeRecording(void)
 
 int	RecordBuffer(short *piBuf, long lBufSize)
 {
-	static	WAVEFORMATEX WaveFormat;	/* WAVEFORMATEX structure for reading in the WAVE fmt chunk */
-	static  WAVEHDR	WaveHeader;			/* WAVEHDR structure for this buffer */
-	MMRESULT	mmErr;
-	int		rc;
+	static	WAVEFORMATEX WaveFormat;	// WAVEFORMATEX structure for reading in the WAVE fmt chunk
+	static  WAVEHDR	WaveHeader;			// WAVEHDR structure for this buffer
+	MMRESULT	mmErr;					// Multi meadia result
+	int		rc;							// 
 
-	printf("Recording now.....");
+	printf("Recording now.....");		//print to let user know it is recording
 
 	// stop previous recording (just in case)
 	waveInReset(HWaveIn);   // is this good?
 
 	// get the header ready for recording.  This should not be needed here AND in init.
-	WaveHeader.lpData = (char *)piBuf;
+	WaveHeader.lpData = (char *)piBuf;							//
 	WaveHeader.dwBufferLength = lBufSize * sizeof(short);
 	rc = waveInPrepareHeader(HWaveIn, &WaveHeader, sizeof(WAVEHDR));
 	if (rc) {
 		printf("Failed preparing WAVEHDR, error 0x%x.", rc);
-		return(0);
+		return(0);												//Return 0 if error
 	}
 	WaveHeader.dwFlags &= ~(WHDR_BEGINLOOP | WHDR_ENDLOOP);
 
