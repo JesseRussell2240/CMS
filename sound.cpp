@@ -4,6 +4,11 @@ Date: Updated 2022
 Details: Implementation - Contains functions for Windows sound API (sound recording & playback) 
 */
 
+
+
+#pragma warning	(disable:4996)
+
+
 #pragma comment(lib, "Ws2_32.lib")	   // Make sure we are linking against the Ws2_32.lib library
 #pragma comment(lib, "Winmm.lib")      // Make sure we are linking against the Winmm.lib library - some functions/symbols from this library (Windows sound API) are used
 #include <stdio.h> 

@@ -4,6 +4,8 @@ Date: Updated 2022
 Details: Testing mainline for Windows sound API
 */
 
+#pragma warning	(disable:4996)
+
 #include "sound.h"
 #include <stdio.h>
 #include <windows.h>
