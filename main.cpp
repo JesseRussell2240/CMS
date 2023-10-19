@@ -16,6 +16,7 @@ int	main(int argc, char *argv[])
 	extern long  lBigBufSize;											// total number of samples
 	short* iBigBufNew = (short*)malloc(lBigBufSize*sizeof(short));		// buffer used for reading recorded sound from file
 
+	char filePath[150];
 	char save;
 	char replay;
 	char c;																// used to flush extra input
@@ -34,18 +35,30 @@ int	main(int argc, char *argv[])
 	PlayBuffer(iBigBuf, lBigBufSize);
 	ClosePlayback();
 
-	// save audio recording  
-	printf("Would you like to save your audio recording? (y/n): "); 
-	scanf_s("%c", &save, 1);
-	while ((c = getchar()) != '\n' && c != EOF) {}								// Flush other input
-	if ((save == 'y') || (save == 'Y')) {
-		/* Open input file */
-		fopen_s(&f, "C:\\myfiles\\recording.dat", "wb");
+	// Save audio recording
+	printf("Would you like to save your audio recording? (y/n): ");
+	scanf_s("%c", &save);
+	while ((c = getchar()) != '\n' && c != EOF) {} // Flush other input
+
+	if (save == 'y' || save == 'Y') {
+		printf("Where would you like to save your audio recording?: ");
+		fgets(filePath, sizeof(filePath), stdin);
+
+		//sets an int = to the length of the string 
+		int n = strlen(filePath);
+		//delete the terminator \n and replace it with \0
+		filePath[n - 1] = '\0';
+		strcat_s(filePath, ".dat");
+
+		/* Open input file in "ab" mode (append or create if it doesn't exist) */
+		f = fopen(filePath, "ab");
 		if (!f) {
-			printf("unable to open %s\n", "C:\\myfiles\\recording.dat");
-			return 0;
+			printf("Unable to open %s\n", filePath);
+			return 1; // Return an error code to indicate failure
 		}
+
 		printf("Writing to sound file ...\n");
+		// You can write your audio recording to the 'f' file pointer here.
 		fwrite(iBigBuf, sizeof(short), lBigBufSize, f);
 		fclose(f);
 	}
@@ -56,9 +69,9 @@ int	main(int argc, char *argv[])
 	while ((c = getchar()) != '\n' && c != EOF) {}								// Flush other input
 	if ((replay == 'y') || (replay == 'Y')) {
 		/* Open input file */
-		fopen_s(&f, "C:\\myfiles\\recording.dat", "rb");
+		fopen_s(&f, filePath, "rb");
 		if (!f) {
-			printf("unable to open %s\n", "C:\\myfiles\\recording.dat");
+			printf("Unable to open %s\n", filePath);
 			return 0;
 		}
 		printf("Reading from sound file ...\n");
