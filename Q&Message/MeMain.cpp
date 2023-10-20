@@ -9,7 +9,7 @@
 #pragma warning(disable : 4996)
 
 
-int main()
+int MeMain()
 {
 	link p, q;
 	int i;
