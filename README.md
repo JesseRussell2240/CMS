@@ -22,3 +22,21 @@ the saved audio
 
 
 ________________________________________________________________________________________________________________
+
+Week 1
+Jesse
+Created project outline/scedual 
+set up git
+weekly stats reports
+Trouble shoot for various IDE related issues
+
+Hayden
+Created test case document
+comment provided main and reserched paramaters for various given functions
+
+Zach
+Commented provided files
+researched windows audio paramaters etc
+began legwork to have custom GUI setup
+
+________________________________________________________________________________________________________________
