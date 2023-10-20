@@ -1,7 +1,10 @@
 ﻿# CMS
 CMS coded message system for eng projects 3 project 2
 
-New Features
+
+
+________________________________________________________________________________________________________________
+New Features/Change log/version control
 
 
 CMS V0.0.1
@@ -18,4 +21,4 @@ they want to save it and if so where. Then gives them an option to replay
 the saved audio
 
 
-----------------temp----------------
+________________________________________________________________________________________________________________
