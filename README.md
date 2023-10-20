@@ -1,7 +1,10 @@
 ﻿# CMS
 CMS coded message system for eng projects 3 project 2
 
-New Features
+
+
+________________________________________________________________________________________________________________
+New Features/Change log/version control
 
 
 CMS V0.0.1
@@ -18,3 +21,22 @@ they want to save it and if so where. Then gives them an option to replay
 the saved audio
 
 
+________________________________________________________________________________________________________________
+
+Week 1
+Jesse
+Created project outline/scedual 
+set up git
+weekly stats reports
+Trouble shoot for various IDE related issues
+
+Hayden
+Created test case document
+comment provided main and reserched paramaters for various given functions
+
+Zach
+Commented provided files
+researched windows audio paramaters etc
+began legwork to have custom GUI setup
+
+________________________________________________________________________________________________________________

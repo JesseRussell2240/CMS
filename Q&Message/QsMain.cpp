@@ -10,7 +10,7 @@
 #include "message.h"
 #include "Queues.h"
 
-int main() {
+int QsMain() {
 
 	int numQuotes;					 // Number of quotes in the file
 	long int* quoteIndices;		   	 // Array of quote locations in the file (index correspondes to quote number)
@@ -62,5 +62,5 @@ int main() {
 	free(quoteIndices);
 	free(quoteLengths);
 
-	//return(0);
+	return(0);
 }
