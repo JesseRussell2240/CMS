@@ -10,11 +10,11 @@ Details: Testing mainline for Windows sound API
 #include <stdio.h>
 #include <windows.h>
 
-int	main(int argc, char *argv[])
+int	main(int argc, char* argv[])
 {
 	extern short iBigBuf[];												// buffer
 	extern long  lBigBufSize;											// total number of samples
-	short* iBigBufNew = (short*)malloc(lBigBufSize*sizeof(short));		// buffer used for reading recorded sound from file
+	short* iBigBufNew = (short*)malloc(lBigBufSize * sizeof(short));		// buffer used for reading recorded sound from file
 
 	char filePath[150];
 	char save;
@@ -67,26 +67,27 @@ int	main(int argc, char *argv[])
 	printf("Would you like to replay the saved audio recording from the file? (y/n): ");
 	scanf_s("%c", &replay, 1);
 	while ((c = getchar()) != '\n' && c != EOF) { //waits till user entered enter							// Flush other input
-	if ((replay == 'y') || (replay == 'Y')) {
-		/* Open input file */
-		fopen_s(&f, filePath, "rb");
-		if (!f) {
-			printf("Unable to open %s\n", filePath);
-			return 0;
+		if ((replay == 'y') || (replay == 'Y')) {
+			/* Open input file */
+			fopen_s(&f, filePath, "rb");
+			if (!f) {
+				printf("Unable to open %s\n", filePath);
+				return 0;
+			}
+			printf("Reading from sound file ...\n");
+
+			fread(iBigBufNew, sizeof(short), lBigBufSize, f); // Read audio data from the file into the buffer iBigBufNew			// Record to new buffer iBigBufNew
+			fclose(f); // Close the file
+			InitializePlayback(); // Initialize the audio playback
+
+			printf("\nPlaying recording from saved file ...\n");
+
+			PlayBuffer(iBigBufNew, lBigBufSize); // Play the audio from the buffer
+			ClosePlayback(); // Close the audio playback
 		}
-		printf("Reading from sound file ...\n");
 
-		fread(iBigBufNew, sizeof(short), lBigBufSize, f); // Read audio data from the file into the buffer iBigBufNew			// Record to new buffer iBigBufNew
-		fclose(f); // Close the file
-		InitializePlayback(); // Initialize the audio playback
-
-		printf("\nPlaying recording from saved file ...\n");
-
-		PlayBuffer(iBigBufNew, lBigBufSize); // Play the audio from the buffer
-		ClosePlayback(); // Close the audio playback
+		printf("\n");
+		system("pause");
+		return(0);
 	}
-	
-	printf("\n");
-	system("pause");
-	return(0);
 }
