@@ -35,6 +35,8 @@ void BackEnd::recordAudio() {
 void BackEnd::playAudio() {
     // Call the play audio function - need to include the header
     qDebug("C/C++ play audio function called");
+
+
 }
 
 void BackEnd::saveAudio() {
