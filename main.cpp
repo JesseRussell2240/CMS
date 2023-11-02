@@ -12,14 +12,14 @@ Details: Testing mainline for Windows sound API
 
 int	main(int argc, char* argv[])
 {
-	extern short iBigBuf[];												// buffer
-	extern long  lBigBufSize;											// total number of samples
+	extern short iBigBuf[];													// buffer
+	extern long  lBigBufSize;												// total number of samples
 	short* iBigBufNew = (short*)malloc(lBigBufSize * sizeof(short));		// buffer used for reading recorded sound from file
 
 	char filePath[150];
 	char save;
 	char replay;
-	char c;																// used to flush extra input
+	char c;																	// used to flush extra input
 	FILE* f;
 
 	// initialize playback and recording
