@@ -10,21 +10,18 @@ Details: Testing mainline for Windows sound API
 #include <stdio.h>
 #include <windows.h>
 
+
+//protoypes
 // Function to record audio and store it in a buffer
 void RecordAudio(short* buffer, long bufferSize);
-
-// Function to play audio from a buffer
 void PlayAudio(short* buffer, long bufferSize);
-
-// Function to save audio data to a file
 void SaveAudio(short* buffer, long bufferSize, const char* filePath);
-
-// Function to load audio data from a file into a buffer
 void LoadAudio(short* buffer, long bufferSize, const char* filePath);
+void RecordAudioTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate);
+void RecordBufferTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate);
 
 int	main(int argc, char* argv[])
 {
-<<<<<<< HEAD
     extern short iBigBuf[];     // buffer
     extern long lBigBufSize;    // total number of samples
 
@@ -32,68 +29,106 @@ int	main(int argc, char* argv[])
     char save;
     char replay;
     char c;                     // used to flush extra input
-=======
-	extern short iBigBuf[];													// buffer
-	extern long  lBigBufSize;												// total number of samples
-	short* iBigBufNew = (short*)malloc(lBigBufSize * sizeof(short));		// buffer used for reading recorded sound from file
-
-	char filePath[150];
-	char save;
-	char replay;
-	char c;																	// used to flush extra input
-	FILE* f;
->>>>>>> 030d41e833e20406aa51615fed677528656581e5
+    int n;                       // Declare 'n' here
 
     // initialize playback and recording
     InitializePlayback();
     InitializeRecording();
 
-    // Record audio
-    RecordAudio(iBigBuf, lBigBufSize);
+    int option;
 
-    // playback recording
-    printf("\nPlaying recording from buffer\n");
-    PlayAudio(iBigBuf, lBigBufSize);
 
-    // Save audio recording
-    printf("Would you like to save your audio recording? (y/n): ");
-    scanf_s("%c", &save);
-    while ((c = getchar()) != '\n' && c != EOF) {}
+    //menu loop
+    do {
+        printf("\nOptions:\n");
+        printf("1. Record audio\n");
+        printf("2. Play audio\n");
+        printf("3. Load audio from file\n");
+        printf("4. Exit\n");
+        printf("Enter your choice: ");
+        scanf_s("%d", &option);
 
-    if (save == 'y' || save == 'Y') {
-        printf("Where would you like to save your audio recording?: ");
-        fgets(filePath, sizeof(filePath), stdin);
 
-        int n = strlen(filePath);
-        filePath[n - 1] = '\0';
-        strcat_s(filePath, ".dat");
+        while ((c = getchar()) != '\n' && c != EOF) {}
 
-        SaveAudio(iBigBuf, lBigBufSize, filePath);
-    }
+        switch (option) {
+        case 1:
+        {
+            //time duration userinput code
+            printf("Enter the  duration \n");
+            int recordingDuration;
+            scanf_s("%d", &recordingDuration);
 
-    // Replay audio recording from file
-    printf("Would you like to replay the saved audio recording from the file? (y/n): ");
-    scanf_s("%c", &replay, 1);
-    while ((c = getchar()) != '\n' && c != EOF) {}
+            //code to get sample rate from user
+            printf("Enter the sample rate in kHz (1-20): ");
+            int sampleRate;
+            scanf_s("%d", &sampleRate);
 
-    if (replay == 'y' || replay == 'Y') {
-        printf("Enter the path to the saved audio file: ");
-        fgets(filePath, sizeof(filePath), stdin);
 
-        int n = strlen(filePath);
-        filePath[n - 1] = '\0';
+            //calls helper function
+            RecordAudioTB(iBigBuf, lBigBufSize, recordingDuration, sampleRate * 1000);
+            break;
 
-        LoadAudio(iBigBuf, lBigBufSize, filePath);
 
-        printf("\nPlaying recording from saved file ...\n");
-        PlayAudio(iBigBuf, lBigBufSize);
-    }
+        }
+        case 2:
+            //calls helper to play audio
+            printf("\nPlaying recording from buffer\n");
+            PlayAudio(iBigBuf, lBigBufSize);
+            break;
 
-    printf("\n");
-    system("pause");
+
+        case 3:
+            //file loading code
+            printf("Enter the path to the audio file to load: ");
+            fgets(filePath, sizeof(filePath), stdin);
+
+            //remove line end char
+            n = strlen(filePath);  // Assign to 'n' (declared before the switch)
+            filePath[n - 1] = '\0';
+
+            //move audio to buffer
+            LoadAudio(iBigBuf, lBigBufSize, filePath);
+
+            //calls helper function to play audio recording
+            printf("\nPlaying recording from loaded file ...\n");
+            PlayAudio(iBigBuf, lBigBufSize);
+            break;
+
+
+        case 4:
+            printf("\nExiting...\n");
+            printf("\n");
+            system("pause");
+            break;
+
+
+        default:
+            printf("Invalid option. Please choose a valid option.\n");
+        }
+
+
+    } while (option != 4);
+
+
     return 0;
 }
 
+// Function to record audio and store it in a buffer with a specified duration (in seconds) and sample rate
+void RecordAudioTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate) {
+    InitializeRecording();
+    RecordBufferTB(buffer, bufferSize, durationInSeconds, sampleRate);
+    CloseRecording();
+}
+
+
+//Do we need to ensure this code is not recording really long audio?
+// Function to record audio with a specified duration (in seconds) and sample rate
+void RecordBufferTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate) {
+    // Calculate the number of samples needed for the specified duration
+    long requiredSamples = durationInSeconds * sampleRate;
+    RecordBuffer(buffer, requiredSamples);
+}
 
 	// Function to record audio and store it in a buffer
 	void RecordAudio(short* buffer, long bufferSize) {
