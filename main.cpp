@@ -45,7 +45,6 @@ int	main(int argc, char* argv[])
         printf("1. Record audio\n");
         printf("2. Play audio\n");
         printf("3. Load audio from file\n");
-        printf("4. Exit\n");
         printf("Enter your choice: ");
         scanf_s("%d", &option);
 
@@ -96,20 +95,12 @@ int	main(int argc, char* argv[])
             PlayAudio(iBigBuf, lBigBufSize);
             break;
 
-
-        case 4:
-            printf("\nExiting...\n");
-            printf("\n");
-            system("pause");
-            break;
-
-
         default:
             printf("Invalid option. Please choose a valid option.\n");
         }
 
 
-    } while (option != 4);
+    } while (option != -1);
 
 
     return 0;
