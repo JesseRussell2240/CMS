@@ -15,15 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\RS232 - Windows\RS232 - Windows\main.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\RS232 - Windows\RS232 - Windows\RS232Comm.cpp">
+    <ClCompile Include="RS232Comm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\RS232 - Windows\RS232 - Windows\RS232Comm.h">
+    <ClInclude Include="RS232Comm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

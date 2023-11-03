@@ -9,6 +9,7 @@ Details: Testing mainline for Windows sound API
 #include "sound.h"
 #include <stdio.h>
 #include <windows.h>
+//#include "AudioRecorder.h"
 
 
 //protoypes
@@ -114,6 +115,7 @@ int	main(int argc, char* argv[])
     return 0;
 }
 
+
 // Function to record audio and store it in a buffer with a specified duration (in seconds) and sample rate
 void RecordAudioTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate) {
     InitializeRecording();
@@ -130,42 +132,45 @@ void RecordBufferTB(short* buffer, long bufferSize, int durationInSeconds, int s
     RecordBuffer(buffer, requiredSamples);
 }
 
-	// Function to record audio and store it in a buffer
-	void RecordAudio(short* buffer, long bufferSize) {
-		InitializeRecording();
-		RecordBuffer(buffer, bufferSize);
-		CloseRecording();
-	}
 
-	// Function to play audio from a buffer
-	void PlayAudio(short* buffer, long bufferSize) {
-		InitializePlayback();
-		PlayBuffer(buffer, bufferSize);
-		ClosePlayback();
-	}
 
-	// Function to save audio data to a file
-	void SaveAudio(short* buffer, long bufferSize, const char* filePath) {
-		FILE* f = fopen(filePath, "wb");
-		if (!f) {
-			printf("Unable to open %s\n", filePath);
-			return;
-		}
 
-		fwrite(buffer, sizeof(short), bufferSize, f);
-		fclose(f);
-	}
+// Function to record audio and store it in a buffer
+void RecordAudio(short* buffer, long bufferSize) {
+    InitializeRecording();
+    RecordBuffer(buffer, bufferSize);
+    CloseRecording();
+}
 
-	// Function to load audio data from a file into a buffer
-	void LoadAudio(short* buffer, long bufferSize, const char* filePath) {
-		FILE* f = fopen(filePath, "rb");
-		if (!f) {
-			printf("Unable to open %s\n", filePath);
-			return;
-		}
+// Function to play audio from a buffer
+void PlayAudio(short* buffer, long bufferSize) {
+    InitializePlayback();
+    PlayBuffer(buffer, bufferSize);
+    ClosePlayback();
+}
 
-		fread(buffer, sizeof(short), bufferSize, f);
-		fclose(f);
-	}
+// Function to save audio data to a file
+void SaveAudio(short* buffer, long bufferSize, const char* filePath) {
+    FILE* f = fopen(filePath, "wb");
+    if (!f) {
+        printf("Unable to open %s\n", filePath);
+        return;
+    }
+
+    fwrite(buffer, sizeof(short), bufferSize, f);
+    fclose(f);
+}
+
+// Function to load audio data from a file into a buffer
+void LoadAudio(short* buffer, long bufferSize, const char* filePath) {
+    FILE* f = fopen(filePath, "rb");
+    if (!f) {
+        printf("Unable to open %s\n", filePath);
+        return;
+    }
+
+    fread(buffer, sizeof(short), bufferSize, f);
+    fclose(f);
+}
 
 

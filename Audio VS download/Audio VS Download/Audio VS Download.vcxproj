@@ -128,16 +128,16 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\main.cpp" />
-    <ClCompile Include="..\..\Q&amp;Message\MeMain.cpp" />
     <ClCompile Include="..\..\Q&amp;Message\QsMain.cpp" />
     <ClCompile Include="..\..\Q&amp;Message\message.cpp" />
     <ClCompile Include="..\..\Q&amp;Message\Queues.cpp" />
     <ClCompile Include="..\..\sound.cpp" />
+    <ClCompile Include="AudioRecorder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Q&amp;Message\message.h" />
-    <ClInclude Include="..\..\Q&amp;Message\Queues.h" />
-    <ClInclude Include="..\..\sound.h" />
+    <ClInclude Include="AudioRecorder.h" />
+    <ClInclude Include="sound.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

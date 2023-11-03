@@ -43,6 +43,7 @@ ________________________________________________________________________________
 
 Week 2
 Jesse
+modified audio recording into helper functions and text based GUI intorder to better ingrate with the GUI
 
 Hayden
 

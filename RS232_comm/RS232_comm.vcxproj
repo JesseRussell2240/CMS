@@ -127,11 +127,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\RS232 - Windows\RS232 - Windows\main.cpp" />
-    <ClCompile Include="..\..\..\..\..\RS232 - Windows\RS232 - Windows\RS232Comm.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="RS232Comm.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\RS232 - Windows\RS232 - Windows\RS232Comm.h" />
+    <ClInclude Include="RS232Comm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
