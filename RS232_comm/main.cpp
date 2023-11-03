@@ -60,6 +60,7 @@ int main() {
 
 		//Transmit side 
 		char msgOut[] = "Hi there person";							// Sent message	
+
 		outputToPort(&hComTx, msgOut, strlen(msgOut) + 1);			// Send string to port - include space for '\0' termination
 		Sleep(500);													// Allow time for signal propagation on cable 
 		purgePort(&hComTx);											// Purge the Tx port
@@ -69,17 +70,41 @@ int main() {
 	else if (userResult == receive) {
 
 		initPort(&hComRx, COMPORT_Rx, nComRate, nComBits, timeout);	// Initialize the Rx port
-		Sleep(1500);
+
 
 		// Receive side  
 		char msgIn[BUFSIZE];
-		DWORD bytesRead;
-		bytesRead = inputFromPort(&hComRx, msgIn, BUFSIZE);			// Receive string from port
-		printf("Length of received msg = %d", bytesRead);
-		msgIn[bytesRead] = '\0';
-		printf("\nMessage Received: %s\n\n", msgIn);				// Display message from port
-		purgePort(&hComRx);											// Purge the Rx port
-		CloseHandle(hComRx);										// Close the handle to Rx port 
+
+
+		///////NEEDS WORK
+		//WORKS but it is finding garbage in the /0
+		while (1) {
+			Sleep(1500);
+			DWORD bytesRead;
+			bytesRead = inputFromPort(&hComRx, msgIn, BUFSIZE);    // Receive string from port
+			printf("Length of received msg = %d", bytesRead);
+			msgIn[bytesRead] = '\0';
+			printf("\nMessage Received: %s\n\n", msgIn);        // Display message from port
+			purgePort(&hComRx);                                  // Purge the Rx port
+			CloseHandle(hComRx);                                 // Close the handle to Rx port
+
+			int chunkSize = 140;
+			int i;
+			for (i = 0; i < bytesRead; i += chunkSize) {
+				char chunk[141];
+				strncpy_s(chunk, msgIn + i, chunkSize);
+				chunk[chunkSize] = '\0';
+
+				// Check if the chunk contains a newline character
+				if (strchr(chunk, '\n') != NULL) {
+					break;  // Found a newline character, exit the loop
+				}
+			}
+
+			if (i < bytesRead) {
+				break;  // Found a newline character in one of the chunks, exit the loop
+			}
+		}
 
 	}
 
