@@ -128,18 +128,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\main.cpp" />
-    <ClCompile Include="..\..\Q&amp;Message\QsMain.cpp" />
-    <ClCompile Include="..\..\Q&amp;Message\message.cpp" />
-    <ClCompile Include="..\..\Q&amp;Message\Queues.cpp" />
     <ClCompile Include="..\..\RS232_comm\Transmission.cpp" />
     <ClCompile Include="..\..\RS232_comm\RS232Comm.cpp" />
-    <ClCompile Include="..\..\sound.cpp" />
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\sound.cpp" />
     <ClCompile Include="AudioRecorder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Q&amp;Message\message.h" />
     <ClInclude Include="..\..\RS232_comm\RS232Comm.h" />
+    <ClInclude Include="..\sound.h" />
     <ClInclude Include="AudioRecorder.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="Transmission.h" />
