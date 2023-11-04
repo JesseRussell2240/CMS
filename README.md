@@ -46,11 +46,18 @@ Jesse
 modified audio recording into helper functions and text based GUI intorder to better ingrate with the GUI
 
 Hayden
+Modified status report template and filled out this weeks status report
+Wrote code to use a buffer inorder to have a longer recive window that checks for garbage
 
 Zach
+rs232 set up comport virtual code calls
+
 ________________________________________________________________________________________________________________
 Week 3
 Jesse
+Implemented play and record into GUI
+Merged RS232 code with audio recording, wrote a basic merged copy of menu systems, removed mains and called helper functions.
+
 
 Hayden
 
@@ -70,3 +77,12 @@ Hayden
 
 Zach
 ________________________________________________________________________________________________________________
+
+TO_DO
+-intgrate rs232 communications into GUI
+-transmit virtual audio
+- transmit physical audio m
+- investigate multithreading
+- finish non gui implementation of code. 
+- figureout how to update the comm port pased on used provided input. (a switch case is a nasty solution to this
+- 

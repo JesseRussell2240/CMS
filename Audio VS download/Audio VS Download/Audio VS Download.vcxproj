@@ -104,6 +104,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\Users\Jessr\OneDrive - Conestoga College\Conestoga\Year2\sem1\Projects\CMS\CMS\Audio VS download\Audio VS Download;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -131,13 +132,17 @@
     <ClCompile Include="..\..\Q&amp;Message\QsMain.cpp" />
     <ClCompile Include="..\..\Q&amp;Message\message.cpp" />
     <ClCompile Include="..\..\Q&amp;Message\Queues.cpp" />
+    <ClCompile Include="..\..\RS232_comm\Transmission.cpp" />
+    <ClCompile Include="..\..\RS232_comm\RS232Comm.cpp" />
     <ClCompile Include="..\..\sound.cpp" />
     <ClCompile Include="AudioRecorder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Q&amp;Message\message.h" />
+    <ClInclude Include="..\..\RS232_comm\RS232Comm.h" />
     <ClInclude Include="AudioRecorder.h" />
     <ClInclude Include="sound.h" />
+    <ClInclude Include="Transmission.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
