@@ -99,7 +99,7 @@ int transmit(extern short audioData[], int dataSize){
 				initializeTxPort(COMPORT_Tx);
 
 				//const short msgConverted = msgOut[];
-				transmitAudio(audioData, lBigBufSize);
+				transmitAudio(audioData, dataSize);
 
 			}
 
@@ -126,7 +126,7 @@ int transmit(extern short audioData[], int dataSize){
 
 				initializeRxPort(COMPORT_Rx);
 				extern short receivedAudio[AUDIO_BUFFER_SIZE]; // Define a buffer to store received audio
-				receiveAudio(audioData, lBigBufSize); // Pass the buffer to store the received audio
+				receiveAudio(audioData, dataSize); // Pass the buffer to store the received audio
 
 			}
 			else {
