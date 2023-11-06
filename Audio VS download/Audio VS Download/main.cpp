@@ -11,8 +11,8 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "sound.h"
 #include <stdio.h>
 #include <windows.h>
-#include <AudioRecorder.h>
-#include <Transmission.h>
+#include "AudioRecorder.h"
+#include "Transmission.h"
 					
 //these are buffers for storing the audio message
 extern short iBigBuf[];  // Declare the external variable// buffer
