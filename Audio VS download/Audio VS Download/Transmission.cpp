@@ -15,8 +15,8 @@ Details: Contains various audio file functions such as , play, save, load, recor
 #pragma warning	(disable:4996)
 
  // Declare constants, variables and communication parameters
-const int BUFSIZE = 140;							// Buffer size
-#define AUDIO_BUFFER_SIZE 140
+const int BUFSIZE = 280;							// Buffer size
+#define AUDIO_BUFFER_SIZE 280
 HANDLE hComRx;										// Pointer to the selected COM port (Receiver)
 HANDLE hComTx;										// Pointer to the selected COM port (Transmitter)
 int nComRate = 9600;								// Baud (Bit) rate in bits/second 
@@ -28,7 +28,7 @@ extern long lBigBufSize;							// Declare the external variable
 
 //these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // A commtimeout struct variable
-wchar_t COMPORT_Rx[] = L"COM3";
+wchar_t COMPORT_Rx[] = L"COM4";
 wchar_t COMPORT_Tx[] = L"COM3";
 
 //this code is called from the main, and passes the audio buffer as a paramater
@@ -65,7 +65,7 @@ int transmit(extern short audioData[], int dataSize){
 	else if (comType == 2) {
 
 		//once user selects Physical com ports it stays in this section of code
-		while (1) {
+		//while (1) {
 			printf("Enter an option:\n");
 			printf("1. Transmit\n");
 			printf("2. Receive\n");
@@ -99,7 +99,7 @@ int transmit(extern short audioData[], int dataSize){
 				initializeTxPort(COMPORT_Tx);
 
 				//const short msgConverted = msgOut[];
-				transmitAudio(iBigBuf, lBigBufSize);
+				transmitAudio(audioData, lBigBufSize);
 
 			}
 
@@ -126,19 +126,19 @@ int transmit(extern short audioData[], int dataSize){
 
 				initializeRxPort(COMPORT_Rx);
 				extern short receivedAudio[AUDIO_BUFFER_SIZE]; // Define a buffer to store received audio
-				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
+				receiveAudio(audioData, lBigBufSize); // Pass the buffer to store the received audio
 
 			}
 			else {
 				printf("Invalid input. Please enter 1 or 2.\n");
 			}
-		}
+		//}
 
-		system("pause");
+		//system("pause");
 
 	}
 	else {
-		system("pause");
+		//system("pause");
 
 	}
 
