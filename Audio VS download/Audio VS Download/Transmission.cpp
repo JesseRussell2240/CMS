@@ -193,18 +193,21 @@ void receiveMessages() {
 }
 
 void transmitAudio(const extern short* audioData, int dataSize) {
-	const char* charData = reinterpret_cast<const char*>(audioData);
-	outputToPort(&hComTx, charData, dataSize * sizeof(short));
+
+	//const char* charData = reinterpret_cast<const char*>(audioData);
+	
+	outputToPort(&hComTx, (char*)audioData, dataSize * sizeof(short));
 	Sleep(500);
 	purgePort(&hComTx);
 	CloseHandle(hComTx);
 }
 
 void receiveAudio(extern short* audioData, int dataSize) {
-	char* charData = reinterpret_cast<char*>(audioData);
-	Sleep(1500);
+	//char* charData = reinterpret_cast<char*>(audioData);
+
+	//Sleep(1500);
 	DWORD bytesRead;
-	bytesRead = inputFromPort(&hComRx, charData, dataSize * sizeof(short));
+	bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));
 
 	if (bytesRead == dataSize * sizeof(short)) {
 		// The received data size matches the expected size
