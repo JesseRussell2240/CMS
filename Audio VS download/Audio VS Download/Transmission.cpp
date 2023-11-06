@@ -32,7 +32,7 @@ wchar_t COMPORT_Rx[] = L"COM4";
 wchar_t COMPORT_Tx[] = L"COM3";
 
 //this code is called from the main, and passes the audio buffer as a paramater
-int transmit(extern short audioData[], int dataSize){
+int transmit(short* audioData, int dataSize){
 
 
 	char userResult;
@@ -125,7 +125,7 @@ int transmit(extern short audioData[], int dataSize){
 				setComRate(rate);
 
 				initializeRxPort(COMPORT_Rx);
-				extern short receivedAudio[AUDIO_BUFFER_SIZE]; // Define a buffer to store received audio
+				//short receivedAudio[AUDIO_BUFFER_SIZE]; // Define a buffer to store received audio
 				receiveAudio(audioData, dataSize); // Pass the buffer to store the received audio
 
 			}
@@ -192,7 +192,7 @@ void receiveMessages() {
 
 }
 
-void transmitAudio(const extern short* audioData, int dataSize) {
+void transmitAudio(short* audioData, int dataSize) {
 
 	//const char* charData = reinterpret_cast<const char*>(audioData);
 	
@@ -202,17 +202,18 @@ void transmitAudio(const extern short* audioData, int dataSize) {
 	CloseHandle(hComTx);
 }
 
-void receiveAudio(extern short* audioData, int dataSize) {
+void receiveAudio(short* audioData, int dataSize) {
 	//char* charData = reinterpret_cast<char*>(audioData);
 
 	//Sleep(1500);
 	DWORD bytesRead;
+	//bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));
 	bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));
-
 	if (bytesRead == dataSize * sizeof(short)) {
 		// The received data size matches the expected size
 	}
 	else {
+		printf("error in recive audio helper function");
 		// Handle an error, as the received data size is not as expected
 	}
 
