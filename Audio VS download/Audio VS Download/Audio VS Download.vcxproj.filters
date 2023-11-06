@@ -18,16 +18,16 @@
     <ClCompile Include="AudioRecorder.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\RS232_comm\RS232Comm.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\RS232_comm\Transmission.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\sound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\RS232Comm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Transmission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -41,13 +41,13 @@
     <ClInclude Include="AudioRecorder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\RS232_comm\RS232Comm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Transmission.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\sound.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\RS232Comm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
