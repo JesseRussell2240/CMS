@@ -135,6 +135,7 @@
     <ClCompile Include="Transmission.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\encrypt.h" />
     <ClInclude Include="AudioRecorder.h" />
     <ClInclude Include="RS232Comm.h" />
     <ClInclude Include="sound.h" />
