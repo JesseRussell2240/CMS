@@ -128,6 +128,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\encrypt.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\EnCryptMain.cpp" />
     <ClCompile Include="AudioRecorder.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RS232Comm.cpp" />
