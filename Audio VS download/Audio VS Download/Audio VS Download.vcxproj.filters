@@ -50,7 +50,7 @@
     <ClInclude Include="AudioRecorder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\encrypt.h">
+    <ClInclude Include="encrypt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

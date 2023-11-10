@@ -113,10 +113,15 @@ static int SetComParms(HANDLE* hCom, int nComRate, int nComBits, COMMTIMEOUTS ti
 
 	// Set communication timeouts (SEE COMMTIMEOUTS structure in MSDN) - want a fairly long timeout
 	memset((void *)&timeout, 0, sizeof(timeout));
-	timeout.ReadIntervalTimeout = 500;				// Maximum time allowed to elapse before arival of next byte in milliseconds. If the interval between the arrival of any two bytes exceeds this amount, the ReadFile operation is completed and buffered data is returned
+	timeout.ReadIntervalTimeout = 0;				// Maximum time allowed to elapse before arival of next byte in milliseconds. If the interval between the arrival of any two bytes exceeds this amount, the ReadFile operation is completed and buffered data is returned
 	timeout.ReadTotalTimeoutMultiplier = 1;			// The multiplier used to calculate the total time-out period for read operations in milliseconds. For each read operation this value is multiplied by the requested number of bytes to be read
 	timeout.ReadTotalTimeoutConstant = 10000;		// A constant added to the calculation of the total time-out period. This constant is added to the resulting product of the ReadTotalTimeoutMultiplier and the number of bytes (above).
+	timeout.WriteTotalTimeoutMultiplier = 0;
+	timeout.WriteTotalTimeoutConstant = 0;
+
+	
 	SetCommTimeouts(*hCom, &timeout);
 	return(1);
+
 }
 

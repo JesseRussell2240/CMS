@@ -128,17 +128,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\encrypt.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\EnCryptMain.cpp" />
     <ClCompile Include="AudioRecorder.cpp" />
+    <ClCompile Include="encrypt.cpp" />
+    <ClCompile Include="EnCryptMain.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="RS232Comm.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="Transmission.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\encrypt.h" />
     <ClInclude Include="AudioRecorder.h" />
+    <ClInclude Include="encrypt.h" />
     <ClInclude Include="RS232Comm.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="Transmission.h" />

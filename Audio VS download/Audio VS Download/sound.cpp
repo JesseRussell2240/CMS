@@ -4,6 +4,8 @@ Date: Updated 2022
 Details: Implementation - Contains functions for Windows sound API (sound recording & playback)
 */
 
+
+
 #pragma comment(lib, "Ws2_32.lib")	   // Make sure we are linking against the Ws2_32.lib library
 #pragma comment(lib, "Winmm.lib")      // Make sure we are linking against the Winmm.lib library - some functions/symbols from this library (Windows sound API) are used
 #include <stdio.h> 
@@ -13,8 +15,12 @@ Details: Implementation - Contains functions for Windows sound API (sound record
 #include "sound.h"
 
 // BUFFERS
-short iBigBuf[SAMPLES_SEC * RECORD_TIME];
-long  lBigBufSize = SAMPLES_SEC * RECORD_TIME;	// total number of samples
+//short iBigBuf[SAMPLES_SEC * RECORD_TIME];
+//long  lBigBufSize = SAMPLES_SEC * RECORD_TIME;	// total number of samples
+
+// BUFFERS
+short iBigBuf[64000];
+long  lBigBufSize = 64000;	// total number of samples
 
 // output and input channel parameters 
 static	int			g_nSamplesPerSec = SAMPLES_SEC;		//Define sample seconds
