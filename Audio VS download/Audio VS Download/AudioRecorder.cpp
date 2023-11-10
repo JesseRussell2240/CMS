@@ -38,7 +38,7 @@ void RecordBufferTB(short* buffer, long bufferSize, int durationInSeconds, int s
     long requiredSamples = durationInSeconds * sampleRate;
     // Clear the buffer
     memset(buffer, 0, sizeof(short) * bufferSize);
-    printf("Recorded audio is %d\n", sizeof(short) * bufferSize);
+    printf("Buffer size %d\n",  bufferSize);
     RecordBuffer(buffer, requiredSamples);
 }
 
