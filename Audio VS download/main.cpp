@@ -11,29 +11,17 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "sound.h"
 #include <stdio.h>
 #include <windows.h>
-#include "AudioRecorder.h"
-#include "Transmission.h"
+#include <AudioRecorder.h>
+#include <Transmission.h>
 					
 //these are buffers for storing the audio message
-//extern short iBigBuf[];  // Declare the external variable// buffer
-//extern long lBigBufSize;  // Declare the external variable // total number of samples
-
-
-
-//these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-// A commtimeout struct variable
-wchar_t COMPORT_Rx[] = L"COM8";
-wchar_t COMPORT_Tx[] = L"COM9";
-
-
-extern short iBigBuf[];								// Declare the external variable
-extern long lBigBufSize;							// Declare the external variable
+extern short iBigBuf[];  // Declare the external variable// buffer
+extern long lBigBufSize;  // Declare the external variable // total number of samples
 
 
 int	main(int argc, char* argv[])
 {
-    char transmit = 'T';
-    char receive = 'R';
+
     char filePath[150];
     char save;
     char replay;
@@ -127,135 +115,8 @@ int	main(int argc, char* argv[])
 
         case 5:
 
-            char userResult;
-
-            printf("Select the type of COM port:\n");
-            printf("1. Virtual COM Port\n");
-            printf("2. Physical COM Port\n");
-            printf("Enter your choice (1 or 2): ");
-            int comType;
-            scanf("%d", &comType);
             //this code needs to be validated.
-           
-			if (comType == 1) {
-
-				//printf("Virtual Comports Selected this code is commented out for now.\n");
-				/*
-
-				Virtual comport code goes here!
-
-
-
-				*/
-
-
-				printf("Using virtual COM port for transmission: %S\n", COMPORT_Tx);
-				printf("Using virtual COM port for reception: %S\n", COMPORT_Rx);
-
-				printf("Enter the bit rate: ");
-				int rate;
-				scanf("%d", &rate);
-				setComRate(rate);
-
-
-				initializeRxPort(COMPORT_Rx);
-
-				initializeTxPort(COMPORT_Tx);
-
-				printf("Memory address of audioData: %p\n", iBigBuf);
-				transmitAudio(iBigBuf, lBigBufSize);
-				//Sleep(50);
-				receiveAudio(iBigBuf, lBigBufSize);
-
-
-
-
-
-			}
-
-
-			else if (comType == 2) {
-
-				//once user selects Physical com ports it stays in this section of code
-				//while (1) {
-				printf("Enter an option:\n");
-				printf("1. Transmit\n");
-				printf("2. Receive\n");
-
-				printf("Enter your choice (1, or 2): ");
-				scanf_s(" %c", &userResult, 1);
-
-				if (userResult == '1') {
-
-					/* This code does not correctly update the comm port based on user input, i commentd it out but this needs to be figure out
-					printf("Enter the COM port: ");
-					wchar_t txPort[20];
-					scanf_s("%s", txPort, 20);
-					*/
-					/*
-					printf("Enter the message to transmit: ");
-					char msgOut[BUFSIZE];
-					scanf_s("%s", msgOut, BUFSIZE);
-					printf("Enter the number of bits: ");
-					int bits;
-					scanf("%d", &bits);
-					setComBits(bits);
-					*/
-
-
-					printf("Enter the bit rate: ");
-					int rate;
-					scanf("%d", &rate);
-					setComRate(rate);
-
-					initializeTxPort(COMPORT_Tx);
-
-					//const short msgConverted = msgOut[];
-					transmitAudio(iBigBuf, lBigBufSize);
-
-				}
-
-
-				else if (userResult == '2') {
-
-					//wchar_t rxPort[20];
-					/*
-					printf("Enter the COM port: ");
-
-
-					scanf_s("%s", rxPort, 20);
-
-					printf("Enter the number of bits: ");
-					int bits;
-					scanf("%d", &bits);
-					setComBits(bits);
-					*/
-
-					printf("Enter the bit rate: ");
-					int rate;
-					scanf("%d", &rate);
-					setComRate(rate);
-
-					initializeRxPort(COMPORT_Rx);
-					//short receivedAudio[AUDIO_BUFFER_SIZE]; // Define a buffer to store received audio
-					receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
-
-				}
-				else {
-					printf("Invalid input. Please enter 1 or 2.\n");
-				}
-				//}
-
-				//system("pause");
-
-			}
-			else {
-				//system("pause");
-
-			}
-
-			//return 0;
-
+            transmit(iBigBuf, lBigBufSize);
             break;
 
         default:

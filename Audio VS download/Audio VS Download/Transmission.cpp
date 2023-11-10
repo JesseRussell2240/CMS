@@ -87,13 +87,11 @@ void transmitAudio(short* audioData, int dataSize) {
 	//const char* charData = reinterpret_cast<const char*>(audioData);
 	
 	//printf("size of transmitted audio is %d\n", dataSize * sizeof(short) * 2);
-
-
 	//char* pntr = (char*)audioData;
 	//PlayAudio(audioData, dataSize);
-	
+
 	//outputToPort(&hComTx, (char*)&audioData, dataSize * sizeof(short) * 2);
-	outputToPort(&hComTx, (char*) audioData, (128000) * 2);
+	outputToPort(&hComTx, (char*) audioData, 40000 * 2);
 
 	purgePort(&hComTx);
 	CloseHandle(hComTx);
@@ -105,17 +103,19 @@ void receiveAudio(short* audioData, int dataSize) {
 	DWORD bytesRead;
 	printf("recive audio called\n");
 	//bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));
-	bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * 2);
+	bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));
 	printf("bytes expected %d\n", dataSize);
 	
 	if (bytesRead == dataSize * sizeof(short)) {
 		// The received data size matches the expected size
-
+		
 	}
 	else {
 		printf("error in recive audio helper function");
 		// Handle an error, as the received data size is not as expected
 	}
+
+	PlayAudio(audioData, dataSize);
 
 	purgePort(&hComRx);
 	CloseHandle(hComRx);

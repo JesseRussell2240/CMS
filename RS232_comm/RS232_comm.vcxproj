@@ -21,8 +21,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{0598b9be-6ba6-46c2-96d5-f4af89423047}</ProjectGuid>
-    <RootNamespace>AudioVSDownload</RootNamespace>
+    <ProjectGuid>{2a251511-d1e8-4c13-81d9-67814babd704}</ProjectGuid>
+    <RootNamespace>RS232comm</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -104,7 +104,6 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Jessr\OneDrive - Conestoga College\Conestoga\Year2\sem1\Projects\CMS\CMS\Audio VS download\Audio VS Download;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -128,18 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AudioRecorder.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="RS232Comm.cpp" />
-    <ClCompile Include="sound.cpp" />
-    <ClCompile Include="Transmission.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="AudioRecorder.h" />
-    <ClInclude Include="encrypt.h" />
     <ClInclude Include="RS232Comm.h" />
-    <ClInclude Include="sound.h" />
-    <ClInclude Include="Transmission.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
