@@ -128,54 +128,17 @@ int	main(int argc, char* argv[])
 
         case 5:
 
-            char userResult;
-
-            printf("Select the type of COM port:\n");
-            printf("1. Virtual COM Port\n");
-            printf("2. Physical COM Port\n");
-            printf("Enter your choice (1 or 2): ");
-            int comType;
-            scanf("%d", &comType);
-            //this code needs to be validated.
            
-			if (comType == 1) {
+			
 
 				//printf("Virtual Comports Selected this code is commented out for now.\n");
 				/*
 
-				Virtual comport code goes here!
-
-
+		
 
 				*/
 
 
-				printf("Using virtual COM port for transmission: %S\n", COMPORT_Tx);
-				printf("Using virtual COM port for reception: %S\n", COMPORT_Rx);
-
-				printf("Enter the bit rate: ");
-				int rate;
-				scanf("%d", &rate);
-				setComRate(rate);
-
-
-				initializeRxPort(COMPORT_Rx);
-
-				initializeTxPort(COMPORT_Tx);
-
-				printf("Memory address of audioData: %p\n", iBigBuf);
-				transmitAudio(iBigBuf, lBigBufSize);
-				//Sleep(50);
-				receiveAudio(iBigBuf, lBigBufSize);
-
-
-
-
-
-			}
-
-
-			else if (comType == 2) {
 
 				//once user selects Physical com ports it stays in this section of code
 				//while (1) {
@@ -184,9 +147,9 @@ int	main(int argc, char* argv[])
 				printf("2. Receive\n");
 
 				printf("Enter your choice (1, or 2): ");
-				scanf_s(" %c", &userResult, 1);
+				scanf_s(" %c", &option, 1);
 
-				if (userResult == '1') {
+				if (option == '1') {
 
 					/* This code does not correctly update the comm port based on user input, i commentd it out but this needs to be figure out
 					printf("Enter the COM port: ");
@@ -217,7 +180,7 @@ int	main(int argc, char* argv[])
 				}
 
 
-				else if (userResult == '2') {
+				else if (option == '2') {
 
 					//wchar_t rxPort[20];
 					/*
@@ -249,11 +212,7 @@ int	main(int argc, char* argv[])
 
 				//system("pause");
 
-			}
-			else {
-				//system("pause");
-
-			}
+			
 
 			//return 0;
 
