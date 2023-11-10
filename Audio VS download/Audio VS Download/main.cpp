@@ -116,7 +116,10 @@ int	main(int argc, char* argv[])
         case 5:
 
             //this code needs to be validated.
+            printf("Memory address of big buffaroni: %p\n", (void*)iBigBuf);
+
             transmit(iBigBuf, lBigBufSize);
+
             break;
 
         default:
