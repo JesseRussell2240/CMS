@@ -10,6 +10,7 @@ Details: Contains various audio file functions such as , play, save, load, recor
 #include <string.h>
 #include "RS232Comm.h"
 #include "Transmission.h"
+#include "AudioRecorder.h"
 
 //dosables warning for userinput
 #pragma warning	(disable:4996)
@@ -28,8 +29,9 @@ extern long lBigBufSize;							// Declare the external variable
 
 //these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // A commtimeout struct variable
-wchar_t COMPORT_Rx[] = L"COM6";
-wchar_t COMPORT_Tx[] = L"COM7";
+wchar_t COMPORT_Rx[] = L"COM8";
+wchar_t COMPORT_Tx[] = L"COM9";
+
 
 //this code is called from the main, and passes the audio buffer as a paramater
 int transmit(short* audioData, int dataSize){
@@ -48,7 +50,7 @@ int transmit(short* audioData, int dataSize){
 
 	if (comType == 1) {
 		
-		printf("Virtual Comports Selected this code is commented out for now.\n");
+		//printf("Virtual Comports Selected this code is commented out for now.\n");
 		/*
 		
 		Virtual comport code goes here!
@@ -56,6 +58,26 @@ int transmit(short* audioData, int dataSize){
 		
 		
 		*/
+
+		
+		printf("Using virtual COM port for transmission: %S\n", COMPORT_Tx);
+		printf("Using virtual COM port for reception: %S\n", COMPORT_Rx);
+
+		printf("Enter the bit rate: ");
+		int rate;
+		scanf("%d", &rate);
+		setComRate(rate);
+
+		
+		initializeRxPort(COMPORT_Rx);
+		Sleep(500);
+		initializeTxPort(COMPORT_Tx);
+
+		printf("Memory address of audioData: %p\n", audioData);
+		transmitAudio(audioData, dataSize);
+		receiveAudio(audioData, dataSize);
+
+	
 
 
 
@@ -196,31 +218,31 @@ void receiveMessages() {
 }
 
 void transmitAudio(short* audioData, int dataSize) {
-
 	//const char* charData = reinterpret_cast<const char*>(audioData);
 	
-	outputToPort(&hComTx, (char*)audioData, dataSize * sizeof(short));
-	Sleep(500);
+	outputToPort(&hComTx, (char*)audioData, dataSize * sizeof(short) * 2);//this line causes the transmission to stop. Must be what is sent or size of sent
+	//outputToPort(&hComTx, (char*)audioData, 192000);//this line causes the transmission to stop. Must be what is sent or size of sent
+
+
 	purgePort(&hComTx);
 	CloseHandle(hComTx);
 }
 
 void receiveAudio(short* audioData, int dataSize) {
-	//char* charData = reinterpret_cast<char*>(audioData);
-
-	//Sleep(1500);
 	DWORD bytesRead;
-	//bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));
+	printf("recive audio called\n");
 	bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));
+	printf("bytes expected %d\n", dataSize);
+	
 	if (bytesRead == dataSize * sizeof(short)) {
 		// The received data size matches the expected size
+
 	}
 	else {
 		printf("error in recive audio helper function");
 		// Handle an error, as the received data size is not as expected
 	}
 
-	// Further processing of audioData can be done here
 	purgePort(&hComRx);
 	CloseHandle(hComRx);
 }
