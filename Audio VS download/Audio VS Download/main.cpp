@@ -22,8 +22,8 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 
 //these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // A commtimeout struct variable
-wchar_t COMPORT_Rx[] = L"COM8";
-wchar_t COMPORT_Tx[] = L"COM9";
+wchar_t COMPORT_Rx[] = L"COM6";
+wchar_t COMPORT_Tx[] = L"COM7";
 
 
 extern short iBigBuf[];								// Declare the external variable
@@ -55,8 +55,9 @@ int	main(int argc, char* argv[])
         printf("1. Record audio into buffer\n");
         printf("2. Play audio in buffer\n");
         printf("3. Load audio from file into buffer\n");
-        printf("4. Save Audio in buffer\n");
-        printf("5. Transmit Audio in Buffer\n");
+        printf("4. Save audio in buffer\n");
+        printf("5. Transmit audio in buffer\n");
+        printf("6. Transmit text message in buffer\n");
         printf("Enter your choice: ");
         scanf_s("%d", &option);
 
@@ -178,7 +179,7 @@ int	main(int argc, char* argv[])
 
 				//once user selects Physical com ports it stays in this section of code
 				//while (1) {
-				printf("Enter an option:\n");
+				printf("Options:\n");
 				printf("1. Transmit\n");
 				printf("2. Receive\n");
 
@@ -258,8 +259,83 @@ int	main(int argc, char* argv[])
 
             break;
 
-        default:
+           case 6:
+			   char userResultTwo;
+			   printf("Select the type of COM port:\n");
+			   printf("1. Virtual COM Port\n");
+			   printf("2. Physical COM Port\n");
+			   printf("Enter your choice (1 or 2): ");
+			   int comTypeTwo;
+			   scanf("%d", &comTypeTwo);
 
+			   if (comTypeTwo == 1) {
+				   // Virtual COM Port selected
+				   printf("Using virtual COM port for transmission: %S\n", COMPORT_Tx);
+				   printf("Enter the bit rate: ");
+				   int rate;
+				   scanf("%d", &rate);
+				   setComRate(rate);
+
+				   initializeRxPort(COMPORT_Rx);
+				   initializeTxPort(COMPORT_Tx);
+
+				   // User input for text message
+				   printf("Enter the text message to transmit: ");
+				   char msgOut[250];
+				   scanf(" %[^\n]s", msgOut);
+
+				   // Transmit text message
+				   transmitMessage(msgOut);
+				   receiveMessages();
+			   }
+			   else if (comTypeTwo == 2) {
+				   // Physical COM Port selected
+				   printf("Options:\n");
+				   printf("1. Transmit\n");
+				   printf("2. Receive\n");
+				   printf("Enter your choice (1 or 2): ");
+				   scanf_s(" %c", &userResultTwo, 1);
+
+				   if (userResultTwo == '1') {
+					   // Transmit text message
+					   printf("Enter the bit rate: ");
+					   int rate;
+					   scanf("%d", &rate);
+					   setComRate(rate);
+
+					   initializeTxPort(COMPORT_Tx);
+
+					   // User input for text message
+					   printf("Enter the text message to transmit: ");
+					   char msgOut[250];
+					   scanf(" %[^\n]s", msgOut);
+
+					   // Transmit text message
+					   transmitMessage(msgOut);
+				   }
+				   else if (userResultTwo == '2') {
+					   // Receive text message
+					   printf("Enter the bit rate: ");
+					   int rate;
+					   scanf("%d", &rate);
+					   setComRate(rate);
+
+					   initializeRxPort(COMPORT_Rx);
+
+					   // Receive text message
+					   receiveMessages();
+				   }
+				   else {
+					   printf("Invalid input. Please enter 1 or 2.\n");
+				   }
+			   }
+			   else {
+				   printf("Invalid input. Please enter 1 or 2.\n");
+			   }
+			   break;
+
+        default:
+            system("cls");
             printf("Invalid option. Please choose a valid option.\n");
         }
 
@@ -269,4 +345,140 @@ int	main(int argc, char* argv[])
 }
 
 
+/*
+
+ case 6:
+
+	 char userResultThree;
+
+	 printf("Select the type of COM port:\n");
+	 printf("1. Virtual COM Port\n");
+	 printf("2. Physical COM Port\n");
+	 printf("Enter your choice (1 or 2): ");
+	 int comTypeTwo;
+	 scanf("%d", &comTypeTwo);
+	 //this code needs to be validated.
+
+	 if (comTypeTwo == 1) {
+
+
+
+		 printf("Using virtual COM port for transmission: %S\n", COMPORT_Tx);
+		 printf("Using virtual COM port for reception: %S\n", COMPORT_Rx);
+
+		 char userResultTwo;
+		 //ask if user wants to transmit their own message or a generated one
+		 printf("Options:\n");
+		 printf("1. Custom message\n");
+		 printf("2. Message from FortuneCookies\n");
+
+		 printf("Enter your choice (1, or 2): ");
+		 scanf_s(" %c", &userResultTwo, 1);
+
+		 if (userResultTwo == '1') {
+
+			 //take in user message
+			 char userMessage[250];
+			 printf("Enter your message: ");
+			 scanf_s(" %s", &userMessage);
+
+
+			 initializeRxPort(COMPORT_Rx);
+
+			 initializeTxPort(COMPORT_Tx);
+
+			 //call function to transmit message
+			 transmitMessage(userMessage);
+			 receiveMessages();
+		 }
+		 else if (userResultTwo == '2') {
+
+		 }
+		 else {
+			 printf("Invalid input. Please enter 1 or 2.\n");
+		 }
+
+
+
+
+
+
+	 }
+
+
+	 else if (comType == 2) {
+
+		 //once user selects Physical com ports it stays in this section of code
+		 //while (1) {
+		 printf("Options:\n");
+		 printf("1. Transmit\n");
+		 printf("2. Receive\n");
+
+		 printf("Enter your choice (1, or 2): ");
+		 scanf_s(" %c", &userResult, 1);
+
+		 if (userResult == '1') {
+
+			 /* This code does not correctly update the comm port based on user input, i commentd it out but this needs to be figure out
+			 printf("Enter the COM port: ");
+			 wchar_t txPort[20];
+			 scanf_s("%s", txPort, 20);
+			 */
+			 /*
+			 printf("Enter the message to transmit: ");
+			 char msgOut[BUFSIZE];
+			 scanf_s("%s", msgOut, BUFSIZE);
+			 printf("Enter the number of bits: ");
+			 int bits;
+			 scanf("%d", &bits);
+			 setComBits(bits);
+			 
+
+
+			 printf("Enter the bit rate: ");
+			 int rate;
+			 scanf("%d", &rate);
+			 setComRate(rate);
+
+			 initializeTxPort(COMPORT_Tx);
+
+			 //const short msgConverted = msgOut[];
+			 transmitAudio(iBigBuf, lBigBufSize);
+
+		 }
+
+
+		 else if (userResult == '2') {
+
+			 //wchar_t rxPort[20];
+			 /*
+			 printf("Enter the COM port: ");
+
+
+			 scanf_s("%s", rxPort, 20);
+
+			 printf("Enter the number of bits: ");
+			 int bits;
+			 scanf("%d", &bits);
+			 setComBits(bits);
+			 
+
+			 printf("Enter the bit rate: ");
+			 int rate;
+			 scanf("%d", &rate);
+			 setComRate(rate);
+
+			 initializeRxPort(COMPORT_Rx);
+			 //short receivedAudio[AUDIO_BUFFER_SIZE]; // Define a buffer to store received audio
+			 receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
+
+		 }
+		 else {
+			 printf("Invalid input. Please enter 1 or 2.\n");
+		 }
+	 }
+
+	 break;
+
+	 */
 
