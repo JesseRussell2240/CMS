@@ -192,6 +192,9 @@ void initializeTxPort(const wchar_t* port) {
 void transmitMessage(const char* msg) {
 	char msgWithSenderID[BUFSIZE];
 	//snprintf(msgWithSenderID, BUFSIZE, "%s %s", msg, senderID); // Append the sender ID to the message
+
+	//XOR encode funtion
+
 	outputToPort(&hComTx, msg, strlen(msg) + 1);
 	Sleep(500);
 	purgePort(&hComTx);
