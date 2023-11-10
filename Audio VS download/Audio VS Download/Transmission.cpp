@@ -28,8 +28,8 @@ extern long lBigBufSize;							// Declare the external variable
 
 //these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // A commtimeout struct variable
-wchar_t COMPORT_Rx[] = L"COM4";
-wchar_t COMPORT_Tx[] = L"COM3";
+wchar_t COMPORT_Rx[] = L"COM6";
+wchar_t COMPORT_Tx[] = L"COM7";
 
 //this code is called from the main, and passes the audio buffer as a paramater
 int transmit(short* audioData, int dataSize){
@@ -43,7 +43,7 @@ int transmit(short* audioData, int dataSize){
 	printf("2. Physical COM Port\n");
 	printf("Enter your choice (1 or 2): ");
 	int comType;
-	scanf("%d", &comType);
+	scanf_s("%d", &comType);
 
 
 	if (comType == 1) {
