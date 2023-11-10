@@ -11,6 +11,7 @@ Details: Contains various audio file functions such as , play, save, load, recor
 #include "RS232Comm.h"
 #include "Transmission.h"
 #include "AudioRecorder.h"
+#include "encrypt.h"
 
 //dosables warning for userinput
 #pragma warning	(disable:4996)
@@ -78,9 +79,6 @@ int transmit(short* audioData, int dataSize){
 		receiveAudio(audioData, dataSize);
 
 	
-
-
-
 	}
 
 
@@ -229,6 +227,8 @@ void transmitAudio(short* audioData, int dataSize) {
 }
 
 void receiveAudio(short* audioData, int dataSize) {
+
+
 	DWORD bytesRead;
 	printf("recive audio called\n");
 	bytesRead = inputFromPort(&hComRx, (char*)audioData, dataSize * sizeof(short));

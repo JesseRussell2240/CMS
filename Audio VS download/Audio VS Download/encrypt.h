@@ -6,7 +6,7 @@
 #pragma once
 
 // Function prototypes
+
 void xorCipher(void* message, int messageLength, void* secretKey, int secretKeyLength, void* encBuf); 
-
-
-//void vigCipher(void* message, int messageLength, void* secretKey, int secretKeyLength, void* encBuf, bool encOrDec);
+void encryption();
+void decryption();

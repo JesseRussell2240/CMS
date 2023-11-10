@@ -59,9 +59,10 @@ Implemented play and record into GUI
 Merged RS232 code with audio recording, wrote a basic merged copy of menu systems, removed mains and called helper functions.
 
 Hayden
+Status report, and work breakdown strucutre. Improved menu system
 
 Zach
-Started creating helper function for XOR encrytion
+Started creating helper functions for XOR encrytion to be implemented into transmission and reciver functions
 ________________________________________________________________________________________________________________
 Week 4
 Jesse

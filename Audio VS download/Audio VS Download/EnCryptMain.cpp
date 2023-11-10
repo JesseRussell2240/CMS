@@ -17,7 +17,7 @@ int messageLen, secretKeyLen;
 int encrypt;
 int i;
 
-int main()
+int XORencryption()
 {
 
     printf("Please enter message to encrypt: ");
@@ -52,7 +52,7 @@ int main()
 
 //helper function
 
-void encrpytion() {
+void encryption() {
 
     printf("Now encrypting ...\n");
 
