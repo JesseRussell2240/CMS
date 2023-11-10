@@ -30,10 +30,10 @@
     <ClCompile Include="Transmission.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\EnCryptMain.cpp">
+    <ClCompile Include="encrypt.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\encrypt.cpp">
+    <ClCompile Include="EnCryptMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -50,7 +50,7 @@
     <ClInclude Include="AudioRecorder.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\..\..\..\..\Lecture 8-code\Lecture 8-code\encrypt.h">
+    <ClInclude Include="encrypt.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
