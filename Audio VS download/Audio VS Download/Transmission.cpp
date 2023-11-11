@@ -11,6 +11,7 @@ Details: Contains various audio file functions such as , play, save, load, recor
 #include "RS232Comm.h"
 #include "Transmission.h"
 #include "AudioRecorder.h"
+#include "encrypt.h"
 
 //dosables warning for userinput
 #pragma warning	(disable:4996)
