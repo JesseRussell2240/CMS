@@ -22,8 +22,8 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 
 //these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // A commtimeout struct variable
-wchar_t COMPORT_Rx[] = L"COM8";
-wchar_t COMPORT_Tx[] = L"COM9";
+//wchar_t COMPORT_Rx[] = L"COM8";
+//wchar_t COMPORT_Tx[] = L"COM9";
 
 
 extern short iBigBuf[];								// Declare the external variable
@@ -127,17 +127,21 @@ int	main(int argc, char* argv[])
 
         case 5:
 
-           
-			
-
 				//printf("Virtual Comports Selected this code is commented out for now.\n");
 				/*
 
-		
+				    */
+                printf("What COMM port would you like to use (1-9): ");
+                int comPortNumber;
+                scanf_s("%d", &comPortNumber);
 
-				*/
+                // Check if the COM port number is within the valid range
+              if (comPortNumber >= 1 && comPortNumber <= 9) {
+                wchar_t Port[20];
+                swprintf(Port, L"COM%d", comPortNumber);
 
-
+               
+               }
 
 				//once user selects Physical com ports it stays in this section of code
 				//while (1) {
@@ -156,15 +160,7 @@ int	main(int argc, char* argv[])
 					scanf_s("%s", txPort, 20);
 					*/
 					/*
-					printf("Enter the message to transmit: ");
-					char msgOut[BUFSIZE];
-					scanf_s("%s", msgOut, BUFSIZE);
-					printf("Enter the number of bits: ");
-					int bits;
-					scanf("%d", &bits);
-					setComBits(bits);
-					*/
-
+	
 
 					printf("Enter the bit rate: ");
 					int rate;
@@ -210,8 +206,6 @@ int	main(int argc, char* argv[])
 				//}
 
 				//system("pause");
-
-			
 
 			//return 0;
 
