@@ -8,6 +8,7 @@
 #include <string.h>
 #include "RS232Comm.h"
 
+
 #define EX_FATAL 1
 
 // Initializes the port and sets the communication parameters

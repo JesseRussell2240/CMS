@@ -13,6 +13,9 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include <windows.h>
 #include "AudioRecorder.h"
 #include "Transmission.h"
+#include <time.h>
+#include "message.h"
+#include <stdlib.h>
 					
 //these are buffers for storing the audio message
 //extern short iBigBuf[];  // Declare the external variable// buffer
@@ -40,9 +43,11 @@ int	main(int argc, char* argv[])
     char c;                     // used to flush extra input
     int n;                       // Declare 'n' here
 
-    // initialize playback and recording
-    InitializePlayback();
-    InitializeRecording();
+	int randomNum;
+	int numberOfQuotes;
+	long int* quoteIndices;
+	int* quoteLengths;
+	int bytesRead = 0;
 
     int option;
 
@@ -58,6 +63,7 @@ int	main(int argc, char* argv[])
         printf("4. Save audio in buffer\n");
         printf("5. Transmit audio in buffer\n");
         printf("6. Transmit text message in buffer\n");
+		printf("7. Random\n");
         printf("Enter your choice: ");
         scanf_s("%d", &option);
 
@@ -292,6 +298,21 @@ int	main(int argc, char* argv[])
 				   printf("Invalid input. Please enter 1 or 2.\n");
 			   }
 			   break;
+		   case 7:
+
+			   numberOfQuotes = fnumQuotes();
+			   quoteIndices = fquoteIndices(numberOfQuotes);
+			   quoteLengths = fquoteLength(numberOfQuotes, quoteIndices);
+			   randomNum = frandNum(0, numberOfQuotes - 1);
+			   char messageBuffer[MAX_QUOTE_LENGTH];
+			   bytesRead = GetMessageFromFile(messageBuffer, MAX_QUOTE_LENGTH, randomNum, numberOfQuotes, quoteIndices, quoteLengths);
+
+			   // Print the random message
+			   printf("\nRandom Message:\n%s\n", messageBuffer);
+			   free(quoteIndices);
+			   free(quoteLengths);
+
+			   break;
 
         default:
             system("cls");
@@ -302,142 +323,28 @@ int	main(int argc, char* argv[])
 
     return 0;
 }
-
-
 /*
+  srand(time(NULL));
 
- case 6:
+			   // Get the number of quotes in the file
+			   int numQuotes = fnumQuotes();
 
-	 char userResultThree;
+			   // Generate a random number between 0 and numQuotes-1
+			   int randNum = frandNum(0, numQuotes - 1);
+			   // Allocate memory for quote indices and lengths
+			   long int* quoteIndices = fquoteIndices(numQuotes);
+			   int* quoteLengths = fquoteLength(numQuotes, quoteIndices);
 
-	 printf("Select the type of COM port:\n");
-	 printf("1. Virtual COM Port\n");
-	 printf("2. Physical COM Port\n");
-	 printf("Enter your choice (1 or 2): ");
-	 int comTypeTwo;
-	 scanf("%d", &comTypeTwo);
-	 //this code needs to be validated.
+			   // Allocate memory for the buffer to store the message
+			   char buffer[MAX_QUOTE_LENGTH];
 
-	 if (comTypeTwo == 1) {
+			   // Get the random message from the file
+			   GetMessageFromFile(buffer, MAX_QUOTE_LENGTH, randNum, numQuotes, quoteIndices, quoteLengths);
 
+			   // Transmit the random message
+			   transmitMessage(buffer);
 
-
-		 printf("Using virtual COM port for transmission: %S\n", COMPORT_Tx);
-		 printf("Using virtual COM port for reception: %S\n", COMPORT_Rx);
-
-		 char userResultTwo;
-		 //ask if user wants to transmit their own message or a generated one
-		 printf("Options:\n");
-		 printf("1. Custom message\n");
-		 printf("2. Message from FortuneCookies\n");
-
-		 printf("Enter your choice (1, or 2): ");
-		 scanf_s(" %c", &userResultTwo, 1);
-
-		 if (userResultTwo == '1') {
-
-			 //take in user message
-			 char userMessage[250];
-			 printf("Enter your message: ");
-			 scanf_s(" %s", &userMessage);
-
-
-			 initializeRxPort(COMPORT_Rx);
-
-			 initializeTxPort(COMPORT_Tx);
-
-			 //call function to transmit message
-			 transmitMessage(userMessage);
-			 receiveMessages();
-		 }
-		 else if (userResultTwo == '2') {
-
-		 }
-		 else {
-			 printf("Invalid input. Please enter 1 or 2.\n");
-		 }
-
-
-
-
-
-
-	 }
-
-
-	 else if (comType == 2) {
-
-		 //once user selects Physical com ports it stays in this section of code
-		 //while (1) {
-		 printf("Options:\n");
-		 printf("1. Transmit\n");
-		 printf("2. Receive\n");
-
-		 printf("Enter your choice (1, or 2): ");
-		 scanf_s(" %c", &userResult, 1);
-
-		 if (userResult == '1') {
-
-			 /* This code does not correctly update the comm port based on user input, i commentd it out but this needs to be figure out
-			 printf("Enter the COM port: ");
-			 wchar_t txPort[20];
-			 scanf_s("%s", txPort, 20);
-			 */
-			 /*
-			 printf("Enter the message to transmit: ");
-			 char msgOut[BUFSIZE];
-			 scanf_s("%s", msgOut, BUFSIZE);
-			 printf("Enter the number of bits: ");
-			 int bits;
-			 scanf("%d", &bits);
-			 setComBits(bits);
-			 
-
-
-			 printf("Enter the bit rate: ");
-			 int rate;
-			 scanf("%d", &rate);
-			 setComRate(rate);
-
-			 initializeTxPort(COMPORT_Tx);
-
-			 //const short msgConverted = msgOut[];
-			 transmitAudio(iBigBuf, lBigBufSize);
-
-		 }
-
-
-		 else if (userResult == '2') {
-
-			 //wchar_t rxPort[20];
-			 /*
-			 printf("Enter the COM port: ");
-
-
-			 scanf_s("%s", rxPort, 20);
-
-			 printf("Enter the number of bits: ");
-			 int bits;
-			 scanf("%d", &bits);
-			 setComBits(bits);
-			 
-
-			 printf("Enter the bit rate: ");
-			 int rate;
-			 scanf("%d", &rate);
-			 setComRate(rate);
-
-			 initializeRxPort(COMPORT_Rx);
-			 //short receivedAudio[AUDIO_BUFFER_SIZE]; // Define a buffer to store received audio
-			 receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
-
-		 }
-		 else {
-			 printf("Invalid input. Please enter 1 or 2.\n");
-		 }
-	 }
-
-	 break;
-
-	 */
-
+			   // Free allocated memory
+			   free(quoteIndices);
+			   free(quoteLengths);
+			   */
