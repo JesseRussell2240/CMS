@@ -164,11 +164,6 @@ int	main(int argc, char* argv[])
 
 			else if (option == '2') {
 
-				printf("Enter the number of bits: ");
-				int bits;
-				scanf("%d", &bits);
-				setComBits(bits);
-
 				printf("Enter the bit rate: ");
 				int rate;
 				scanf("%d", &rate);
@@ -202,20 +197,17 @@ int	main(int argc, char* argv[])
 				printf("Enter your choice (1 or 2): ");
 				scanf_s(" %c", &userResultTwo, 1);
 
+				//setBitrate for communication
+				printf("Enter the bit rate: ");
+				int rate;
+				scanf("%d", &rate);
+				setComRate(rate);
+
 				if (userResultTwo == '1') {
-					// Transmit text message
-					printf("Enter the bit rate: ");
-					int rate;
-					scanf("%d", &rate);
-					setComRate(rate);
 
-					initializePort(COMPORT);
-
-					// User input for text message\
-
+					// User input for text message
 					char userResultThree;
 
-					// Physical COM Port selected
 					printf("Options:\n");
 					printf("1. Custom Message\n");
 					printf("2. Genorate Message\n");
@@ -230,6 +222,8 @@ int	main(int argc, char* argv[])
 						scanf(" %[^\n]s", msgOut);
 					}
 					else if (userResultThree == '2') {
+
+						//code calls queues to q fourtion cookies and then randomly get a qoute
 						numberOfQuotes = fnumQuotes();
 						quoteIndices = fquoteIndices(numberOfQuotes);
 						quoteLengths = fquoteLength(numberOfQuotes, quoteIndices);
@@ -253,27 +247,18 @@ int	main(int argc, char* argv[])
 					xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
 
 
+					initializePort(COMPORT);
 					// Transmit text message
 					transmitMessage(msgOut);
 
 				}	else if (userResultTwo == '2') {
 					// Receive text message
 
-
-					printf("Enter the bit rate: ");
-					int rate;
-					scanf("%d", &rate);
-					setComRate(rate);
-
 					initializePort(COMPORT);
-
-
 					int messageLength;
 					char messageBuffer[250];
 					// Receive text message
 					receiveMessages(messageBuffer, &messageLength);
-
-
 				}
 				else {
 					printf("Invalid input. Please enter 1 or 2.\n");
@@ -281,11 +266,8 @@ int	main(int argc, char* argv[])
 			
 			break;
 
-
 		   case 7:
-
 			   printf("Option 7 coming soon.\n");
-
 			break;
 
         default:
