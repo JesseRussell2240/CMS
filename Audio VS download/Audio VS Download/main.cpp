@@ -210,7 +210,7 @@ int	main(int argc, char* argv[])
 
 					printf("Options:\n");
 					printf("1. Custom Message\n");
-					printf("2. Genorate Message\n");
+					printf("2. Generate Message\n");
 					printf("Enter your choice (1 or 2): ");
 					scanf_s(" %c", &userResultThree, 1);
 
