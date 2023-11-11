@@ -25,6 +25,8 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 
 //these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // A commtimeout struct variable
+//wchar_t COMPORT_Rx[] = L"COM8";
+//wchar_t COMPORT_Tx[] = L"COM9";
 wchar_t COMPORT_Rx[] = L"COM6";
 wchar_t COMPORT_Tx[] = L"COM7";
 
@@ -134,17 +136,18 @@ int	main(int argc, char* argv[])
 
         case 5:
 
-           
-			
+				
+                printf("What COMM port would you like to use (1-9): ");
+                int comPortNumber;
+                scanf_s("%d", &comPortNumber);
 
-				//printf("Virtual Comports Selected this code is commented out for now.\n");
-				/*
+                // Check if the COM port number is within the valid range
+              if (comPortNumber >= 1 && comPortNumber <= 9) {
+                wchar_t Port[20];
+                swprintf(Port, L"COM%d", comPortNumber);
 
-		
-
-				*/
-
-
+               
+               }
 
 				//once user selects Physical com ports it stays in this section of code
 				//while (1) {
@@ -157,21 +160,13 @@ int	main(int argc, char* argv[])
 
 				if (option == '1') {
 
-					/* This code does not correctly update the comm port based on user input, i commentd it out but this needs to be figure out
+					// This code does not correctly update the comm port based on user input, i commentd it out but this needs to be figure out
 					printf("Enter the COM port: ");
 					wchar_t txPort[20];
 					scanf_s("%s", txPort, 20);
-					*/
-					/*
-					printf("Enter the message to transmit: ");
-					char msgOut[BUFSIZE];
-					scanf_s("%s", msgOut, BUFSIZE);
-					printf("Enter the number of bits: ");
-					int bits;
-					scanf("%d", &bits);
-					setComBits(bits);
-					*/
-
+					
+			
+	
 
 					printf("Enter the bit rate: ");
 					int rate;
@@ -188,8 +183,8 @@ int	main(int argc, char* argv[])
 
 				else if (option == '2') {
 
-					//wchar_t rxPort[20];
-					/*
+					wchar_t rxPort[20];
+					
 					printf("Enter the COM port: ");
 
 
@@ -199,7 +194,7 @@ int	main(int argc, char* argv[])
 					int bits;
 					scanf("%d", &bits);
 					setComBits(bits);
-					*/
+					
 
 					printf("Enter the bit rate: ");
 					int rate;
@@ -218,42 +213,13 @@ int	main(int argc, char* argv[])
 
 				//system("pause");
 
-			
-
 			//return 0;
 
             break;
 
            case 6:
 			   char userResultTwo;
-			   printf("Select the type of COM port:\n");
-			   printf("1. Virtual COM Port\n");
-			   printf("2. Physical COM Port\n");
-			   printf("Enter your choice (1 or 2): ");
-			   int comTypeTwo;
-			   scanf("%d", &comTypeTwo);
 
-			   if (comTypeTwo == 1) {
-				   // Virtual COM Port selected
-				   printf("Using virtual COM port for transmission: %S\n", COMPORT_Tx);
-				   printf("Enter the bit rate: ");
-				   int rate;
-				   scanf("%d", &rate);
-				   setComRate(rate);
-
-				   initializeRxPort(COMPORT_Rx);
-				   initializeTxPort(COMPORT_Tx);
-
-				   // User input for text message
-				   printf("Enter the text message to transmit: ");
-				   char msgOut[250];
-				   scanf(" %[^\n]s", msgOut);
-
-				   // Transmit text message
-				   transmitMessage(msgOut);
-				   receiveMessages();
-			   }
-			   else if (comTypeTwo == 2) {
 				   // Physical COM Port selected
 				   printf("Options:\n");
 				   printf("1. Transmit\n");
@@ -277,8 +243,8 @@ int	main(int argc, char* argv[])
 
 					   // Transmit text message
 					   transmitMessage(msgOut);
-				   }
-				   else if (userResultTwo == '2') {
+
+				   }	else if (userResultTwo == '2') {
 					   // Receive text message
 					   printf("Enter the bit rate: ");
 					   int rate;
@@ -293,10 +259,7 @@ int	main(int argc, char* argv[])
 				   else {
 					   printf("Invalid input. Please enter 1 or 2.\n");
 				   }
-			   }
-			   else {
-				   printf("Invalid input. Please enter 1 or 2.\n");
-			   }
+			
 			   break;
 		   case 7:
 
@@ -315,8 +278,8 @@ int	main(int argc, char* argv[])
 			   break;
 
         default:
-            system("cls");
-            printf("Invalid option. Please choose a valid option.\n");
+         //   system("cls");
+          //  printf("Invalid option. Please choose a valid option.\n");
         }
 
     } while (option != -1);
