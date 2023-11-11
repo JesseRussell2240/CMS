@@ -17,42 +17,9 @@ int messageLen, secretKeyLen;
 int encrypt;
 int i;
 
-int main()
-{
-
-    printf("Please enter message to encrypt: ");
-    scanf_s("%[^\n]s", message, 139);
-    messageLen = strlen(message);
-
-    printf("Please enter a single word encryption key: ");
-    scanf_s("%s", secretKey, 139);
-    secretKeyLen = strlen(secretKey);
-
-    printf("Do you want to (1) transmit or (2) recieve? ");
-    scanf_s("%d", &encrypt);
-
-
-    if (encrypt == 1) {
-
-        encryption();
-
-    }
-    else if (encrypt == 2) {
-
-        decryption();
-
-    }
-    else {
-        printf("Please enter a valid selection \n");
-    }
-
-    return(0);
-}
-
-
 //helper function
 
-void encrpytion() {
+void encrpytiondep() {
 
     printf("Now encrypting ...\n");
 
