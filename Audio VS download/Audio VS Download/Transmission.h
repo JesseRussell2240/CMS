@@ -10,4 +10,4 @@ void transmitMessage(const char* msg);
 void receiveMessages();
 void transmitAudio( short* audioData, int dataSize);
 void receiveAudio(short* audioData, int dataSize);
-int transmit(short* audioData, int dataSize);
+int transmit(short audioData[], int dataSize);
