@@ -130,8 +130,8 @@
   <ItemGroup>
     <ClCompile Include="AudioRecorder.cpp" />
     <ClCompile Include="encrypt.cpp" />
+    <ClCompile Include="EnCryptMain.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="message.cpp" />
     <ClCompile Include="RS232Comm.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="Transmission.cpp" />
@@ -139,7 +139,6 @@
   <ItemGroup>
     <ClInclude Include="AudioRecorder.h" />
     <ClInclude Include="encrypt.h" />
-    <ClInclude Include="message.h" />
     <ClInclude Include="RS232Comm.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="Transmission.h" />
