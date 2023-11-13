@@ -135,13 +135,18 @@ int	main(int argc, char* argv[])
 
         case 5:
 
-			//gets user input for comport setup	
+
+			/*
+						//gets user input for comport setup	
             printf("What COMM port would you like to use (1-9): ");
 			int comPortNumber;
             scanf_s("%d", &comPortNumber);
 			wchar_t TempPort[20];
 			swprintf(TempPort, L"COM%d", comPortNumber);
-			wcscpy(COMPORT, TempPort);             
+			wcscpy(COMPORT, TempPort); 
+			
+			*/
+            
 
 			//request transmission or reciving
 			printf("Options:\n");
@@ -182,12 +187,16 @@ int	main(int argc, char* argv[])
 
            case 6:
 
-			   //updated comm port number based on user provided input
+
+			   /*
+			   	   //updated comm port number based on user provided input
 			   //var initilization is in case 5 - thiscould be a sub function to reduce redunduncy, but so could the transmit/recive request
 			   printf("What COMM port would you like to use (1-9): ");
 			   scanf_s("%d", &comPortNumber);
 			   swprintf(TempPort, L"COM%d", comPortNumber);
 			   wcscpy(COMPORT, TempPort);
+			   */
+		
 
 			   char userResultTwo;
 
@@ -257,8 +266,17 @@ int	main(int argc, char* argv[])
 					initializePort(COMPORT);
 					int messageLength;
 					char messageBuffer[250];
-					// Receive text message
 					receiveMessages(messageBuffer, &messageLength);
+					char secretKey[10] = "314159265";
+					int keyLength = 10;
+					char tempBuf[250];
+
+					xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+
+					printf("\nXOR Decrypted Message: %s\n\n\n\n", tempBuf);
+
+					// Receive text message
+					
 				}
 				else {
 					printf("Invalid input. Please enter 1 or 2.\n");
