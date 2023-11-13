@@ -187,7 +187,7 @@ void initializeTxPort(const wchar_t* port) {
 
 //removed out code to keep the recive port open and appending a special ending to the message
 void transmitMessage(const char* msg) {
-	char msgWithSenderID[BUFSIZE];
+	//char msgWithSenderID[BUFSIZE];
 	//snprintf(msgWithSenderID, BUFSIZE, "%s %s", msg, senderID); // Append the sender ID to the message
 
 	//XOR encode funtion
