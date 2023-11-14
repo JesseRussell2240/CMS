@@ -62,6 +62,7 @@ void encryption() {
     for (i = 0; i < messageLen; i++) {
         printf("%02x", encBuf[i]);
     }
+
 }
 
 void decryption() {
