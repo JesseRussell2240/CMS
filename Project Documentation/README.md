@@ -25,7 +25,7 @@ ________________________________________________________________________________
 
 Week 1
 Jesse
-Created project outline/scedual 
+Created project outline/schedule 
 set up git
 weekly stats reports
 Trouble shoot for various IDE related issues
@@ -39,6 +39,11 @@ Commented provided files
 researched windows audio paramaters etc
 began legwork to have custom GUI setup
 
+Goals for week 2:
+
+Implement RS232 comports, prepare GUI for helper functions to be moved over into QT. Establish git hub to ensure we
+can start editing the same repository. 
+
 ________________________________________________________________________________________________________________
 
 Week 2
@@ -51,6 +56,11 @@ Wrote code to use a buffer inorder to have a longer recive window that checks fo
 
 Zach
 rs232 set up comport virtual code calls
+
+Goals for week 3
+
+Begin implementation for XOR cypher for text. Move more helper functions into the GUI. Create Menu system to easily navigate through
+the user options. 
 
 ________________________________________________________________________________________________________________
 Week 3
@@ -66,10 +76,15 @@ Started creating helper functions for XOR encrytion to be implemented into trans
 ________________________________________________________________________________________________________________
 Week 4
 Jesse
+Added load and save file functionality 
+Added menu options to change, save and load settings
+Refractured transmission
 
 Hayden
+Added the capability to transmit custom messages as well as random messages from the FortuneCookie.txt file
 
 Zach
+Status report and added encryption files
 ________________________________________________________________________________________________________________
 Week 5
 Jesse
@@ -82,7 +97,7 @@ ________________________________________________________________________________
 TO_DO
 -intgrate rs232 communications into GUI
 -transmit virtual audio
-- transmit physical audio m
+- transmit physical audio 
 - investigate multithreading
 - finish non gui implementation of code. 
 - figureout how to update the comm port pased on used provided input. (a switch case is a nasty solution to this
