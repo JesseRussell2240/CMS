@@ -32,7 +32,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 
 
 
-//extern short iBigBuf[];								// Declare the external variable
+extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
 
 
@@ -108,6 +108,9 @@ int	main(int argc, char* argv[])
 	int bytesRead = 0;
 
     int option;
+
+	srand((unsigned int)time(NULL));
+
 
 
 	// Read settings from file
@@ -194,7 +197,7 @@ int	main(int argc, char* argv[])
 			if (option == '1') {
 
 				setComRate(settings.audioBitRate);
-				initializePort(COMPORT);
+				initializePort(settings.comPort);
 
 				transmitAudio(iBigBuf, lBigBufSize);
 			}

@@ -17,7 +17,7 @@ Details: Contains various audio file functions such as , play, save, load, recor
 #pragma warning	(disable:4996)
 
 //extern wchar_t COMPORT_Rx[];
-extern wchar_t COMPORT[];
+//extern wchar_t COMPORT[];
 
  // Declare constants, variables and communication parameters
 const int BUFSIZE = 280;							// Buffer size
@@ -42,7 +42,7 @@ void setComRate(int rate) {
 
 //port initilization helper
 void initializePort( wchar_t* port) {
-	initPort(&hCom, COMPORT, nComRate, nComBits, timeout);
+	initPort(&hCom, port, nComRate, nComBits, timeout);
 	Sleep(50);
 }
 
