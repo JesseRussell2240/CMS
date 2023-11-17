@@ -60,6 +60,7 @@ DWORD inputFromPort(HANDLE* hCom, LPVOID buf, DWORD szBuf) {
 		&NumberofBytesRead,
 		NULL
 	);
+	printf("readfile finished");
 	// Handle the timeout error
 	if (i == 0) {
 		printf("\nRead Error: 0x%x\n", GetLastError());

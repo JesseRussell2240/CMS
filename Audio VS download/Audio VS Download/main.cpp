@@ -269,7 +269,9 @@ int	main(int argc, char* argv[])
 
 					xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
 
-					printf("\nXOR Decrypted Message: %s\n\n\n\n", tempBuf);
+					printf("\nRecived message: %s\n", tempBuf);
+					printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+
 
 					// Receive text message
 					
