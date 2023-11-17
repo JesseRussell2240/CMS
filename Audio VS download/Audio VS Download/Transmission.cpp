@@ -63,7 +63,7 @@ void receiveMessages(char* msgBuffer, int* msgLength) {
 	bytesRead = inputFromPort(&hCom, msgBuffer, BUFSIZE);
 	msgBuffer[bytesRead] = '\0';
 	*msgLength = bytesRead;
-	printf("Received Message: %s\n", msgBuffer);
+	//printf("Received Message: %s\n", msgBuffer);
 
 	purgePort(&hCom);
 	CloseHandle(hCom);
