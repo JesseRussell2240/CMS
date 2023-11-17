@@ -28,7 +28,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 // A commtimeout struct variable
 //wchar_t COMPORT_Rx[] = L"COM8";
 //wchar_t COMPORT_Tx[]
-wchar_t COMPORT[] = L"COM9";
+//wchar_t COMPORT[] = L"COM9";
 
 
 
@@ -108,6 +108,9 @@ int	main(int argc, char* argv[])
 	int bytesRead = 0;
 
     int option;
+
+	srand((unsigned int)time(NULL));
+
 
 
 	// Read settings from file
@@ -194,7 +197,7 @@ int	main(int argc, char* argv[])
 			if (option == '1') {
 
 				setComRate(settings.audioBitRate);
-				initializePort(COMPORT);
+				initializePort(settings.comPort);
 
 				transmitAudio(iBigBuf, lBigBufSize);
 			}
@@ -204,7 +207,7 @@ int	main(int argc, char* argv[])
 				
 				setComRate(settings.baudRate);
 
-				initializePort(COMPORT);
+				initializePort(settings.comPort);
 				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
 
 			}
@@ -275,7 +278,7 @@ int	main(int argc, char* argv[])
 					xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
 
 
-					initializePort(COMPORT);
+					initializePort(settings.comPort);
 					// Transmit text message
 					transmitMessage(msgOut);
 
@@ -284,7 +287,7 @@ int	main(int argc, char* argv[])
 
 
 
-					initializePort(COMPORT);
+					initializePort(settings.comPort);
 					int messageLength;
 					char messageBuffer[250];
 					receiveMessages(messageBuffer, &messageLength);
@@ -327,9 +330,9 @@ int	main(int argc, char* argv[])
 				   
 			   }
 			   else {
-				   swprintf_s(COMPORT, sizeof(COMPORT) / sizeof(COMPORT[0]), L"COM%d", comPortNumber);
-				   swprintf_s(settings.comPort, sizeof(COMPORT) / sizeof(COMPORT[0]), L"COM%d", comPortNumber);
-				   wprintf(L"Selected COM port: %s\n", COMPORT);
+				   swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
+				   swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
+				   wprintf(L"Selected COM port: %s\n", settings.comPort);
 				  //strcpy(settings.comPort, COMPORT);
 
 				   
