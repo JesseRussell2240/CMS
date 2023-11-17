@@ -27,7 +27,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 //these need a way to update!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 // A commtimeout struct variable
 //wchar_t COMPORT_Rx[] = L"COM8";
-//wchar_t COMPORT_Tx[] = L"COM9";
+//wchar_t COMPORT_Tx[]
 wchar_t COMPORT[] = L"COM9";
 
 
@@ -46,6 +46,7 @@ typedef struct {
 	int audioBitRate;
 } ComSettings;
 
+ComSettings settings;
 
 // Function to write settings to a file
 void writeSettingsToFile(const ComSettings* settings, const char* filename) {
@@ -98,7 +99,7 @@ int	main(int argc, char* argv[])
     char c;                     // used to flush extra input
     int n;                       // Declare 'n' here
 
-	ComSettings settings;
+
 
 	int randomNum;
 	int numberOfQuotes;
