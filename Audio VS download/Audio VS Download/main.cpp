@@ -28,11 +28,11 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 // A commtimeout struct variable
 //wchar_t COMPORT_Rx[] = L"COM8";
 //wchar_t COMPORT_Tx[]
-wchar_t COMPORT[] = L"COM9";
+//wchar_t COMPORT[] = L"COM9";
 
 
 
-extern short iBigBuf[];								// Declare the external variable
+//extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
 
 
@@ -204,7 +204,7 @@ int	main(int argc, char* argv[])
 				
 				setComRate(settings.baudRate);
 
-				initializePort(COMPORT);
+				initializePort(settings.comPort);
 				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
 
 			}
@@ -275,7 +275,7 @@ int	main(int argc, char* argv[])
 					xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
 
 
-					initializePort(COMPORT);
+					initializePort(settings.comPort);
 					// Transmit text message
 					transmitMessage(msgOut);
 
@@ -284,7 +284,7 @@ int	main(int argc, char* argv[])
 
 
 
-					initializePort(COMPORT);
+					initializePort(settings.comPort);
 					int messageLength;
 					char messageBuffer[250];
 					receiveMessages(messageBuffer, &messageLength);
@@ -294,8 +294,7 @@ int	main(int argc, char* argv[])
 
 					xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
 
-					printf("\nRecived Message: %s\n", tempBuf);
-					printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+					printf("\nXOR Decrypted Message: %s\n\n\n\n", tempBuf);
 
 					// Receive text message
 					
@@ -328,9 +327,9 @@ int	main(int argc, char* argv[])
 				   
 			   }
 			   else {
-				   swprintf_s(COMPORT, sizeof(COMPORT) / sizeof(COMPORT[0]), L"COM%d", comPortNumber);
-				   swprintf_s(settings.comPort, sizeof(COMPORT) / sizeof(COMPORT[0]), L"COM%d", comPortNumber);
-				   wprintf(L"Selected COM port: %s\n", COMPORT);
+				   swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
+				   swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
+				   wprintf(L"Selected COM port: %s\n", settings.comPort);
 				  //strcpy(settings.comPort, COMPORT);
 
 				   
