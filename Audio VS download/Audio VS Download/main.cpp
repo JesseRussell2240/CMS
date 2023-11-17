@@ -28,7 +28,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 // A commtimeout struct variable
 //wchar_t COMPORT_Rx[] = L"COM8";
 //wchar_t COMPORT_Tx[] = L"COM9";
-wchar_t COMPORT[] = L"COM6";
+wchar_t COMPORT[] = L"COM9";
 
 
 
@@ -36,8 +36,60 @@ extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
 
 
+// Define a structure to store COM port, bit rate, external variables, and audio settings
+typedef struct {
+	wchar_t comPort[20];
+	int baudRate;
+	short* bigBuf;
+	long bigBufSize;
+	int audioMessageLength;
+	int audioBitRate;
+} ComSettings;
+
+
+// Function to write settings to a file
+void writeSettingsToFile(const ComSettings* settings, const char* filename) {
+	FILE* file = fopen(filename, "w");
+
+	if (file != NULL) {
+		fwprintf(file, L"COMPORT=%s\n", settings->comPort);
+		fwprintf(file, L"BITRATE=%d\n", settings->baudRate);
+		fwprintf(file, L"AUDIOMESSAGELENGTH=%d\n", settings->audioMessageLength);
+		fwprintf(file, L"AUDIOBITRATE=%d\n", settings->audioBitRate);
+
+		fclose(file);
+	}
+	else {
+
+	}
+}
+
+// Function to read settings from a file
+void readSettingsFromFile(ComSettings* settings, const char* filename) {
+	FILE* file = fopen(filename, "r");
+
+	if (file != NULL) {
+		wchar_t line[256];
+
+		while (fgetws(line, sizeof(line) / sizeof(line[0]), file) != NULL) {
+			swscanf(line, L"COMPORT=%s", settings->comPort);
+			swscanf(line, L"BITRATE=%d", &settings->baudRate);
+			swscanf(line, L"AUDIOMESSAGELENGTH=%d", &settings->audioMessageLength);
+			swscanf(line, L"AUDIOBITRATE=%d", &settings->audioBitRate);
+		}
+
+		fclose(file);
+	}
+	else {
+
+	}
+}
+
+
 int	main(int argc, char* argv[])
 {
+	int sampleRate;
+	int recordingDuration;
     char transmit = 'T';
     char receive = 'R';
     char filePath[150];
@@ -45,6 +97,8 @@ int	main(int argc, char* argv[])
     char replay;
     char c;                     // used to flush extra input
     int n;                       // Declare 'n' here
+
+	ComSettings settings;
 
 	int randomNum;
 	int numberOfQuotes;
@@ -54,6 +108,9 @@ int	main(int argc, char* argv[])
 
     int option;
 
+
+	// Read settings from file
+	readSettingsFromFile(&settings, "settings.txt");
 
     //menu loop
     do {
@@ -66,7 +123,7 @@ int	main(int argc, char* argv[])
         printf("4. Save audio in buffer\n");
         printf("5. Transmit audio in buffer\n");
         printf("6. Transmit text message in buffer\n");
-		//printf("7. Random\n");
+		printf("7. Settings\n");
         printf("Enter your choice: ");
         scanf_s("%d", &option);
 
@@ -79,16 +136,6 @@ int	main(int argc, char* argv[])
 
         case 1:	// Recording audio case
       
-            //time duration userinput code
-            printf("Enter the  duration \n");
-            int recordingDuration;
-            scanf_s("%d", &recordingDuration);
-
-            //code to get sample rate from user
-            //this can cause issues if user enters too low or two high
-            printf("Enter the sample rate in kHz (1-20): ");
-            int sampleRate;
-            scanf_s("%d", &sampleRate);
 
             //calls helper function
             RecordAudioTB(iBigBuf, lBigBufSize, recordingDuration, sampleRate * 1000);
@@ -135,19 +182,6 @@ int	main(int argc, char* argv[])
 
         case 5:
 
-
-			/*
-						//gets user input for comport setup	
-            printf("What COMM port would you like to use (1-9): ");
-			int comPortNumber;
-            scanf_s("%d", &comPortNumber);
-			wchar_t TempPort[20];
-			swprintf(TempPort, L"COM%d", comPortNumber);
-			wcscpy(COMPORT, TempPort); 
-			
-			*/
-            
-
 			//request transmission or reciving
 			printf("Options:\n");
 			printf("1. Transmit\n");
@@ -158,10 +192,7 @@ int	main(int argc, char* argv[])
 
 			if (option == '1') {
 
-				printf("Enter the bit rate: ");
-				int rate;
-				scanf("%d", &rate);
-				setComRate(rate);
+				setComRate(settings.audioBitRate);
 				initializePort(COMPORT);
 
 				transmitAudio(iBigBuf, lBigBufSize);
@@ -169,10 +200,8 @@ int	main(int argc, char* argv[])
 
 			else if (option == '2') {
 
-				printf("Enter the bit rate: ");
-				int rate;
-				scanf("%d", &rate);
-				setComRate(rate);
+				
+				setComRate(settings.baudRate);
 
 				initializePort(COMPORT);
 				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
@@ -187,15 +216,7 @@ int	main(int argc, char* argv[])
 
            case 6:
 
-
-			   /*
-			   	   //updated comm port number based on user provided input
-			   //var initilization is in case 5 - thiscould be a sub function to reduce redunduncy, but so could the transmit/recive request
-			   printf("What COMM port would you like to use (1-9): ");
-			   scanf_s("%d", &comPortNumber);
-			   swprintf(TempPort, L"COM%d", comPortNumber);
-			   wcscpy(COMPORT, TempPort);
-			   */
+			 
 		
 
 			   char userResultTwo;
@@ -206,11 +227,7 @@ int	main(int argc, char* argv[])
 				printf("Enter your choice (1 or 2): ");
 				scanf_s(" %c", &userResultTwo, 1);
 
-				//setBitrate for communication
-				printf("Enter the bit rate: ");
-				int rate;
-				scanf("%d", &rate);
-				setComRate(rate);
+
 
 				if (userResultTwo == '1') {
 
@@ -245,6 +262,7 @@ int	main(int argc, char* argv[])
 						strcpy(msgOut, messageBuffer);
 						free(quoteIndices);
 						free(quoteLengths);
+
 					}
 
 					//encrypt transmitted message
@@ -262,6 +280,8 @@ int	main(int argc, char* argv[])
 
 				}	else if (userResultTwo == '2') {
 					// Receive text message
+
+
 
 					initializePort(COMPORT);
 					int messageLength;
@@ -285,7 +305,61 @@ int	main(int argc, char* argv[])
 			break;
 
 		   case 7:
-			   printf("Option 7 coming soon.\n");
+			   //printf("Option 7 coming soon.\n");
+			   wprintf(L"Current COM port: %s\n", settings.comPort);
+			   printf("Current bit rate: %d\n", settings.baudRate);
+			   printf("Current audio message length: %d seconds\n", settings.audioMessageLength);
+			   printf("Current audio bit rate: %d kbps\n", settings.audioBitRate);
+
+
+			   // Prompt the user to change settings
+			   printf("\nChange settings:\n");
+
+			   
+
+				printf("What COMM port would you like to use (1-9): ");
+			     int comPortNumber;
+
+				//comport update code
+			   if (wscanf_s(L"%d", &comPortNumber) != 1 || comPortNumber < 1 || comPortNumber > 9) {
+				   wprintf(L"Invalid input. Please enter a number between 1 and 9.\n");
+				   
+			   }
+			   else {
+				   swprintf_s(COMPORT, sizeof(COMPORT) / sizeof(COMPORT[0]), L"COM%d", comPortNumber);
+				   swprintf_s(settings.comPort, sizeof(COMPORT) / sizeof(COMPORT[0]), L"COM%d", comPortNumber);
+				   wprintf(L"Selected COM port: %s\n", COMPORT);
+				  //strcpy(settings.comPort, COMPORT);
+
+				   
+			   }
+
+			   //time duration userinput code
+			   printf("Enter the audio duration in seconds\n");
+			   scanf_s("%d", &recordingDuration);
+			   settings.audioMessageLength = recordingDuration;
+
+			   //code to get sample rate from user
+			   //this can cause issues if user enters too low or two high
+			   printf("Enter the sample rate in kHz (1-20): ");
+			   scanf_s("%d", &sampleRate);
+			   settings.audioBitRate = sampleRate;
+
+			   printf("Enter the transmission baud rate: ");
+			   scanf_s("%d", &settings.baudRate);
+			   settings.audioBitRate = sampleRate;
+
+
+			   writeSettingsToFile(&settings, "settings.txt");
+
+			   // Display updated settings
+			   printf("\nUpdated settings:\n");
+			   wprintf(L"COM port: %s\n", settings.comPort);
+			   printf("baud rate: %d\n", settings.baudRate);
+			   printf("Audio message length: %d seconds\n", settings.audioMessageLength);
+			   printf("Audio bit rate: %d kbps\n", settings.audioBitRate);
+			   
+
 			break;
 
         default:
@@ -301,3 +375,4 @@ int	main(int argc, char* argv[])
 
     return 0;
 }
+

@@ -148,3 +148,4 @@ int GetMessageFromFile(char* buff, int iLen, int randNum, int numQuotes, long in
 
 	return bytesRead;														//Return the number of characters read
 }
+

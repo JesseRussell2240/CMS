@@ -144,6 +144,10 @@
     <ClInclude Include="sound.h" />
     <ClInclude Include="Transmission.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\..\..\..\..\Second Year\Semester 1\Projects 3\CMR\CMS\ConsoleApplication1\nonemptyAudioFile.dat" />
+    <None Include="..\..\..\..\..\..\..\Second Year\Semester 1\Projects 3\CMR\CMS\ConsoleApplication1\nonemptyfile.dat" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
