@@ -53,5 +53,4 @@ INCLUDEPATH += $$PWD/''
 DEPENDPATH += $$PWD/''
 
 unix|win32: LIBS += -lWS2_32
-
 unix|win32: LIBS += -lWinMM

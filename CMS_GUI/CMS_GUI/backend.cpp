@@ -47,6 +47,8 @@ void BackEnd::transmitText() {
 void BackEnd::genQuote() {
     // Call the quote generation function - need to include the header
     qDebug("C/C++ Quote generation function called");
+
+
 }
 
 void BackEnd::recordAudio() {
@@ -57,9 +59,11 @@ void BackEnd::recordAudio() {
 }
 
 void BackEnd::playAudio() {
+
     // Call the play audio function - need to include the header
     qDebug("C/C++ play audio function called");
     PlayAudio(iBigBuf, lBigBufSize);
+
 }
 
 void BackEnd::saveAudio() {

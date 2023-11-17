@@ -57,12 +57,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\..\..\..\..\..\Second Year\Semester 1\Projects 3\CMR\CMS\ConsoleApplication1\nonemptyAudioFile.dat">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="..\..\..\..\..\..\..\Second Year\Semester 1\Projects 3\CMR\CMS\ConsoleApplication1\nonemptyfile.dat">
-      <Filter>Source Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>
