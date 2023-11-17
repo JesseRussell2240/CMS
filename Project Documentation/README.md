@@ -25,7 +25,7 @@ ________________________________________________________________________________
 
 Week 1
 Jesse
-Created project outline/scedual 
+Created project outline/schedule 
 set up git
 weekly stats reports
 Trouble shoot for various IDE related issues
@@ -66,10 +66,15 @@ Started creating helper functions for XOR encrytion to be implemented into trans
 ________________________________________________________________________________________________________________
 Week 4
 Jesse
+Added load and save file functionality 
+Added menu options to change, save and load settings
+Refractured transmission
 
 Hayden
+Added the capability to transmit custom messages as well as random messages from the FortuneCookie.txt file
 
 Zach
+Status report and added encryption files
 ________________________________________________________________________________________________________________
 Week 5
 Jesse
