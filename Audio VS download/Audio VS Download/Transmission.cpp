@@ -16,6 +16,10 @@ Details: Contains various audio file functions such as , play, save, load, recor
 //dosables warning for userinput
 #pragma warning	(disable:4996)
 
+
+
+
+
 //extern wchar_t COMPORT_Rx[];
 //extern wchar_t COMPORT[];
 
@@ -96,4 +100,25 @@ void receiveAudio(short* audioData, int dataSize) {
 
 	purgePort(&hCom);
 	CloseHandle(hCom);
+}
+
+void transmitPayload(Header* Header, void* Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout) {
+	initPort(hCom, COMPORT, nComRate, nComBits, timeout);				// Initialize the Tx port
+	outputToPort(hCom, Header, sizeof(Header));						// Send Header
+	outputToPort(hCom, Payload, (*Header).payloadSize);				// Send payload
+	Sleep(500);															// Allow time for signal propagation on cable 
+	purgePort(hCom);													// Purge the Tx port
+	CloseHandle(*hCom);													// Close the handle to Tx port 
+}
+
+DWORD receivePayload(Header* Header, void** Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout) {
+	// Note: Pointer to rxPayload buffer (pointer to a pointer) is passed to this function since this function malloc's the amount of memory required - need to free it in main()
+	DWORD bytesRead;
+	initPort(hCom, COMPORT, nComRate, nComBits, timeout);				// Initialize the Rx port
+	inputFromPort(hCom, Header, sizeof(Header));						// Read in Header first (which is a standard number of bytes) to get size of payload 
+	*Payload = (void*)malloc((*Header).payloadSize);				// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
+	bytesRead = inputFromPort(hCom, *Payload, (*Header).payloadSize);// Receive payload 
+	purgePort(hCom);													// Purge the Rx port
+	CloseHandle(*hCom);													// Close the handle to Rx port 
+	return bytesRead;													// Number of bytes read
 }
