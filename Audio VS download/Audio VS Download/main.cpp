@@ -324,6 +324,7 @@ int	main(int argc, char* argv[]) {
 
 					printf("Enter the text message to transmit: ");
 					scanf(" %[^\n]s", msgOut);
+					printf("You entered %s\n", msgOut);
 				}
 				else if (userResultThree == '2') {
 
@@ -352,11 +353,12 @@ int	main(int argc, char* argv[]) {
 					printf("Huffman compressing message");
 					char tmpMsg[500];
 					int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
-					printf("compressed size: %s", strlen(msgOut), compressedSize);
+					printf("\ntest\n");
+					printf("Length of input message: %d, compressed size: %d\n", strlen(msgOut), compressedSize);
 
-					printf("Decompressed Size: %d\n", strlen(msgOut));
-					printf("Compressed Size: %s\n", compressedSize);
-					strcpy(msgOut, tmpMsg);
+					printf("Original buffer Size: %d\n", strlen(msgOut));
+					printf("Compressed Size: %d\n", compressedSize);
+					//strcpy(msgOut, tmpMsg);
 
 					//void encodeFile(const char* inputFileName, const char* outputFileName);
 				}
