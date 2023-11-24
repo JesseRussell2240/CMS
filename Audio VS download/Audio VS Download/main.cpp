@@ -199,7 +199,7 @@ int	main(int argc, char* argv[]) {
 				for (int i = 0; i < lBigBufSize; ++i) {
 					iBigBuf[i] = (*tmpBuf)[i];
 				}
-				lBigBufSize = lengthBuf;
+				lBigBufSize = lengthBuf / 2;
 
 
 			}
@@ -348,8 +348,12 @@ int	main(int argc, char* argv[]) {
 				//args in the following order to encrypt (message, messageLen, secretKey, secretKeyLen, encBuf
 
 				if (settings.compression == 1) {
+					char tmpMsg[500];
+					int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
 
-					void encodeFile(const char* inputFileName, const char* outputFileName);
+					strcpy(msgOut, tmpMsg);
+
+					//void encodeFile(const char* inputFileName, const char* outputFileName);
 				}
 
 				if (settings.encryption == 1) {
@@ -360,6 +364,8 @@ int	main(int argc, char* argv[]) {
 
 					xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
 				}
+
+				
 
 				initializePort(settings.comPort);
 				// Transmit text message
@@ -383,8 +389,15 @@ int	main(int argc, char* argv[]) {
 
 				if (settings.compression == 1) {
 
+					char tmpMsg[500];
+					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), 250);
+
+					//int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
+
+					strcpy(messageBuffer, tmpMsg);
+					printf("\nUncompressed message: %s\n", messageBuffer);
 					//void decodeFile(const char* inputFileName, const char* outputFileName);
-				}
+									}
 
 				if (settings.encryption == 1) {
 

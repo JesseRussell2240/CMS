@@ -174,3 +174,34 @@ void decodeShorts(const short* compressedData, long compressedSize, short** deco
 
     free(inputBuffer);
 }
+
+// Function to compress a message using Huffman coding
+int compressTXT(char* msgIn, char* msgOut, int msgSize) {
+    if (msgSize > 250) {
+        printf("Error: Message size exceeds maximum allowed size.\n");
+        return -1;
+    }
+
+    // Call Huffman compression function
+    int compressedSize = Huffman_Compress((unsigned char*)msgIn, (unsigned char*)msgOut, msgSize);
+
+    if (compressedSize <= 0) {
+        printf("Error: Compression failed.\n");
+        return -1;
+    }
+
+    return compressedSize;
+}
+
+// Function to decompress a message using Huffman coding
+int decompressTXT(char* msgIn, char* msgOut, int compressedSize, int decompressedSize) {
+    if (decompressedSize > 250) {
+        printf("Error: Decompressed message size exceeds maximum allowed size.\n");
+        return -1;
+    }
+
+    // Call Huffman decompression function
+    Huffman_Uncompress((unsigned char*)msgIn, (unsigned char*)msgOut, compressedSize, decompressedSize);
+
+    return decompressedSize;
+}
