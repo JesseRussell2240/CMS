@@ -8,10 +8,6 @@
 
 #pragma warning(disable : 4996)
 
-
-/*
-
-
 int main() {
 
 
@@ -42,7 +38,7 @@ int main() {
 
     return 0;
 }
-*/
+
 void encodeFile(const char* inputFileName, const char* outputFileName) {
 
     //Declare file pointers/buffers
