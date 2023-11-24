@@ -16,9 +16,18 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         AudioHandling.cpp \
+        AudioRecorder.cpp \
+        EnCryptMain.cpp \
+        Queues.cpp \
+        RS232Comm.cpp \
         Sound.cpp \
+        Transmission.cpp \
         backend.cpp \
-        main.cpp
+        compression.c \
+        encrypt.cpp \
+        huffman.c \
+        main.cpp \
+        message.cpp
 
 RESOURCES += qml.qrc
 
@@ -35,8 +44,16 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 HEADERS += \
     AudioHandling.h \
+    AudioRecorder.h \
+    Queues.h \
+    RS232Comm.h \
     Sound.h \
-    backend.h
+    Transmission.h \
+    backend.h \
+    compression.h \
+    encrypt.h \
+    huffman.h \
+    message.h
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../ -lWS2_32
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../ -lWS2_32d

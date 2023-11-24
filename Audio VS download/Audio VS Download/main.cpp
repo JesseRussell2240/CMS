@@ -17,7 +17,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "message.h"
 #include <stdlib.h>
 #include "encrypt.h"
-#include "compression.h"
+//include "Huffmain.h"
 					
 extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
@@ -33,7 +33,6 @@ typedef struct {
 	int audioBitRate;
 	int encryption;
 	int compression;
-	int header;
 } ComSettings;
 
 ComSettings settings;
@@ -49,7 +48,6 @@ void writeSettingsToFile(const ComSettings* settings, const char* filename) {
 		fwprintf(file, L"AUDIOBITRATE=%d\n", settings->audioBitRate);
 		fwprintf(file, L"ENCRYPTION=%d\n", settings->encryption);
 		fwprintf(file, L"COMPRESSION=%d\n", settings->compression);
-		fwprintf(file, L"HEADER=%d\n", settings->header);
 
 		fclose(file);
 	}
@@ -67,14 +65,14 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 
 		while (fgetws(line, sizeof(line) / sizeof(line[0]), file) != NULL) {
 			//use of swscanf because comport is stored as a wide char
-
 			swscanf(line, L"COMPORT=%s", settings->comPort);
+
 			swscanf(line, L"BITRATE=%d", &settings->baudRate);
 			swscanf(line, L"AUDIOMESSAGELENGTH=%d", &settings->audioMessageLength);
 			swscanf(line, L"AUDIOBITRATE=%d", &settings->audioBitRate);
 			swscanf(line, L"ENCRYPTION=%d", &settings->encryption);
 			swscanf(line, L"COMPRESSION=%d", &settings->compression);
-			swscanf(line, L"HEADER=%d\n", &settings->header);
+
 		}
 
 		fclose(file);
@@ -187,25 +185,13 @@ int	main(int argc, char* argv[])
 			printf("Enter your choice (1, or 2): ");
 			scanf_s(" %c", &option, 1);
 
-
-			//Transmit with header
-			if (option == '1' && settings.header == 0) {
-				setComRate(settings.baudRate);
+			if (option == '1') {
+				setComRate(settings.audioBitRate);
 				initializePort(settings.comPort);
 				transmitAudio(iBigBuf, lBigBufSize);
 			}
 
-			//Transmit without header
-			else if (option == '1' && settings.header == 1) {
-				setComRate(settings.baudRate);
-				initializePort(settings.comPort);
-
-				//Transmit payload
-				//transmitAudio(iBigBuf, lBigBufSize);
-			}
-
-			//Recieve with header
-			else if (option == '2' && settings.header == 0) {
+			else if (option == '2') {
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
@@ -215,10 +201,9 @@ int	main(int argc, char* argv[])
 			else if (option == '2' && settings.header == 1) {
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-
-				//Recieve payload
-				//receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
-			}
+				initializePort(settings.comPort);
+				initializePort(settings.comPort);
+				initializePort(settings.comPort);
 
 			else {
 				printf("Invalid input. Please enter 1 or 2.\n");
@@ -339,10 +324,10 @@ int	main(int argc, char* argv[])
 			   wprintf(L"Current COM port: %s\n", settings.comPort);
 			   printf("Current bit rate: %d\n", settings.baudRate);
 			   printf("Current audio message length: %d seconds\n", settings.audioMessageLength);
-			   printf("Current audio bit rate: %d kbps\n", settings.audioBitRate);
+			   printf("Send header with message on (YES: 1 || NO: 0): %d\n\n", settings.header);
 			   printf("XOR encryption on (YES: 1 || NO: 0): %d\n", settings.encryption);
 			   printf("Huffman compression on (YES: 1 || NO: 0): %d\n", settings.compression);
-			   printf("Send header with message on (YES: 1 || NO: 0): %d\n\n", settings.header);
+			   printf("Send header with message on (YES: 1 || NO: 0): %d\n", settings.header);
 
 
 			   // Prompt the user to change settings
@@ -362,18 +347,15 @@ int	main(int argc, char* argv[])
 				   else {
 					   swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
 					   // swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
-					   wprintf(L"Selected COM port: %s\n", settings.comPort);
-					   //strcpy(settings.comPort, COMPORT);
-
 				   }
 				   break;
-
+					   //strcpy(settings.comPort, COMPORT);
 			   case 2:
 				   //time duration userinput code
 				   printf("Enter the audio duration in seconds");
 				   scanf_s("%d", &settings.audioMessageLength);
 				   break;
-
+			   //time duration userinput code
 
 			   case 3:
 				   //code to get sample rate from user
@@ -387,13 +369,13 @@ int	main(int argc, char* argv[])
 				   scanf_s("%d", &settings.baudRate);
 				   break;
 
+			  
+			   printf("Enter the transmission baud rate: ");
+			   scanf_s("%d", &settings.baudRate);
 
 			   case 5:
 				   printf("Do you want to use XOR encyption (YES: 1 || NO: 0): ");
 				   scanf_s("%d", &settings.encryption);
-				   break;
-
-
 			   case 6:
 				   printf("Do you want to use Huffman compression (YES: 1 || NO: 0): ");
 				   scanf_s("%d", &settings.compression);
@@ -410,17 +392,19 @@ int	main(int argc, char* argv[])
 				   break;
 			   }
 			   
+			   printf("Do you want to send your message with a header (YES: 1 || NO: 0): ");
+			   scanf_s("%d", &settings.header);
+			   
 			   writeSettingsToFile(&settings, "settings.txt");
 
 			   // Display updated settings
-			   printf("\n\n\nUpdated settings:\n");
+			   printf("\nUpdated settings:\n");
 			   wprintf(L"COM port: %s\n", settings.comPort);
 			   printf("baud rate: %d\n", settings.baudRate);
 			   printf("Audio message length: %d seconds\n", settings.audioMessageLength);
 			   printf("Audio bit rate: %d kbps\n", settings.audioBitRate);
-			   printf("XOR encyption (ON: 1 || OFF: 0): %d\n", settings.encryption);
-			   printf("Huffman compression (ON: 1 || OFF: 0): %d\n", settings.compression);
-			   printf("Sending header with message (ON: 1 || OFF: 0): %d\n\n", settings.header);
+			   printf("XOR encyption on (YES: 1 || NO: 0): %d\n", settings.encryption);
+			   printf("Huffman compression (YES: 1 || NO: 0): %d\n", settings.compression);
 
 			break;
 

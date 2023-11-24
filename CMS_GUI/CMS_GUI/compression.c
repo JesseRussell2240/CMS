@@ -8,7 +8,11 @@
 
 #pragma warning(disable : 4996)
 
-int Compressionmain() {
+
+/*
+
+
+int main() {
 
 
     char inputFileName[256];
