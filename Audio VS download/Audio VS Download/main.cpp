@@ -51,7 +51,7 @@ void writeSettingsToFile(const ComSettings* settings, const char* filename) {
 		fwprintf(file, L"AUDIOBITRATE=%d\n", settings->audioBitRate);
 		fwprintf(file, L"ENCRYPTION=%d\n", settings->encryption);
 		fwprintf(file, L"COMPRESSION=%d\n", settings->compression);
-
+		fwprintf(file, L"HEADER=%d\n", settings->header);
 		fclose(file);
 	}
 	else {
@@ -75,7 +75,7 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 			swscanf(line, L"AUDIOBITRATE=%d", &settings->audioBitRate);
 			swscanf(line, L"ENCRYPTION=%d", &settings->encryption);
 			swscanf(line, L"COMPRESSION=%d", &settings->compression);
-
+			swscanf(line, L"HEADER=%d", &settings->header);
 		}
 
 		fclose(file);
