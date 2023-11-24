@@ -352,7 +352,7 @@ int	main(int argc, char* argv[]) {
 					printf("Huffman compressing message");
 					char tmpMsg[500];
 					int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
-					//printf("origonal size :%d\nCompressed size :%d", strlen(msgOut), compressedSize);
+					printf("compressed size: %s", strlen(msgOut), compressedSize);
 
 					printf("Decompressed Size: %d\n", strlen(msgOut));
 					printf("Compressed Size: %s\n", compressedSize);
@@ -398,7 +398,7 @@ int	main(int argc, char* argv[]) {
 					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), 250);
 
 					printf("Decompressed Size: %d\n", decompressedSize);
-					printf("Decompressed Message: %s\n", strlen(messageBuffer));
+					//printf("Decompressed Message: %s\n", strlen(messageBuffer));
 
 					strcpy(messageBuffer, tmpMsg);
 					printf("\nUncompressed message: %s\n", messageBuffer);
