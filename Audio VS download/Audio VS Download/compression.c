@@ -3,7 +3,7 @@
 
 //Include the Huffman module
 #include "huffman.h"  // Assuming you save the provided code in a file named "huffman.h"
-#include "Main.h"
+#include "compression.h"
 
 
 #pragma warning(disable : 4996)

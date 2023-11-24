@@ -17,6 +17,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "message.h"
 #include <stdlib.h>
 #include "encrypt.h"
+#include "Huffmain.h"
 					
 extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
@@ -65,6 +66,7 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 		while (fgetws(line, sizeof(line) / sizeof(line[0]), file) != NULL) {
 			//use of swscanf because comport is stored as a wide char
 			swscanf(line, L"COMPORT=%s", settings->comPort);
+
 			swscanf(line, L"BITRATE=%d", &settings->baudRate);
 			swscanf(line, L"AUDIOMESSAGELENGTH=%d", &settings->audioMessageLength);
 			swscanf(line, L"AUDIOBITRATE=%d", &settings->audioBitRate);
@@ -100,8 +102,6 @@ int	main(int argc, char* argv[])
     int option;
 
 	srand((unsigned int)time(NULL));
-
-
 
 
 	// Read settings from file
@@ -251,24 +251,30 @@ int	main(int argc, char* argv[])
 					//XOR encode funtion
 					//args in the following order to encrypt (message, messageLen, secretKey, secretKeyLen, encBuf
 				
+					if (settings.compression == 1) {
 
-					//if (settings.encryption == 1) {
+						void encodeFile(const char* inputFileName, const char* outputFileName);
+					}
+
+					if (settings.encryption == 1) {
 
 						char secretKey[10] = "314159265";
 						int keyLength = 10;
 						char tempBuf[250];
 
 						xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
-				//	}
+					}
 
 					initializePort(settings.comPort);
 					// Transmit text message
 					transmitMessage(msgOut);
 
+
+
+
+					// RECIEVING TEXT MESSAGES
 				}	else if (userResultTwo == '2') {
-					// Receive text message
-
-
+					
 
 					initializePort(settings.comPort);
 					int messageLength;
@@ -278,7 +284,12 @@ int	main(int argc, char* argv[])
 
 					printf("\nRecived message: %s\n", messageBuffer);
 					
-				//	if (settings.encryption == 1) {
+					if (settings.compression == 1) {
+
+						void decodeFile(const char* inputFileName, const char* outputFileName);
+					}
+
+					if (settings.encryption == 1) {
 
 						char secretKey[10] = "314159265";
 						int keyLength = 10;
@@ -287,7 +298,7 @@ int	main(int argc, char* argv[])
 						xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
 
 						printf("\nXOR Decrypted Message: %s\n", messageBuffer);
-				//	}
+					}
 					
 
 
