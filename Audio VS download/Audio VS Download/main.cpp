@@ -18,7 +18,8 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include <stdlib.h>
 #include "encrypt.h"
 //include "Huffmain.h"
-					
+		
+extern HeaderForPayload;
 extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
 
@@ -183,13 +184,13 @@ int	main(int argc, char* argv[]) {
 
 			printf("Enter your choice (1, or 2): ");
 			scanf_s(" %c", &option, 1);
-			
-			
+
+
 			setComRate(settings.baudRate);
 			initializePort(settings.comPort);
 
 			//transmitting without header
-			if (option == '1' && settings.header == 0) {	
+			if (option == '1' && settings.header == 0) {
 				transmitAudio(iBigBuf, lBigBufSize);
 			}
 
@@ -200,23 +201,71 @@ int	main(int argc, char* argv[]) {
 
 			//transmitt with header
 			else if (option == '2' && settings.header == 1) {
+				//char Payload[] = "\nHi there this is a great message for you\n"; 	// Payload is a text message in this example but could be any data	
+
+				// Header (sample data type is text but this should work with audio and images as well)
+				//HeaderForPayload.sid = 1;
+				//HeaderForPayload.rid = 2;
+				//HeaderForPayload.payloadSize = strlen(txPayload) + 1;				// Flexible payload size - Send size of payload inside header (payload can be anything) and enough memory will be malloc'd in the receive function
+				//HeaderForPayload.compression = 0;									// None
+				//HeaderForPayload.encryption = 0;									// None
+				//HeaderForPayload.payLoadType = 0;									// Text
+
+			//	transmitPayload(&HeaderForPayload, iBigBuf, &hComTx, settings.comPort, settings.baudRate, nComBits, timeout);  // Transmit header and payload
 
 
 			}
 
 			//recive with header
 			else if (option == '2' && settings.header == 1) {
-	
+				/*
+
+					bytesRead = receive(&rxHeader, &HeaderForPayload, &hComRx, COMPORT_Rx, nComRate, nComBits, timeout);		// Pass pointer to rxPayload so can access malloc'd memory inside the receive function from main()
+
+					// Use header info to determine if payload needs to be decrypted or decompressed
+					if (HeaderForPayload.encryption != 0) {
+						printf("\nMessage is encrypted so need to decrypt!\n");
+						// rxPayload = decrypt(rxPayload)
+					}
+					else {
+						printf("\nMessage is not encrypted\n");
+					}
+					if (HeaderForPayload.compression != 0) {
+						printf("\nMessage is compressed so need to decompress!\n");
+						// rxPayload = decompress(rxPayload)
+					}
+					else {
+						printf("\nMessage is not compressed\n");
+					}
+
+					// Determine type of payload from header data and corresponding action to complete (e.g. display text, play audio, etc)
+					if (HeaderForPayload.payLoadType == 0) {
+						printf("\nPayload is text\n");
+						printf("\nMessage recieved: %s\n", (char*)rxPayload);		// May need to set rxPayload[bytesRead - 1] = '\0'
+						// Enqueue()
+						free(HeaderForPayload);											// malloc'd in the receive function
+					}
+					else if (HeaderForPayload.payLoadType == 1) {
+						printf("\nPayload is audio\n");
+						// Playbuffer();
+						// Enqueue
+						free(rxPayload);											// malloc'd in the receive function
+					}
+					else {
+						printf("\Payload is an image or something else ...\n");
+						// DisplayImage();
+						free(rxPayload);											// malloc'd in the receive function
+					}
+*/
+				}
+
+				else {
+					printf("Invalid input. Please enter 1 or 2.\n");
+				}
 
 
-			}
-
-			else {
-				printf("Invalid input. Please enter 1 or 2.\n");
-			}
-
-
-			break;
+				break;
+				
 
 		case 6:
 
@@ -417,14 +466,19 @@ int	main(int argc, char* argv[]) {
 
 			break;
 
+
 		default:
+
 			//system("cls");
 			printf("Invalid option. Please choose a valid option.\n");
+			break;
 			}
 		} while (option != -1);
 
-
+	
 		return 0;
+
 }
+
 
 
