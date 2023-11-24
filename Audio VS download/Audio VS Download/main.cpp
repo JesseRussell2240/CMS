@@ -17,6 +17,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "message.h"
 #include <stdlib.h>
 #include "encrypt.h"
+#include "compression.h"
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
@@ -187,6 +188,21 @@ int	main(int argc, char* argv[]) {
 
 			setComRate(settings.baudRate);
 			initializePort(settings.comPort);
+			
+			if (settings.compression == 1) {
+
+				short* tmpBuf[40000];
+				long lengthBug = 40000;
+				encodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBug);
+				//*iBigBuf = *tmpBuf;
+				//copy temp buf to ibigbuf
+				for (int i = 0; i < lBigBufSize; ++i) {
+					iBigBuf[i] = (*tmpBuf)[i];
+				}
+
+
+			}
+
 
 			//transmitting without header
 			if (option == '1' && settings.header == 0) {
@@ -217,7 +233,7 @@ int	main(int argc, char* argv[]) {
 
 			//recive with header
 			else if (option == '2' && settings.header == 1) {
-				/*
+				/*****************************************************************************************************************************
 
 					bytesRead = receive(&rxHeader, &HeaderForPayload, &hComRx, COMPORT_Rx, nComRate, nComBits, timeout);		// Pass pointer to rxPayload so can access malloc'd memory inside the receive function from main()
 
@@ -351,7 +367,7 @@ int	main(int argc, char* argv[]) {
 
 				if (settings.compression == 1) {
 
-					void decodeFile(const char* inputFileName, const char* outputFileName);
+					//void decodeFile(const char* inputFileName, const char* outputFileName);
 				}
 
 				if (settings.encryption == 1) {
