@@ -183,28 +183,35 @@ int	main(int argc, char* argv[]) {
 
 			printf("Enter your choice (1, or 2): ");
 			scanf_s(" %c", &option, 1);
+			
+			
+			setComRate(settings.baudRate);
+			initializePort(settings.comPort);
 
-			if (option == '1') {
-				setComRate(settings.audioBitRate);
-				initializePort(settings.comPort);
+			//transmitting without header
+			if (option == '1' && settings.header == 0) {	
 				transmitAudio(iBigBuf, lBigBufSize);
 			}
 
-			else if (option == '2') {
-				setComRate(settings.baudRate);
-				initializePort(settings.comPort);
+			//reciving without a header
+			else if (option == '2' && settings.header == 0) {
 				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
 			}
 
-			//Recieve without header
+			//transmitt with header
 			else if (option == '2' && settings.header == 1) {
-				setComRate(settings.baudRate);
-				initializePort(settings.comPort);
-				initializePort(settings.comPort);
-				initializePort(settings.comPort);
-				initializePort(settings.comPort);
 
-			//else {
+
+			}
+
+			//recive with header
+			else if (option == '2' && settings.header == 1) {
+	
+
+
+			}
+
+			else {
 				printf("Invalid input. Please enter 1 or 2.\n");
 			}
 
