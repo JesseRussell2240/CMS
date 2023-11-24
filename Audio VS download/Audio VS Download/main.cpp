@@ -17,7 +17,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "message.h"
 #include <stdlib.h>
 #include "encrypt.h"
-#include "compression.h"
+#include "compression.c"
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
@@ -193,8 +193,8 @@ int	main(int argc, char* argv[]) {
 			if (settings.compression == 1) {
 
 				short* tmpBuf[40000];
-				long lengthBug = 40000;
-				encodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBug);
+				long lengthBuf = 40000;
+				encodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
 				//*iBigBuf = *tmpBuf;
 				//copy temp buf to ibigbuf
 				for (int i = 0; i < lBigBufSize; ++i) {
