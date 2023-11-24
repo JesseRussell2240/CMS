@@ -102,6 +102,7 @@ int	main(int argc, char* argv[])
 	int bytesRead = 0;
 
     int option;
+	int ChangeSettings;
 
 	srand((unsigned int)time(NULL));
 
@@ -208,9 +209,9 @@ int	main(int argc, char* argv[])
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
+			}
 
 			//Recieve without header
-			}
 			else if (option == '2' && settings.header == 1) {
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
@@ -341,47 +342,73 @@ int	main(int argc, char* argv[])
 			   printf("Current audio bit rate: %d kbps\n", settings.audioBitRate);
 			   printf("XOR encryption on (YES: 1 || NO: 0): %d\n", settings.encryption);
 			   printf("Huffman compression on (YES: 1 || NO: 0): %d\n", settings.compression);
-			   printf("Send header with message on (YES: 1 || NO: 0): %d\n", settings.header);
+			   printf("Send header with message on (YES: 1 || NO: 0): %d\n\n", settings.header);
+
 
 			   // Prompt the user to change settings
-			   printf("\nChange settings:\n");
+			   printf("\nWhat settings would you like to change\n");
 
-				printf("What COMM port would you like to use (1-9): ");
-			     int comPortNumber;
+			   switch (ChangeSettings) {
 
-				//comport update code
-			   if (wscanf_s(L"%d", &comPortNumber) != 1 || comPortNumber < 1 || comPortNumber > 9) {
-				   wprintf(L"Invalid input. Please enter a number between 1 and 9.\n");
-				   
+			   case 1:
+				   printf("What COMM port would you like to use (1-9): ");
+				   int comPortNumber;
+
+				   //comport update code
+				   if (wscanf_s(L"%d", &comPortNumber) != 1 || comPortNumber < 1 || comPortNumber > 9) {
+					   wprintf(L"Invalid input. Please enter a number between 1 and 9.\n");
+
+				   }
+				   else {
+					   swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
+					   // swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
+					   wprintf(L"Selected COM port: %s\n", settings.comPort);
+					   //strcpy(settings.comPort, COMPORT);
+
+				   }
+				   break;
+
+			   case 2:
+				   //time duration userinput code
+				   printf("Enter the audio duration in seconds");
+				   scanf_s("%d", &settings.audioMessageLength);
+				   break;
+
+
+			   case 3:
+				   //code to get sample rate from user
+				   //this can cause issues if user enters too low or two high
+				   printf("Enter the sample rate in kHz (1-20): ");
+				   scanf_s("%d", &settings.audioBitRate);
+				   break;
+
+			   case 4:
+				   printf("Enter the transmission baud rate: ");
+				   scanf_s("%d", &settings.baudRate);
+				   break;
+
+
+			   case 5:
+				   printf("Do you want to use XOR encyption (YES: 1 || NO: 0): ");
+				   scanf_s("%d", &settings.encryption);
+				   break;
+
+
+			   case 6:
+				   printf("Do you want to use Huffman compression (YES: 1 || NO: 0): ");
+				   scanf_s("%d", &settings.compression);
+				   break;
+
+
+			   case 7:
+				   printf("Do you want to send your message with a header (YES: 1 || NO: 0): ");
+				   scanf_s("%d", &settings.header);
+				   break;
+
+			   default:
+				   printf("Error changing settings");
+				   break;
 			   }
-			   else {
-				   swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
-				  // swprintf_s(settings.comPort, sizeof(settings.comPort) / sizeof(settings.comPort[0]), L"COM%d", comPortNumber);
-				   wprintf(L"Selected COM port: %s\n", settings.comPort);
-				  //strcpy(settings.comPort, COMPORT);
-
-			   }
-
-			   //time duration userinput code
-			   printf("Enter the audio duration in seconds");
-			   scanf_s("%d", &settings.audioMessageLength);
-
-			   //code to get sample rate from user
-			   //this can cause issues if user enters too low or two high
-			   printf("Enter the sample rate in kHz (1-20): ");
-			   scanf_s("%d", &settings.audioBitRate);
-			  
-			   printf("Enter the transmission baud rate: ");
-			   scanf_s("%d", &settings.baudRate);
-
-			   printf("Do you want to use XOR encyption (YES: 1 || NO: 0): ");
-			   scanf_s("%d", &settings.encryption);
-
-			   printf("Do you want to use Huffman compression (YES: 1 || NO: 0): ");
-			   scanf_s("%d", &settings.compression);
-
-			   printf("Do you want to send your message with a header (YES: 1 || NO: 0): ");
-			   scanf_s("%d", &settings.header);
 			   
 			   writeSettingsToFile(&settings, "settings.txt");
 
