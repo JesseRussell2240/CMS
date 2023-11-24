@@ -3,11 +3,12 @@
 
 //Include the Huffman module
 #include "huffman.h"  // Assuming you save the provided code in a file named "huffman.h"
-#include "Main.h"
+#include "Huffmain.h"
 
 
 #pragma warning(disable : 4996)
 
+/*
 int main() {
 
 
@@ -38,6 +39,7 @@ int main() {
 
     return 0;
 }
+*/
 
 void encodeFile(const char* inputFileName, const char* outputFileName) {
 

@@ -17,6 +17,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "message.h"
 #include <stdlib.h>
 #include "encrypt.h"
+
 					
 extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
