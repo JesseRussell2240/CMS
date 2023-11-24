@@ -30,6 +30,8 @@ typedef struct {
 	long bigBufSize;
 	int audioMessageLength;
 	int audioBitRate;
+	int encryption;
+	int compression;
 } ComSettings;
 
 ComSettings settings;
@@ -43,11 +45,13 @@ void writeSettingsToFile(const ComSettings* settings, const char* filename) {
 		fwprintf(file, L"BITRATE=%d\n", settings->baudRate);
 		fwprintf(file, L"AUDIOMESSAGELENGTH=%d\n", settings->audioMessageLength);
 		fwprintf(file, L"AUDIOBITRATE=%d\n", settings->audioBitRate);
+		fwprintf(file, L"ENCRYPTION=%d\n", settings->encryption);
+		fwprintf(file, L"COMPRESSION=%d\n", settings->compression);
 
 		fclose(file);
 	}
 	else {
-
+		printf("Write settings function failed");
 	}
 }
 
@@ -64,13 +68,15 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 			swscanf(line, L"BITRATE=%d", &settings->baudRate);
 			swscanf(line, L"AUDIOMESSAGELENGTH=%d", &settings->audioMessageLength);
 			swscanf(line, L"AUDIOBITRATE=%d", &settings->audioBitRate);
+			swscanf(line, L"ENCRYPTION=%d", &settings->encryption);
+			swscanf(line, L"COMPRESSION=%d", &settings->compression);
 
 		}
 
 		fclose(file);
 	}
 	else {
-
+		printf("Write settings function failed");
 	}
 }
 
@@ -244,11 +250,16 @@ int	main(int argc, char* argv[])
 					//encrypt transmitted message
 					//XOR encode funtion
 					//args in the following order to encrypt (message, messageLen, secretKey, secretKeyLen, encBuf
-					char secretKey[10] = "314159265";
-					int keyLength = 10;
-					char tempBuf[250];
-					xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
+				
 
+					//if (settings.encryption == 1) {
+
+						char secretKey[10] = "314159265";
+						int keyLength = 10;
+						char tempBuf[250];
+
+						xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
+				//	}
 
 					initializePort(settings.comPort);
 					// Transmit text message
@@ -263,14 +274,21 @@ int	main(int argc, char* argv[])
 					int messageLength;
 					char messageBuffer[250];
 					receiveMessages(messageBuffer, &messageLength);
-					char secretKey[10] = "314159265";
-					int keyLength = 10;
-					char tempBuf[250];
+					
 
-					xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+					printf("\nRecived message: %s\n", messageBuffer);
+					
+				//	if (settings.encryption == 1) {
 
-					printf("\nRecived message: %s\n", tempBuf);
-					printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+						char secretKey[10] = "314159265";
+						int keyLength = 10;
+						char tempBuf[250];
+
+						xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+
+						printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+				//	}
+					
 
 
 					// Receive text message
@@ -288,6 +306,8 @@ int	main(int argc, char* argv[])
 			   printf("Current bit rate: %d\n", settings.baudRate);
 			   printf("Current audio message length: %d seconds\n", settings.audioMessageLength);
 			   printf("Current audio bit rate: %d kbps\n", settings.audioBitRate);
+			   printf("XOR encryption on (YES: 1 || NO: 0): %d\n", settings.encryption);
+			   printf("Huffman compression on (YES: 1 || NO: 0): %d\n", settings.compression);
 
 			   // Prompt the user to change settings
 			   printf("\nChange settings:\n");
@@ -321,6 +341,12 @@ int	main(int argc, char* argv[])
 
 			   printf("Enter the transmission baud rate: ");
 			   scanf_s("%d", &settings.baudRate);
+
+			   printf("Do you want to use XOR encyption (YES: 1 || NO: 0): ");
+			   scanf_s("%d", &settings.encryption);
+
+			   printf("Do you want to use Huffman compression (YES: 1 || NO: 0): ");
+			   scanf_s("%d", &settings.compression);
 			   
 			   writeSettingsToFile(&settings, "settings.txt");
 
@@ -330,6 +356,8 @@ int	main(int argc, char* argv[])
 			   printf("baud rate: %d\n", settings.baudRate);
 			   printf("Audio message length: %d seconds\n", settings.audioMessageLength);
 			   printf("Audio bit rate: %d kbps\n", settings.audioBitRate);
+			   printf("XOR encyption on (YES: 1 || NO: 0): %d\n", settings.encryption);
+			   printf("Huffman compression (YES: 1 || NO: 0): %d\n", settings.compression);
 
 			break;
 
