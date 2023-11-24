@@ -17,7 +17,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "message.h"
 #include <stdlib.h>
 #include "encrypt.h"
-#include "Huffmain.h"
+//include "Huffmain.h"
 					
 extern short iBigBuf[];								// Declare the external variable
 extern long lBigBufSize;							// Declare the external variable
@@ -195,7 +195,7 @@ int	main(int argc, char* argv[])
 				initializePort(settings.comPort);
 				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
 
-			}
+			} 
 
 			else {
 				printf("Invalid input. Please enter 1 or 2.\n");
