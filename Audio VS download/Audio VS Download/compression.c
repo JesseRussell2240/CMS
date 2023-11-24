@@ -38,7 +38,7 @@ int Compressionmain() {
 
     return 0;
 }
-*/
+
 void encodeFile(const char* inputFileName, const char* outputFileName) {
 
     //Declare file pointers/buffers
