@@ -104,8 +104,8 @@ void receiveAudio(short* audioData, int dataSize) {
 
 void transmitPayload(Header* Header, void* Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout) {
 	initPort(hCom, COMPORT, nComRate, nComBits, timeout);				// Initialize the Tx port
-	outputToPort(hCom, Header, sizeof(Header));						// Send Header
-	outputToPort(hCom, Payload, (*Header).payloadSize);				// Send payload
+	outputToPort(hCom, Header, sizeof(Header));							// Send Header
+	outputToPort(hCom, Payload, (*Header).payloadSize);					// Send payload
 	Sleep(500);															// Allow time for signal propagation on cable 
 	purgePort(hCom);													// Purge the Tx port
 	CloseHandle(*hCom);													// Close the handle to Tx port 
@@ -116,7 +116,7 @@ DWORD receivePayload(Header* Header, void** Payload, HANDLE* hCom, wchar_t* COMP
 	DWORD bytesRead;
 	initPort(hCom, COMPORT, nComRate, nComBits, timeout);				// Initialize the Rx port
 	inputFromPort(hCom, Header, sizeof(Header));						// Read in Header first (which is a standard number of bytes) to get size of payload 
-	*Payload = (void*)malloc((*Header).payloadSize);				// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
+	*Payload = (void*)malloc((*Header).payloadSize);					// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
 	bytesRead = inputFromPort(hCom, *Payload, (*Header).payloadSize);// Receive payload 
 	purgePort(hCom);													// Purge the Rx port
 	CloseHandle(*hCom);													// Close the handle to Rx port 
