@@ -3,13 +3,12 @@
 
 //Include the Huffman module
 #include "huffman.h"  // Assuming you save the provided code in a file named "huffman.h"
-#include "Huffmain.h"
+#include "compression.h"
 
 
 #pragma warning(disable : 4996)
 
-/*
-int main() {
+int Compressionmain() {
 
 
     char inputFileName[256];
@@ -39,7 +38,6 @@ int main() {
 
     return 0;
 }
-*/
 
 void encodeFile(const char* inputFileName, const char* outputFileName) {
 

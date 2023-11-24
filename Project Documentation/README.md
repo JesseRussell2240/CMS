@@ -73,6 +73,8 @@ Status report, and work breakdown strucutre. Improved menu system
 
 Zach
 Started creating helper functions for XOR encrytion to be implemented into transmission and reciver functions
+
+Goals For week 4
 ________________________________________________________________________________________________________________
 Week 4
 Jesse
@@ -88,17 +90,23 @@ Status report and added encryption files
 ________________________________________________________________________________________________________________
 Week 5
 Jesse
+Added headers into file
 
 Hayden
+Starting implementing hashing//phonebook
 
 Zach
+Added queues, and began editing voteon to be implemented for error correction of header.
+
+Goals for week 6/7
+
+Finished
+
 ________________________________________________________________________________________________________________
 
 TO_DO
 -intgrate rs232 communications into GUI
 -transmit virtual audio
 - transmit physical audio 
-- investigate multithreading
 - finish non gui implementation of code. 
 - figureout how to update the comm port pased on used provided input. (a switch case is a nasty solution to this
-- 

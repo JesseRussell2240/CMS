@@ -36,10 +36,13 @@
     <ClCompile Include="message.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="HuffMain.c">
+    <ClCompile Include="compression.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="huffman.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Queues.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -62,10 +65,13 @@
     <ClInclude Include="message.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Huffmain.h">
+    <ClInclude Include="compression.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="huffman.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Queues.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
