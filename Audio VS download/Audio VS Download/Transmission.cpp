@@ -102,7 +102,7 @@ void receiveAudio(short* audioData, int dataSize) {
 	CloseHandle(hCom);
 }
 
-void transmitPayload(Header* Header, void* Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout) {
+void transmitPayload(HeaderForPayload* Header, void* Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout) {
 	initPort(hCom, COMPORT, nComRate, nComBits, timeout);				// Initialize the Tx port
 	outputToPort(hCom, Header, sizeof(Header));						// Send Header
 	outputToPort(hCom, Payload, (*Header).payloadSize);				// Send payload
@@ -111,7 +111,7 @@ void transmitPayload(Header* Header, void* Payload, HANDLE* hCom, wchar_t* COMPO
 	CloseHandle(*hCom);													// Close the handle to Tx port 
 }
 
-DWORD receivePayload(Header* Header, void** Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout) {
+DWORD receivePayload(HeaderForPayload* Header, void** Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout) {
 	// Note: Pointer to rxPayload buffer (pointer to a pointer) is passed to this function since this function malloc's the amount of memory required - need to free it in main()
 	DWORD bytesRead;
 	initPort(hCom, COMPORT, nComRate, nComBits, timeout);				// Initialize the Rx port
