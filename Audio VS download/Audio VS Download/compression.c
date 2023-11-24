@@ -57,6 +57,8 @@ void encodeFile(const char* inputFileName, const char* outputFileName) {
     inputSize = ftell(inputFile);
     rewind(inputFile);
 
+
+
     //allocated memory
     inputBuffer = (unsigned char*)calloc(inputSize, sizeof(char)); //uses calloc to ensure no garbage is in memory location
  
@@ -124,4 +126,51 @@ void decodeFile(const char* inputFileName, const char* outputFileName) {
     // free mem
     free(inputBuffer);
     free(outputBuffer);
+}
+void encodeShorts(const short* inputArray, int inputSize, short** compressedData, long* compressedSize) {
+    unsigned char* inputBuffer;
+    unsigned char* outputBuffer;
+    int outputSize;
+
+    // Allocate memory
+    inputBuffer = (unsigned char*)calloc(inputSize * sizeof(short), sizeof(char));
+    memcpy(inputBuffer, inputArray, inputSize * sizeof(short));
+
+    // Allocate memory for output buffer
+    outputBuffer = (unsigned char*)calloc(inputSize * 2 * sizeof(short), sizeof(char));
+
+    // Call huff compress
+    outputSize = Huffman_Compress(inputBuffer, outputBuffer, inputSize * sizeof(short));
+
+    // Set external variables
+    *compressedData = (short*)outputBuffer;
+    *compressedSize = outputSize;
+
+    printf("Compression complete. Original size: %d shorts, Compressed size: %d bytes\n", inputSize, outputSize);
+
+    free(inputBuffer);
+}
+
+void decodeShorts(const short* compressedData, long compressedSize, short** decompressedData, long* decompressedSize) {
+    unsigned char* inputBuffer;
+    unsigned char* outputBuffer;
+    int outputSize;
+
+    // Allocate memory for buffers
+    inputBuffer = (unsigned char*)calloc(compressedSize, sizeof(char));
+    memcpy(inputBuffer, compressedData, compressedSize);
+
+    outputBuffer = (unsigned char*)calloc(compressedSize * 2, sizeof(char));
+
+    // Call uncompress from huff
+    Huffman_Uncompress(inputBuffer, outputBuffer, compressedSize, compressedSize * 2);
+    outputSize = compressedSize * 2;
+
+    // Set external variables
+    *decompressedData = (short*)outputBuffer;
+    *decompressedSize = outputSize / sizeof(short);
+
+    printf("Decompression complete. Original size: %d bytes, Decompressed size: %d shorts\n", compressedSize, *decompressedSize);
+
+    free(inputBuffer);
 }
