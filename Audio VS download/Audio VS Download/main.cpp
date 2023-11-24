@@ -189,7 +189,7 @@ int	main(int argc, char* argv[]) {
 			setComRate(settings.baudRate);
 			initializePort(settings.comPort);
 			
-			if (settings.compression == 1) {
+			if (settings.compression == 1 && option == '1') {
 
 				short* tmpBuf[40000];
 				long lengthBuf = 40000;
@@ -199,6 +199,7 @@ int	main(int argc, char* argv[]) {
 				for (int i = 0; i < lBigBufSize; ++i) {
 					iBigBuf[i] = (*tmpBuf)[i];
 				}
+				lBigBufSize = lengthBuf;
 
 
 			}
@@ -278,6 +279,21 @@ int	main(int argc, char* argv[]) {
 					printf("Invalid input. Please enter 1 or 2.\n");
 				}
 
+				if (settings.compression == 1 && option == '2') {
+
+
+					//decodeShorts(compressedData, compressedSize, &decompressedData, &decompressedSize);
+					short* tmpBuf[40000];
+					long lengthBuf = 40000;
+					decodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
+					
+					for (int i = 0; i < lBigBufSize; ++i) {
+						iBigBuf[i] = (*tmpBuf)[i];
+					}
+					lBigBufSize = lengthBuf;
+
+
+				}
 
 				break;
 				
