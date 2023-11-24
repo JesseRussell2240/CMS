@@ -348,9 +348,14 @@ int	main(int argc, char* argv[]) {
 				//args in the following order to encrypt (message, messageLen, secretKey, secretKeyLen, encBuf
 
 				if (settings.compression == 1) {
+
+					printf("Huffman compressing message");
 					char tmpMsg[500];
 					int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
+					//printf("origonal size :%d\nCompressed size :%d", strlen(msgOut), compressedSize);
 
+					printf("Decompressed Size: %d\n", strlen(msgOut));
+					printf("Compressed Size: %s\n", compressedSize);
 					strcpy(msgOut, tmpMsg);
 
 					//void encodeFile(const char* inputFileName, const char* outputFileName);
@@ -392,7 +397,8 @@ int	main(int argc, char* argv[]) {
 					char tmpMsg[500];
 					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), 250);
 
-					//int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
+					printf("Decompressed Size: %d\n", decompressedSize);
+					printf("Decompressed Message: %s\n", strlen(messageBuffer));
 
 					strcpy(messageBuffer, tmpMsg);
 					printf("\nUncompressed message: %s\n", messageBuffer);

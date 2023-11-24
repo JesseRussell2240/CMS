@@ -190,6 +190,7 @@ int compressTXT(char* msgIn, char* msgOut, int msgSize) {
         return -1;
     }
 
+
     return compressedSize;
 }
 
