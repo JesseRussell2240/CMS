@@ -18,6 +18,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include <stdlib.h>
 #include "encrypt.h"
 #include "compression.c"
+#include "Queues.h"
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
@@ -393,6 +394,12 @@ int	main(int argc, char* argv[]) {
 				
 
 		case 6:
+
+			InitQueue();
+			//isQueuesEmpty();
+
+
+
 			system("cls");
 			char userResultTwo;
 
@@ -483,37 +490,45 @@ int	main(int argc, char* argv[]) {
 
 
 				initializePort(settings.comPort);
+
 				int messageLength;
 				char messageBuffer[250];
-				receiveMessages(messageBuffer, &messageLength);
+
+				while (nextMessage != null) {
+
+						receiveMessages(messageBuffer, &messageLength);
+						printf("\nRecived message: %s\n", messageBuffer);
+						if (settings.compression == 1) {
+
+							int resultLength = 0;
+							char tmpMsg[500];
+							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
+
+							printf("Decompressed Size: %d\n", decompressedSize);
+							//printf("Decompressed Message: %s\n", strlen(messageBuffer));
+
+							strcpy(messageBuffer, tmpMsg);
+							printf("\nUncompressed message: %s\n", messageBuffer);
+							//void decodeFile(const char* inputFileName, const char* outputFileName);
+						}
+						if (settings.encryption == 1) {
+
+							char secretKey[10] = "314159265";
+							int keyLength = 10;
+							char tempBuf[250];
+
+							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+
+							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+						}
 
 
-				printf("\nRecived message: %s\n", messageBuffer);
+						Item receivedMsg;
+						AddToQueue(receivedMSG);
 
-				if (settings.compression == 1) {
-
-					int resultLength = 0;
-					char tmpMsg[500];
-					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
-
-					printf("Decompressed Size: %d\n", decompressedSize);
-					//printf("Decompressed Message: %s\n", strlen(messageBuffer));
-
-					strcpy(messageBuffer, tmpMsg);
-					printf("\nUncompressed message: %s\n", messageBuffer);
-					//void decodeFile(const char* inputFileName, const char* outputFileName);
 				}
 
-				if (settings.encryption == 1) {
-
-					char secretKey[10] = "314159265";
-					int keyLength = 10;
-					char tempBuf[250];
-
-					xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
-
-					printf("\nXOR Decrypted Message: %s\n", messageBuffer);
-				}
+						
 
 
 
