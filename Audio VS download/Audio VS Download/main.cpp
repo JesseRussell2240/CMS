@@ -349,7 +349,7 @@ int	main(int argc, char* argv[]) {
 
 				if (settings.compression == 1) {
 
-					printf("Huffman compressing message");
+				//	printf("Huffman compressing message );
 					char tmpMsg[500];
 					int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
 					//printf("origonal size :%d\nCompressed size :%d", strlen(msgOut), compressedSize);
@@ -403,7 +403,7 @@ int	main(int argc, char* argv[]) {
 					strcpy(messageBuffer, tmpMsg);
 					printf("\nUncompressed message: %s\n", messageBuffer);
 					//void decodeFile(const char* inputFileName, const char* outputFileName);
-									}
+				}
 
 				if (settings.encryption == 1) {
 
@@ -418,7 +418,7 @@ int	main(int argc, char* argv[]) {
 
 
 
-				// Receive text message
+				
 
 			}
 			else {
