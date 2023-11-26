@@ -41,7 +41,7 @@ typedef struct {
 ComSettings settings;
 
 // Function to write settings to a file
-void writeSettingsToFile(const ComSettings* settings, const char* filename) {
+void writeSettingsToFile(ComSettings* settings, const char* filename) {
 	FILE* file = fopen(filename, "w");
 
 	if (file != NULL) {
@@ -132,18 +132,21 @@ int	main(int argc, char* argv[]) {
 
 		case 1:	// Recording audio case
 
+			system("cls");
 			//calls helper function
 			RecordAudioTB(iBigBuf, lBigBufSize, settings.audioMessageLength, settings.audioBitRate * 1000);
 			break;
 
 		case 2:
 
+			system("cls");
 			//calls helper to play audio
 			printf("\nPlaying recording from buffer\n");
 			PlayAudio(iBigBuf, lBigBufSize);
 			break;
 
 		case 3:
+			system("cls");
 			//user option for loading into buff from audio file
 
 			//file loading code
@@ -162,6 +165,7 @@ int	main(int argc, char* argv[]) {
 
 		case 4:
 
+			system("cls");
 			//file loading code
 			printf("Enter the path to save the audio file to load: ");
 			fgets(filePath, sizeof(filePath), stdin);
@@ -177,6 +181,7 @@ int	main(int argc, char* argv[]) {
 
 		case 5:
 
+			system("cls");
 			//request transmission or reciving
 			printf("Options:\n");
 			printf("1. Transmit\n");
@@ -299,7 +304,7 @@ int	main(int argc, char* argv[]) {
 				
 
 		case 6:
-
+			system("cls");
 			char userResultTwo;
 
 			printf("Options:\n");
@@ -342,6 +347,9 @@ int	main(int argc, char* argv[]) {
 					free(quoteIndices);
 					free(quoteLengths);
 
+				}
+				else {
+					printf("Invalid input. Please enter 1 or 2.\n");
 				}
 
 				//encrypt transmitted message
@@ -396,8 +404,9 @@ int	main(int argc, char* argv[]) {
 
 				if (settings.compression == 1) {
 
+					int resultLength = 0;
 					char tmpMsg[500];
-					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), 250);
+					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 
 					printf("Decompressed Size: %d\n", decompressedSize);
 					//printf("Decompressed Message: %s\n", strlen(messageBuffer));
@@ -524,7 +533,7 @@ int	main(int argc, char* argv[]) {
 
 		default:
 
-			//system("cls");
+			system("cls");
 			printf("Invalid option. Please choose a valid option.\n");
 			break;
 			}
