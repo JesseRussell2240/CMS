@@ -41,9 +41,9 @@ typedef struct {
 ComSettings settings;
 
 // Function to write settings to a file
-void writeSettingsToFile(const ComSettings* settings, const char* filename) {
+void writeSettingsToFile(ComSettings* settings, const char* filename) {
 	FILE* file = fopen(filename, "w");
-
+	printf("test");
 	if (file != NULL) {
 		fwprintf(file, L"COMPORT=%s\n", settings->comPort);
 		fwprintf(file, L"BITRATE=%d\n", settings->baudRate);
@@ -110,7 +110,7 @@ int	main(int argc, char* argv[]) {
 
 	//menu loop
 	do {
-
+		//system("cls");
 		//prints main menu options and request input
 		printf("\nOptions:\n");
 		printf("1. Record audio into buffer\n");
@@ -132,18 +132,21 @@ int	main(int argc, char* argv[]) {
 
 		case 1:	// Recording audio case
 
+			system("cls");
 			//calls helper function
 			RecordAudioTB(iBigBuf, lBigBufSize, settings.audioMessageLength, settings.audioBitRate * 1000);
 			break;
 
 		case 2:
 
+			system("cls");
 			//calls helper to play audio
 			printf("\nPlaying recording from buffer\n");
 			PlayAudio(iBigBuf, lBigBufSize);
 			break;
 
 		case 3:
+			system("cls");
 			//user option for loading into buff from audio file
 
 			//file loading code
@@ -162,6 +165,7 @@ int	main(int argc, char* argv[]) {
 
 		case 4:
 
+			system("cls");
 			//file loading code
 			printf("Enter the path to save the audio file to load: ");
 			fgets(filePath, sizeof(filePath), stdin);
@@ -177,18 +181,132 @@ int	main(int argc, char* argv[]) {
 
 		case 5:
 
+			system("cls");
 			//request transmission or reciving
 			printf("Options:\n");
 			printf("1. Transmit\n");
 			printf("2. Receive\n");
 
 			printf("Enter your choice (1, or 2): ");
-			scanf_s(" %c", &option, 1);
+			scanf("%d", &option, 1);
 
-
+			
 			setComRate(settings.baudRate);
 			initializePort(settings.comPort);
-			
+
+			//Transmission
+			if (option == 1) {
+
+				if (settings.compression == 1) {
+
+					short* tmpBuf[40000];
+					long lengthBuf = 40000;
+					encodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
+					//*iBigBuf = *tmpBuf;
+					//copy temp buf to ibigbuf
+					for (int i = 0; i < lBigBufSize; ++i) {
+						iBigBuf[i] = (*tmpBuf)[i];
+					}
+					lBigBufSize = lengthBuf / 2;
+				}
+
+				//transmitting without header
+				if (settings.header == 0) {
+					transmitAudio(iBigBuf, lBigBufSize);
+				}
+
+			}
+
+			//Recieve
+			else if (option == 2) {
+
+				if (settings.compression == 1) {
+
+
+					//decodeShorts(compressedData, compressedSize, &decompressedData, &decompressedSize);
+					short* tmpBuf[40000];
+					long lengthBuf = 40000;
+					decodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
+
+					for (int i = 0; i < lBigBufSize; ++i) {
+						iBigBuf[i] = (*tmpBuf)[i];
+					}
+					lBigBufSize = lengthBuf;
+
+
+				}
+
+				if (settings.header == 0) {
+				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
+				}
+
+				//transmitt with header
+				else if (settings.header == 1) {
+					//char Payload[] = "\nHi there this is a great message for you\n"; 	// Payload is a text message in this example but could be any data	
+
+					// Header (sample data type is text but this should work with audio and images as well)
+					//HeaderForPayload.sid = 1;
+					//HeaderForPayload.rid = 2;
+					//HeaderForPayload.payloadSize = strlen(txPayload) + 1;				// Flexible payload size - Send size of payload inside header (payload can be anything) and enough memory will be malloc'd in the receive function
+					//HeaderForPayload.compression = 0;									// None
+					//HeaderForPayload.encryption = 0;									// None
+					//HeaderForPayload.payLoadType = 0;									// Text
+
+				//	transmitPayload(&HeaderForPayload, iBigBuf, &hComTx, settings.comPort, settings.baudRate, nComBits, timeout);  // Transmit header and payload
+
+
+				}
+
+				else if (settings.header == 1) {
+					/*****************************************************************************************************************************
+
+						bytesRead = receive(&rxHeader, &HeaderForPayload, &hComRx, COMPORT_Rx, nComRate, nComBits, timeout);		// Pass pointer to rxPayload so can access malloc'd memory inside the receive function from main()
+
+						// Use header info to determine if payload needs to be decrypted or decompressed
+						if (HeaderForPayload.encryption != 0) {
+							printf("\nMessage is encrypted so need to decrypt!\n");
+							// rxPayload = decrypt(rxPayload)
+						}
+						else {
+							printf("\nMessage is not encrypted\n");
+						}
+						if (HeaderForPayload.compression != 0) {
+							printf("\nMessage is compressed so need to decompress!\n");
+							// rxPayload = decompress(rxPayload)
+						}
+						else {
+							printf("\nMessage is not compressed\n");
+						}
+
+						// Determine type of payload from header data and corresponding action to complete (e.g. display text, play audio, etc)
+						if (HeaderForPayload.payLoadType == 0) {
+							printf("\nPayload is text\n");
+							printf("\nMessage recieved: %s\n", (char*)rxPayload);		// May need to set rxPayload[bytesRead - 1] = '\0'
+							// Enqueue()
+							free(HeaderForPayload);											// malloc'd in the receive function
+						}
+						else if (HeaderForPayload.payLoadType == 1) {
+							printf("\nPayload is audio\n");
+							// Playbuffer();
+							// Enqueue
+							free(rxPayload);											// malloc'd in the receive function
+						}
+						else {
+							printf("\Payload is an image or something else ...\n");
+							// DisplayImage();
+							free(rxPayload);											// malloc'd in the receive function
+						}
+	*/
+				}
+
+
+			}
+
+			else {
+					printf("Invalid input. Please enter 1 or 2.\n");
+			}
+
+			/*
 			if (settings.compression == 1 && option == '1') {
 
 				short* tmpBuf[40000];
@@ -203,8 +321,6 @@ int	main(int argc, char* argv[]) {
 
 
 			}
-
-
 			//transmitting without header
 			if (option == '1' && settings.header == 0) {
 				transmitAudio(iBigBuf, lBigBufSize);
@@ -273,33 +389,11 @@ int	main(int argc, char* argv[]) {
 						free(rxPayload);											// malloc'd in the receive function
 					}
 */
-				}
-
-				else {
-					printf("Invalid input. Please enter 1 or 2.\n");
-				}
-
-				if (settings.compression == 1 && option == '2') {
-
-
-					//decodeShorts(compressedData, compressedSize, &decompressedData, &decompressedSize);
-					short* tmpBuf[40000];
-					long lengthBuf = 40000;
-					decodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
-					
-					for (int i = 0; i < lBigBufSize; ++i) {
-						iBigBuf[i] = (*tmpBuf)[i];
-					}
-					lBigBufSize = lengthBuf;
-
-
-				}
-
-				break;
+			break;
 				
 
 		case 6:
-
+			system("cls");
 			char userResultTwo;
 
 			printf("Options:\n");
@@ -342,6 +436,9 @@ int	main(int argc, char* argv[]) {
 					free(quoteLengths);
 
 				}
+				else {
+					printf("Invalid input. Please enter 1 or 2.\n");
+				}
 
 				//encrypt transmitted message
 				//XOR encode funtion
@@ -352,11 +449,12 @@ int	main(int argc, char* argv[]) {
 				//	printf("Huffman compressing message );
 					char tmpMsg[500];
 					int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
-					//printf("origonal size :%d\nCompressed size :%d", strlen(msgOut), compressedSize);
+					printf("\ntest\n");
+					printf("Length of input message: %d, compressed size: %d\n", strlen(msgOut), compressedSize);
 
-					printf("Decompressed Size: %d\n", strlen(msgOut));
-					printf("Compressed Size: %s\n", compressedSize);
-					strcpy(msgOut, tmpMsg);
+					printf("Original buffer Size: %d\n", strlen(msgOut));
+					printf("Compressed Size: %d\n", compressedSize);
+					//strcpy(msgOut, tmpMsg);
 
 					//void encodeFile(const char* inputFileName, const char* outputFileName);
 				}
@@ -394,11 +492,12 @@ int	main(int argc, char* argv[]) {
 
 				if (settings.compression == 1) {
 
+					int resultLength = 0;
 					char tmpMsg[500];
-					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), 250);
+					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 
 					printf("Decompressed Size: %d\n", decompressedSize);
-					printf("Decompressed Message: %s\n", strlen(messageBuffer));
+					//printf("Decompressed Message: %s\n", strlen(messageBuffer));
 
 					strcpy(messageBuffer, tmpMsg);
 					printf("\nUncompressed message: %s\n", messageBuffer);
@@ -428,6 +527,7 @@ int	main(int argc, char* argv[]) {
 			break;
 
 		case 7:
+
 			system("cls");
 			do{
 			//printf("Option 7 coming soon.\n");
@@ -444,7 +544,7 @@ int	main(int argc, char* argv[]) {
 			// Prompt the user to change settings
 			printf("\nWhat settings would you like to change: ");
 
-			scanf("%d", &ChangeSettings);
+			scanf_s("%d", &ChangeSettings);
 			//int 
 			switch (ChangeSettings) {
 				
@@ -507,7 +607,7 @@ int	main(int argc, char* argv[]) {
 
 			writeSettingsToFile(&settings, "settings.txt");
 
-			// Display updated settings
+			/* Display updated settings
 			printf("\nUpdated settings:\n");
 			wprintf(L"COM port: %s\n", settings.comPort);
 			printf("baud rate: %d\n", settings.baudRate);
@@ -516,13 +616,12 @@ int	main(int argc, char* argv[]) {
 			printf("XOR encyption on (YES: 1 || NO: 0): %d\n", settings.encryption);
 			printf("Huffman compression (YES: 1 || NO: 0): %d\n", settings.compression);
 			printf("Header with message on (YES: 1 || NO : 0): %d\n", settings.header);
-
+			*/
 			break;
-
 
 		default:
 
-			//system("cls");
+			system("cls");
 			printf("Invalid option. Please choose a valid option.\n");
 			break;
 			}
