@@ -37,6 +37,9 @@ typedef struct {
 	int encryption;
 	int compression;
 	int header;
+	int priority;
+	int sid;
+	int rid;
 } ComSettings;
 
 ComSettings settings;
@@ -53,6 +56,9 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 		fwprintf(file, L"ENCRYPTION=%d\n", settings->encryption);
 		fwprintf(file, L"COMPRESSION=%d\n", settings->compression);
 		fwprintf(file, L"HEADER=%d\n", settings->header);
+		fwprintf(file, L"PRIORITY=%d\n", settings->priority);
+		fwprintf(file, L"SID=%d\n", settings->sid);
+		fwprintf(file, L"RID=%d\n", settings->rid);
 		fclose(file);
 	}
 	else {
@@ -76,6 +82,9 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 			swscanf(line, L"ENCRYPTION=%d", &settings->encryption);
 			swscanf(line, L"COMPRESSION=%d", &settings->compression);
 			swscanf(line, L"HEADER=%d", &settings->header);
+			swscanf(line, L"PRIORITY=%d", &settings->priority);
+			swscanf(line, L"SID=%d", &settings->sid);
+			swscanf(line, L"RID=%d", &settings->rid);
 		}
 
 		fclose(file);
@@ -121,6 +130,7 @@ int	main(int argc, char* argv[]) {
 		printf("5. Transmit audio in buffer\n");
 		printf("6. Transmit text message in buffer\n");
 		printf("7. Settings\n");
+		printf("8. Exit\n");
 		printf("Enter your choice: ");
 		scanf_s("%d", &option);
 
@@ -494,9 +504,13 @@ int	main(int argc, char* argv[]) {
 				int messageLength;
 				char messageBuffer[250];
 
-				while (nextMessage != null) {
+				void InitQueue(void);
+				int IsQueueEmpty(void);
 
-						receiveMessages(messageBuffer, &messageLength);
+				receiveMessages(messageBuffer, &messageLength);
+
+				void AddToQueue(link);
+
 						printf("\nRecived message: %s\n", messageBuffer);
 						if (settings.compression == 1) {
 
@@ -522,17 +536,8 @@ int	main(int argc, char* argv[]) {
 							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 						}
 
-
-						Item receivedMsg;
-						AddToQueue(receivedMSG);
-
-				}
-
-						
-
-
-
-				
+						void AddToQueue(link);
+					link DeQueue(void);
 
 			}
 			else {
@@ -553,7 +558,10 @@ int	main(int argc, char* argv[]) {
 			printf("5. XOR encryption on (YES: 1 || NO: 0): %d\n", settings.encryption);
 			printf("6. Huffman compression on (YES: 1 || NO: 0): %d\n", settings.compression);
 			printf("7. Send header with message on (YES: 1 || NO: 0): %d\n", settings.header);
-			printf("8. Exit");
+			printf("8. Priority Level: %d\n", settings.priority);
+			printf("9. Sender identification: %d\n", settings.sid);
+			printf("10. Reciver identification: %d\n", settings. rid);
+			printf("11. Exit");
 
 
 			// Prompt the user to change settings
@@ -612,13 +620,33 @@ int	main(int argc, char* argv[]) {
 				printf("Do you want to send your message with a header (YES: 1 || NO: 0): ");
 				scanf_s("%d", &settings.header);
 				break;
+	
+			case 8:
+
+				printf("What priority message are you sending (1-7)? \n");
+				scanf_s("%d", &settings.priority);
+			
+			case 9:
+
+				printf("What is your SID?\n");
+				scanf_s("%d", &settings.sid);
+
+			case 10:
+
+				printf("What is your RID?\n");
+				scanf_s("%d", &settings.sid);
+
+
+				
+
+				break;
 
 			default:
 				printf("Error changing settings\n");
 				break;
 			}
 			system("cls");
-			} while (ChangeSettings != 8);
+			} while (ChangeSettings != 9);
 
 			writeSettingsToFile(&settings, "settings.txt");
 
@@ -639,10 +667,19 @@ int	main(int argc, char* argv[]) {
 			system("cls");
 			printf("Invalid option. Please choose a valid option.\n");
 			break;
-			}
-		} while (option != -1);
 
-	
+
+		//Close output window
+		case 8:
+
+			exit(0);
+
+			break;
+		}
+
+	} while (option != -1);
+
+		
 		return 0;
 
 }
