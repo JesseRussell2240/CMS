@@ -27,7 +27,7 @@ Details: Contains various audio file functions such as , play, save, load, recor
 const int BUFSIZE = 280;							// Buffer size
 #define AUDIO_BUFFER_SIZE 280
 HANDLE hCom;										// Pointer to the selected COM port (Receiver)
-//int nComRate = 9600;								// Baud (Bit) rate in bits/second 
+int nComRate = 9600;								// Baud (Bit) rate in bits/second 
 int nComBits = 8;									// Number of bits per frame
 COMMTIMEOUTS timeout;
 extern short iBigBuf[];								// Declare the external variable
@@ -40,12 +40,12 @@ void setComBits(int bits) {
 }
 
 //setter function for comRate
-void setComRate(int rate, int nComRate) {
+void setComRate(int rate) {
 	nComRate = rate;
 }
 
 //port initilization helper
-void initializePort( wchar_t* port, int nComRate) {
+void initializePort( wchar_t* port) {
 	initPort(&hCom, port, nComRate, nComBits, timeout);
 	Sleep(50);
 }
@@ -99,8 +99,8 @@ void receiveAudio(short* audioData, int dataSize) {
 	CloseHandle(hCom);
 }
 
-void transmitPayload(HeaderForPayload* Header, void* Payload, wchar_t* port, int nComRate) {
-	initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
+void transmitPayload(HeaderForPayload* Header, void* Payload) {
+	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
 	outputToPort(&hCom, Header, sizeof(Header));						// Send Header
 	outputToPort(&hCom, Payload, (*Header).payloadSize);				// Send payload
 	Sleep(500);															// Allow time for signal propagation on cable 
@@ -108,10 +108,10 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, wchar_t* port, int
 	CloseHandle(hCom);													// Close the handle to Tx port 
 }
 
-DWORD receivePayload(HeaderForPayload* Header, void** Payload, wchar_t* port, int nComRate) {
+DWORD receivePayload(HeaderForPayload* Header, void** Payload) {
 	// Note: Pointer to rxPayload buffer (pointer to a pointer) is passed to this function since this function malloc's the amount of memory required - need to free it in main()
 	DWORD bytesRead;
-	initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Rx port
+	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Rx port
 	inputFromPort(&hCom, Header, sizeof(Header));						// Read in Header first (which is a standard number of bytes) to get size of payload 
 	*Payload = (void*)malloc((*Header).payloadSize);				// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
 	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);// Receive payload 

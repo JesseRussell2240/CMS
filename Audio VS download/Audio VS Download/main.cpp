@@ -67,6 +67,17 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 	}
 }
 
+void printHeaderInfo(const header& h) {
+	printf("Sender ID: %d\n", h.sid);
+	printf("Receiver ID: %d\n", h.rid);
+	printf("Priority: %d\n", h.priority);
+	printf("Sequence Number: %d\n", h.seqNum);
+	printf("Payload Size: %ld bytes\n", h.payloadSize);
+	printf("Payload Type: %d\n", h.payLoadType);
+	printf("Encryption: %d\n", h.encryption);
+	printf("Compression: %d\n", h.compression);
+}
+
 void ReceiveMessagesInBackground() {
 	while (true) {
 
@@ -463,6 +474,7 @@ int	main(int argc, char* argv[]) {
 				scanf_s(" %c", &userResultThree, 1);
 
 				char msgOut[250];
+				int msgSize;
 
 				if (userResultThree == '1') {
 
@@ -498,15 +510,17 @@ int	main(int argc, char* argv[]) {
 
 				//	printf("Huffman compressing message );
 					char tmpMsg[500];
-					int compressedSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
+					
+					msgSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
+
 					printf("\ntest\n");
-					printf("Length of input message: %d, compressed size: %d\n", strlen(msgOut), compressedSize);
+					printf("Length of input message: %d, compressed size: %d\n", strlen(msgOut), msgSize);
 
 					printf("Original buffer Size: %d\n", strlen(msgOut));
-					printf("Compressed Size: %d\n", compressedSize);
-					//strcpy(msgOut, tmpMsg);
+					printf("Compressed Size: %d\n", msgSize);
+					strcpy(msgOut, tmpMsg);
 
-					//void encodeFile(const char* inputFileName, const char* outputFileName);
+				
 				}
 
 				if (settings.encryption == 1) {
@@ -515,11 +529,17 @@ int	main(int argc, char* argv[]) {
 					int keyLength = 10;
 					char tempBuf[250];
 
-					xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
+					xorCipher(msgOut, msgSize, secretKey, keyLength, tempBuf);
 				}
 
+				//set the payload size in the header after compression/encription etc are completed.
+				header.payloadSize = msgSize;
+
+				printHeaderInfo(header);
+				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				transmitPayload(&header, msgOut, settings.comPort, settings.baudRate);
+				
+				transmitPayload(&header, msgOut);
 
 
 
@@ -539,10 +559,15 @@ int	main(int argc, char* argv[]) {
 				int messageLength;
 				char messageBuffer[250];
 
-				void InitQueue(void);
-				int IsQueueEmpty(void);
+			//	void InitQueue(void);
+				//int IsQueueEmpty(void);
 
-				receiveMessages(messageBuffer, &messageLength);
+			//	receiveMessages(messageBuffer, &messageLength);
+				DWORD incomingBytes;
+
+				HeaderForPayload header;
+
+			//	incomingBytes = receivePayload(header, messageBuffer);
 
 				void AddToQueue(link);
 
@@ -574,10 +599,10 @@ int	main(int argc, char* argv[]) {
 						void AddToQueue(link);
 					link DeQueue(void);
 
-						Item receivedMsg;
-						AddToQueue(receivedMSG);
+					//	Item receivedMsg;
+					//	AddToQueue(receivedMSG);
 
-				}
+				//}
 
 						
 
