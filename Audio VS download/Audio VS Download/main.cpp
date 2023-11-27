@@ -513,7 +513,7 @@ int	main(int argc, char* argv[]) {
 					
 					msgSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
 
-					printf("\ntest\n");
+					//printf("\ntest\n");
 					printf("Length of input message: %d, compressed size: %d\n", strlen(msgOut), msgSize);
 
 					printf("Original buffer Size: %d\n", strlen(msgOut));
@@ -539,7 +539,7 @@ int	main(int argc, char* argv[]) {
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				
-				transmitPayload(&header, msgOut);
+				transmitPayload(&header, (void*)msgOut);
 
 
 
@@ -565,9 +565,21 @@ int	main(int argc, char* argv[]) {
 			//	receiveMessages(messageBuffer, &messageLength);
 				DWORD incomingBytes;
 
-				HeaderForPayload header;
+				HeaderForPayload recivedHeader;
+				void* receivedPayload;
 
-			//	incomingBytes = receivePayload(header, messageBuffer);
+
+				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload);
+
+				if (bytesRead == recivedHeader.payloadSize) {
+					// Cast the received payload back to a character array
+					char* receivedExample = static_cast<char*>(receivedPayload);
+
+					
+					// Free the allocated memory for the received payload
+					free(receivedPayload);
+				}
+				
 
 				void AddToQueue(link);
 
