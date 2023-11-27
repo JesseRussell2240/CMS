@@ -717,7 +717,7 @@ int	main(int argc, char* argv[]) {
 				break;
 			}
 			system("cls");
-			} while (ChangeSettings != 9);
+			} while (ChangeSettings != 11);
 
 			writeSettingsToFile(&settings, "settings.txt");
 
