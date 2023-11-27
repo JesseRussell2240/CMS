@@ -474,7 +474,7 @@ int	main(int argc, char* argv[]) {
 				scanf_s(" %c", &userResultThree, 1);
 
 				char msgOut[250];
-				int msgSize;
+				int msgSize = 250;
 
 				if (userResultThree == '1') {
 
@@ -509,16 +509,17 @@ int	main(int argc, char* argv[]) {
 				if (settings.compression == 1) {
 
 				//	printf("Huffman compressing message );
-					char tmpMsg[500];
+
+					char tmpMsg[240];
+					strcpy(tmpMsg, msgOut);
 					
-					msgSize = compressTXT(msgOut, tmpMsg, strlen(msgOut));
+					msgSize = compressTXT(tmpMsg, msgOut, strlen(msgOut));
 
 					//printf("\ntest\n");
 					printf("Length of input message: %d, compressed size: %d\n", strlen(msgOut), msgSize);
 
 					printf("Original buffer Size: %d\n", strlen(msgOut));
 					printf("Compressed Size: %d\n", msgSize);
-					strcpy(msgOut, tmpMsg);
 
 				
 				}
@@ -554,6 +555,7 @@ int	main(int argc, char* argv[]) {
 			}
 			else if (userResultTwo == '2') {
 
+				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 
 				int messageLength;
@@ -570,11 +572,16 @@ int	main(int argc, char* argv[]) {
 
 
 				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload);
+				
+				//printf("MSG recived from %d", recivedHeader.sid);
+				printHeaderInfo(recivedHeader);
+
+
 
 				if (bytesRead == recivedHeader.payloadSize) {
 					// Cast the received payload back to a character array
-					char* receivedExample = static_cast<char*>(receivedPayload);
-
+					char* receivedExample = (char*) (receivedPayload);
+					
 					
 					// Free the allocated memory for the received payload
 					free(receivedPayload);
@@ -608,8 +615,8 @@ int	main(int argc, char* argv[]) {
 						printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 					}
 
-						void AddToQueue(link);
-					link DeQueue(void);
+				//		void AddToQueue(link);
+				//	link DeQueue(void);
 
 					//	Item receivedMsg;
 					//	AddToQueue(receivedMSG);
@@ -617,9 +624,7 @@ int	main(int argc, char* argv[]) {
 				//}
 
 						
-
-
-
+					
 				
 
 			}
