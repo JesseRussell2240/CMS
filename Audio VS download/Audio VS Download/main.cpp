@@ -19,6 +19,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "encrypt.h"
 #include "compression.c"
 #include "Queues.h"
+#include <thread>
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
@@ -60,6 +61,23 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 	}
 }
 
+void ReceiveMessagesInBackground() {
+	while (true) {
+
+
+		////this is eventuially where multithreading of recivie will go. I hate this idea...
+
+
+
+
+
+
+
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	}
+}
+
 // Function to read settings from a file
 void readSettingsFromFile(ComSettings* settings, const char* filename) {
 	FILE* file = fopen(filename, "r");
@@ -87,6 +105,8 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 
 
 int	main(int argc, char* argv[]) {
+
+	std::thread receiveThread(ReceiveMessagesInBackground);
 
 	char transmit = 'T';
 	char receive = 'R';
@@ -411,6 +431,19 @@ int	main(int argc, char* argv[]) {
 
 			if (userResultTwo == '1') {
 
+				//build the header for the message based on users predefined settings
+				HeaderForPayload header;
+				header.sid = settings.sid;
+				header.rid = settings.rid;
+				header.priority = settings.priority;
+				//header.seqNum = 4;
+				//header.payloadSize = 1; //must be determined afrer message is constructed and with be lbigbuflength in audio
+				header.payLoadType = 0; //set as 0 for text
+				header.encryption = settings.encryption;
+				header.compression = settings.compression;
+				
+
+
 				// User input for text message
 				char userResultThree;
 				printf("Options:\n");
@@ -475,11 +508,14 @@ int	main(int argc, char* argv[]) {
 					xorCipher(msgOut, strlen(msgOut), secretKey, keyLength, tempBuf);
 				}
 
-				
-
 				initializePort(settings.comPort);
+				transmitPayload(&header, msgOut, settings.comPort, settings.baudRate);
+
+
+
+				
 				// Transmit text message
-				transmitMessage(msgOut);
+				//transmitMessage(msgOut);
 
 
 
@@ -488,53 +524,49 @@ int	main(int argc, char* argv[]) {
 			}
 			else if (userResultTwo == '2') {
 
-
 				initializePort(settings.comPort);
 
 				int messageLength;
 				char messageBuffer[250];
 
-				while (nextMessage != null) {
+			//	while (true) {
 
-						receiveMessages(messageBuffer, &messageLength);
-						printf("\nRecived message: %s\n", messageBuffer);
-						if (settings.compression == 1) {
+					receiveMessages(messageBuffer, &messageLength);
+					printf("\nRecived message: %s\n", messageBuffer);
+					if (settings.compression == 1) {
 
-							int resultLength = 0;
-							char tmpMsg[500];
-							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
+						int resultLength = 0;
+						char tmpMsg[500];
+						int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 
-							printf("Decompressed Size: %d\n", decompressedSize);
-							//printf("Decompressed Message: %s\n", strlen(messageBuffer));
+						printf("Decompressed Size: %d\n", decompressedSize);
+						//printf("Decompressed Message: %s\n", strlen(messageBuffer));
 
-							strcpy(messageBuffer, tmpMsg);
-							printf("\nUncompressed message: %s\n", messageBuffer);
-							//void decodeFile(const char* inputFileName, const char* outputFileName);
-						}
-						if (settings.encryption == 1) {
+						strcpy(messageBuffer, tmpMsg);
+						printf("\nUncompressed message: %s\n", messageBuffer);
+						//void decodeFile(const char* inputFileName, const char* outputFileName);
+					}
+					if (settings.encryption == 1) {
 
-							char secretKey[10] = "314159265";
-							int keyLength = 10;
-							char tempBuf[250];
+						char secretKey[10] = "314159265";
+						int keyLength = 10;
+						char tempBuf[250];
 
-							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+						xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
 
-							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
-						}
+						printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+					}
 
 
-						Item receivedMsg;
-						AddToQueue(receivedMSG);
+					Item receivedMsg;
+					//AddToQueue(receivedMSG);
 
 				}
 
-						
 
 
-
-				
-
-			}
+					//This is where recive needs to deque the queue---------------------------------------------------------------------------------------------------------------------------------
+		//	}
 			else {
 				printf("Invalid input. Please enter 1 or 2.\n");
 			}
