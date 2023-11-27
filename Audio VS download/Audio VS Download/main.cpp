@@ -708,8 +708,6 @@ int	main(int argc, char* argv[]) {
 				scanf_s("%d", &settings.sid);
 
 
-				
-
 				break;
 
 			default:
