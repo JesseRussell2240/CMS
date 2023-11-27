@@ -698,7 +698,6 @@ int	main(int argc, char* argv[]) {
 				scanf_s("%d", &settings.compression);
 				break;
 
-
 			case 7:
 				printf("Do you want to send your message with a header (YES: 1 || NO: 0): ");
 				scanf_s("%d", &settings.header);
@@ -708,18 +707,18 @@ int	main(int argc, char* argv[]) {
 
 				printf("What priority message are you sending (1-7)? \n");
 				scanf_s("%d", &settings.priority);
+				break;
 			
 			case 9:
 
 				printf("What is your SID?\n");
 				scanf_s("%d", &settings.sid);
+				break;
 
 			case 10:
 
 				printf("What is your RID?\n");
-				scanf_s("%d", &settings.sid);
-
-
+				scanf_s("%d", &settings.rid);
 				break;
 
 			default:
