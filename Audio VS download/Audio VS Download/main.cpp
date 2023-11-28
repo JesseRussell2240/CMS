@@ -474,7 +474,7 @@ int	main(int argc, char* argv[]) {
 				scanf_s(" %c", &userResultThree, 1);
 
 				char msgOut[250];
-				int msgSize = 250;
+				int msgSize = 249;
 
 				if (userResultThree == '1') {
 
@@ -502,6 +502,7 @@ int	main(int argc, char* argv[]) {
 					printf("Invalid input. Please enter 1 or 2.\n");
 				}
 
+				msgSize = strlen(msgOut);
 				//encrypt transmitted message
 				//XOR encode funtion
 				//args in the following order to encrypt (message, messageLen, secretKey, secretKeyLen, encBuf
@@ -513,14 +514,12 @@ int	main(int argc, char* argv[]) {
 					char tmpMsg[240];
 					strcpy(tmpMsg, msgOut);
 					
-					msgSize = compressTXT(tmpMsg, msgOut, strlen(msgOut));
+					msgSize = compressTXT(tmpMsg, msgOut, msgSize);
 
 					//printf("\ntest\n");
-					printf("Length of input message: %d, compressed size: %d\n", strlen(msgOut), msgSize);
+					printf("Length of input message: %d", msgSize);
 
-					printf("Original buffer Size: %d\n", strlen(msgOut));
-					printf("Compressed Size: %d\n", msgSize);
-
+					
 				
 				}
 
@@ -540,6 +539,8 @@ int	main(int argc, char* argv[]) {
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				
+
+				printf("print");
 				transmitPayload(&header, (void*)msgOut);
 
 
@@ -581,14 +582,17 @@ int	main(int argc, char* argv[]) {
 				if (bytesRead == recivedHeader.payloadSize) {
 					// Cast the received payload back to a character array
 					char* receivedExample = (char*) (receivedPayload);
-					
+					receivedExample[recivedHeader.payloadSize] = '\0';
+					//strcat(receivedExample, "\0");
+					strcpy(messageBuffer, receivedExample);
+				//	printf("\nRecived Example var: %s\n", receivedExample);
 					
 					// Free the allocated memory for the received payload
 					free(receivedPayload);
 				}
 				
 
-				void AddToQueue(link);
+				//void AddToQueue(link);
 
 						printf("\nRecived message: %s\n", messageBuffer);
 						if (settings.compression == 1) {
