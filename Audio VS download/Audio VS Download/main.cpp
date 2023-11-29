@@ -41,6 +41,8 @@ typedef struct {
 	int priority;
 	int sid;
 	int rid;
+	int payloaderror;
+	int headererror;
 } ComSettings;
 
 ComSettings settings;
@@ -60,6 +62,8 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 		fwprintf(file, L"PRIORITY=%d\n", settings->priority);
 		fwprintf(file, L"SID=%d\n", settings->sid);
 		fwprintf(file, L"RID=%d\n", settings->rid);
+		fwprintf(file, L"PAYLOADERROR=%d\n", settings->payloaderror);
+		fwprintf(file, L"RID=%d\n", settings->headererror);
 		fclose(file);
 	}
 	else {
@@ -114,6 +118,8 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 			swscanf(line, L"PRIORITY=%d", &settings->priority);
 			swscanf(line, L"SID=%d", &settings->sid);
 			swscanf(line, L"RID=%d", &settings->rid);
+			swscanf(line, L"PAYLOADERROR=%d", &settings->payloaderror);
+			swscanf(line, L"HEADERERROR=%d", &settings->headererror);
 		}
 
 		fclose(file);
@@ -173,20 +179,47 @@ int	main(int argc, char* argv[]) {
 		switch (option) {
 
 		case 1:	// Recording audio case
+		{
+			int playback;
+			int rerecord = 1;
 
-			system("cls");
-			//calls helper function
-			RecordAudioTB(iBigBuf, lBigBufSize, settings.audioMessageLength, settings.audioBitRate * 1000);
+			while (rerecord == 1) {
+
+				system("cls");
+				//calls helper function
+				RecordAudioTB(iBigBuf, lBigBufSize, settings.audioMessageLength, settings.audioBitRate * 1000);
+				printf("\nDo you want to hear the recording (1)?\n");
+				printf("Do you want to rerecord the message (2)?\n");
+				printf("Exit (3)\n");
+				scanf_s("%d", &playback);
+
+				if (playback == 1) {
+					printf("playing audio recording:\n");
+					PlayAudio(iBigBuf, lBigBufSize);
+					rerecord = 0;
+				}
+				else if (playback == 2) {
+					rerecord = 1;
+				}
+				else if (playback == 3) {
+					rerecord = 0;
+					system("cls");
+				}
+				else {
+					printf("Invalid option. Please choose 1 or 2");
+				}
+			}
+		}
 			break;
 
 		case 2:
-
+		{
 			system("cls");
 			//calls helper to play audio
 			printf("\nPlaying recording from buffer\n");
 			PlayAudio(iBigBuf, lBigBufSize);
 			break;
-
+		}
 		case 3:
 			system("cls");
 			//user option for loading into buff from audio file
@@ -537,6 +570,7 @@ int	main(int argc, char* argv[]) {
 			system("cls");
 			do{
 			//printf("Option 7 coming soon.\n");
+			printf("\n(ON: 1 || OFF: 0)\n");
 			wprintf(L"1. Current COM port: %s\n", settings.comPort);
 			printf("2. Current audio message length: %d seconds\n", settings.audioMessageLength);
 			printf("3. Current bit rate: %d\n", settings.audioBitRate);
@@ -544,10 +578,12 @@ int	main(int argc, char* argv[]) {
 			printf("5. XOR encryption on (YES: 1 || NO: 0): %d\n", settings.encryption);
 			printf("6. Huffman compression on (YES: 1 || NO: 0): %d\n", settings.compression);
 			printf("7. Send header with message on (YES: 1 || NO: 0): %d\n", settings.header);
-			printf("8. Priority Level: %d\n", settings.priority);
+			printf("8. Priority Level (1-7): %d\n", settings.priority);
 			printf("9. Sender identification: %d\n", settings.sid);
-			printf("10. Reciver identification: %d\n", settings. rid);
-			printf("11. Exit");
+			printf("10. Reciver identification: %d\n", settings.rid);
+			printf("11. Header error detection and correction:%d\n", settings.headererror);
+			printf("12. Payload error detction:%d\n", settings.payloaderror);
+			printf("13. Exit");
 
 
 			// Prompt the user to change settings
@@ -611,11 +647,15 @@ int	main(int argc, char* argv[]) {
 
 				printf("What priority message are you sending (1-7)? \n");
 				scanf_s("%d", &settings.priority);
+
+				break;
 			
 			case 9:
 
 				printf("What is your SID?\n");
 				scanf_s("%d", &settings.sid);
+
+				break;
 
 			case 10:
 
@@ -625,12 +665,24 @@ int	main(int argc, char* argv[]) {
 
 				break;
 
+			case 11:
+
+				printf("Do you want error detection and correction on for the header?\n ");
+				scanf_s("%d", &settings.headererror);
+
+				break;
+
+			case 12:
+
+				printf("Do you want error detection for the message?\n");
+				scanf_s("%d", &settings.payloaderror);
+
 			default:
 				printf("Error changing settings\n");
 				break;
 			}
 			system("cls");
-			} while (ChangeSettings != 11);
+			} while (ChangeSettings != 13);
 
 			writeSettingsToFile(&settings, "settings.txt");
 
