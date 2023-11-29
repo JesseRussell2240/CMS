@@ -673,17 +673,19 @@ int	main(int argc, char* argv[]) {
 
 		case 7:
 
-			system("cls");
+
+
+			//system("cls");
 			do{
 			//printf("Option 7 coming soon.\n");
-			printf("\n(ON: 1 || OFF: 0)\n");
+			printf("\n\n(ON: 1 || OFF: 0)\n\n");
 			wprintf(L"1. Current COM port: %s\n", settings.comPort);
 			printf("2. Current audio message length: %d seconds\n", settings.audioMessageLength);
 			printf("3. Current bit rate: %d\n", settings.audioBitRate);
 			printf("4. Current baud rate: %d\n", settings.baudRate);
-			printf("5. XOR encryption on (YES: 1 || NO: 0): %d\n", settings.encryption);
-			printf("6. Huffman compression on (YES: 1 || NO: 0): %d\n", settings.compression);
-			printf("7. Send header with message on (YES: 1 || NO: 0): %d\n", settings.header);
+			printf("5. XOR encryption on: %d\n", settings.encryption);
+			printf("6. Huffman compression on: %d\n", settings.compression);
+			printf("7. Send header with message on: %d\n", settings.header);
 			printf("8. Priority Level (1-7): %d\n", settings.priority);
 			printf("9. Sender identification: %d\n", settings.sid);
 			printf("10. Reciver identification: %d\n", settings.rid);
@@ -735,17 +737,17 @@ int	main(int argc, char* argv[]) {
 
 
 			case 5:
-				printf("Do you want to use XOR encyption (YES: 1 || NO: 0): ");
+				printf("Do you want to use XOR encyption: ");
 				scanf_s("%d", &settings.encryption);
 				break;
 			case 6:
-				printf("Do you want to use Huffman compression (YES: 1 || NO: 0): ");
+				printf("Do you want to use Huffman compression: ");
 				scanf_s("%d", &settings.compression);
 				break;
 
 
 			case 7:
-				printf("Do you want to send your message with a header (YES: 1 || NO: 0): ");
+				printf("Do you want to send your message with a header: ");
 				scanf_s("%d", &settings.header);
 				break;
 	
@@ -766,7 +768,7 @@ int	main(int argc, char* argv[]) {
 			case 10:
 
 				printf("What is your RID?\n");
-				scanf_s("%d", &settings.sid);
+				scanf_s("%d", &settings.rid);
 
 
 				break;
@@ -783,25 +785,20 @@ int	main(int argc, char* argv[]) {
 				printf("Do you want error detection for the message?\n");
 				scanf_s("%d", &settings.payloaderror);
 
+				break;
+
+			case 13:
+				break;
+
 			default:
 				printf("Error changing settings\n");
 				break;
 			}
-			system("cls");
-			} while (ChangeSettings != 13);
+			//system("cls");
+			} while (ChangeSettings != 14);
 
 			writeSettingsToFile(&settings, "settings.txt");
 
-			/* Display updated settings
-			printf("\nUpdated settings:\n");
-			wprintf(L"COM port: %s\n", settings.comPort);
-			printf("baud rate: %d\n", settings.baudRate);
-			printf("Audio message length: %d seconds\n", settings.audioMessageLength);
-			printf("Audio bit rate: %d kbps\n", settings.audioBitRate);
-			printf("XOR encyption on (YES: 1 || NO: 0): %d\n", settings.encryption);
-			printf("Huffman compression (YES: 1 || NO: 0): %d\n", settings.compression);
-			printf("Header with message on (YES: 1 || NO : 0): %d\n", settings.header);
-			*/
 			break;
 
 		default:
