@@ -41,8 +41,8 @@ typedef struct {
 	int priority;
 	int sid;
 	int rid;
-	int payloaderror;
-	int headererror;
+	int payloadError;
+	int headerError;
 } ComSettings;
 
 ComSettings settings;
@@ -62,8 +62,8 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 		fwprintf(file, L"PRIORITY=%d\n", settings->priority);
 		fwprintf(file, L"SID=%d\n", settings->sid);
 		fwprintf(file, L"RID=%d\n", settings->rid);
-		fwprintf(file, L"PAYLOADERROR=%d\n", settings->payloaderror);
-		fwprintf(file, L"RID=%d\n", settings->headererror);
+		fwprintf(file, L"PAYLOADERROR=%d\n", settings->payloadError);
+		fwprintf(file, L"RID=%d\n", settings->headerError);
 		fclose(file);
 	}
 	else {
@@ -118,8 +118,8 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 			swscanf(line, L"PRIORITY=%d", &settings->priority);
 			swscanf(line, L"SID=%d", &settings->sid);
 			swscanf(line, L"RID=%d", &settings->rid);
-			swscanf(line, L"PAYLOADERROR=%d", &settings->payloaderror);
-			swscanf(line, L"HEADERERROR=%d", &settings->headererror);
+			swscanf(line, L"PAYLOADERROR=%d", &settings->payloadError);
+			swscanf(line, L"HEADERERROR=%d", &settings->headerError);
 		}
 
 		fclose(file);
@@ -341,7 +341,7 @@ int	main(int argc, char* argv[]) {
 					char* receivedExample = (char*)(receivedPayload);
 					receivedExample[recivedHeader.payloadSize] = '\0';
 
-					strcpy(messageBuffer, receivedExample);
+			//		strcpy(messageBuffer, receivedExample);
 					//	printf("\nRecived Example var: %s\n", receivedExample);
 
 						// Free the allocated memory for the received payload
@@ -581,8 +581,8 @@ int	main(int argc, char* argv[]) {
 			printf("8. Priority Level (1-7): %d\n", settings.priority);
 			printf("9. Sender identification: %d\n", settings.sid);
 			printf("10. Reciver identification: %d\n", settings.rid);
-			printf("11. Header error detection and correction:%d\n", settings.headererror);
-			printf("12. Payload error detction:%d\n", settings.payloaderror);
+			printf("11. Header error detection and correction:%d\n", settings.headerError);
+			printf("12. Payload error detction:%d\n", settings.payloadError);
 			printf("13. Exit");
 
 
@@ -668,14 +668,14 @@ int	main(int argc, char* argv[]) {
 			case 11:
 
 				printf("Do you want error detection and correction on for the header?\n ");
-				scanf_s("%d", &settings.headererror);
+				scanf_s("%d", &settings.headerError);
 
 				break;
 
 			case 12:
 
 				printf("Do you want error detection for the message?\n");
-				scanf_s("%d", &settings.payloaderror);
+				scanf_s("%d", &settings.payloadError);
 
 			default:
 				printf("Error changing settings\n");
