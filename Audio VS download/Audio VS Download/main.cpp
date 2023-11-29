@@ -41,8 +41,8 @@ typedef struct {
 	int priority;
 	int sid;
 	int rid;
-	int payloaderror;
-	int headererror;
+	int payloadError;
+	int headerError;
 } ComSettings;
 
 ComSettings settings;
@@ -62,8 +62,8 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 		fwprintf(file, L"PRIORITY=%d\n", settings->priority);
 		fwprintf(file, L"SID=%d\n", settings->sid);
 		fwprintf(file, L"RID=%d\n", settings->rid);
-		fwprintf(file, L"PAYLOADERROR=%d\n", settings->payloaderror);
-		fwprintf(file, L"RID=%d\n", settings->headererror);
+		fwprintf(file, L"PAYLOADERROR=%d\n", settings->payloadError);
+		fwprintf(file, L"RID=%d\n", settings->headerError);
 		fclose(file);
 	}
 	else {
@@ -118,8 +118,8 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 			swscanf(line, L"PRIORITY=%d", &settings->priority);
 			swscanf(line, L"SID=%d", &settings->sid);
 			swscanf(line, L"RID=%d", &settings->rid);
-			swscanf(line, L"PAYLOADERROR=%d", &settings->payloaderror);
-			swscanf(line, L"HEADERERROR=%d", &settings->headererror);
+			swscanf(line, L"PAYLOADERROR=%d", &settings->payloadError);
+			swscanf(line, L"HEADERERROR=%d", &settings->headerError);
 		}
 
 		fclose(file);
@@ -265,13 +265,20 @@ int	main(int argc, char* argv[]) {
 			printf("Enter your choice (1, or 2): ");
 			scanf("%d", &option, 1);
 
-			
-			setComRate(settings.baudRate);
-			initializePort(settings.comPort);
 
 			//Transmission
 			if (option == 1) {
 
+				//build the header for the message based on users predefined settings and for text message transmission
+				HeaderForPayload header;
+				header.sid = settings.sid;
+				header.rid = settings.rid;
+				header.priority = settings.priority;
+				header.payLoadType = 1; //set as 1 for audio
+				header.encryption = settings.encryption;
+				header.compression = settings.compression;
+
+				//logic for audio compression 
 				if (settings.compression == 1) {
 
 					short* tmpBuf[40000];
@@ -285,21 +292,66 @@ int	main(int argc, char* argv[]) {
 					lBigBufSize = lengthBuf / 2;
 				}
 
-				//transmitting without header
-				if (settings.header == 0) {
-					transmitAudio(iBigBuf, lBigBufSize);
+				//Logic for enctrypted audio transmission
+				if (settings.encryption) {
+
+
 				}
+
+				//logic for data correction and detection for audio transmission
+				if (settings.headerError || settings.payloadError) {
+
+
+				}
+
+				/*
+								setComRate(settings.baudRate);
+				initializePort(settings.comPort);
+				transmitAudio(iBigBuf, lBigBufSize);
+				*/
+				//transmit audio
+				header.payloadSize = lBigBufSize;
+
+
+				printHeaderInfo(header);
+				setComRate(settings.baudRate);
+				initializePort(settings.comPort);
+				transmitPayload(&header, (void*)iBigBuf);
 
 			}
 
-			//Recieve
+			//Recieve audio
 			else if (option == 2) {
 
+				HeaderForPayload recivedHeader;
+				void* receivedPayload;
+
+				//recive incoming header and payload
+				setComRate(settings.baudRate);
+				initializePort(settings.comPort);
+				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload);
+
+
+				printHeaderInfo(recivedHeader);
+
+
+		
+				if (bytesRead == recivedHeader.payloadSize) {
+					// Cast the received payload back to a character array
+					char* receivedExample = (char*)(receivedPayload);
+					receivedExample[recivedHeader.payloadSize] = '\0';
+
+			//		strcpy(messageBuffer, receivedExample);
+					//	printf("\nRecived Example var: %s\n", receivedExample);
+
+						// Free the allocated memory for the received payload
+					free(receivedPayload);
+				}
+
+				//logic for decompressing audio upon reciving
 				if (settings.compression == 1) {
-
-
-					//decodeShorts(compressedData, compressedSize, &decompressedData, &decompressedSize);
-					short* tmpBuf[40000];
+					
+					short* tmpBuf[40000];						//this should not be hardcoded to 40000 fix this with either a define or a function to calculate and set this value
 					long lengthBuf = 40000;
 					decodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
 
@@ -307,72 +359,22 @@ int	main(int argc, char* argv[]) {
 						iBigBuf[i] = (*tmpBuf)[i];
 					}
 					lBigBufSize = lengthBuf;
+				}
+
+				//logic for encryption audio reciving
+				if (settings.encryption) {
 
 
 				}
 
-				if (settings.header == 0) {
-				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
-				}
 
-				//transmitt with header
-				else if (settings.header == 1) {
-					//char Payload[] = "\nHi there this is a great message for you\n"; 	// Payload is a text message in this example but could be any data	
-
-					// Header (sample data type is text but this should work with audio and images as well)
-					//HeaderForPayload.sid = 1;
-					//HeaderForPayload.rid = 2;
-					//HeaderForPayload.payloadSize = strlen(txPayload) + 1;				// Flexible payload size - Send size of payload inside header (payload can be anything) and enough memory will be malloc'd in the receive function
-					//HeaderForPayload.compression = 0;									// None
-					//HeaderForPayload.encryption = 0;									// None
-					//HeaderForPayload.payLoadType = 0;									// Text
-
-				//	transmitPayload(&HeaderForPayload, iBigBuf, &hComTx, settings.comPort, settings.baudRate, nComBits, timeout);  // Transmit header and payload
+				//logic for data correction and detection for audio reciving
+				if (settings.headerError || settings.payloadError) {
 
 
 				}
+				
 
-				else if (settings.header == 1) {
-					/*****************************************************************************************************************************
-
-						bytesRead = receive(&rxHeader, &HeaderForPayload, &hComRx, COMPORT_Rx, nComRate, nComBits, timeout);		// Pass pointer to rxPayload so can access malloc'd memory inside the receive function from main()
-
-						// Use header info to determine if payload needs to be decrypted or decompressed
-						if (HeaderForPayload.encryption != 0) {
-							printf("\nMessage is encrypted so need to decrypt!\n");
-							// rxPayload = decrypt(rxPayload)
-						}
-						else {
-							printf("\nMessage is not encrypted\n");
-						}
-						if (HeaderForPayload.compression != 0) {
-							printf("\nMessage is compressed so need to decompress!\n");
-							// rxPayload = decompress(rxPayload)
-						}
-						else {
-							printf("\nMessage is not compressed\n");
-						}
-
-						// Determine type of payload from header data and corresponding action to complete (e.g. display text, play audio, etc)
-						if (HeaderForPayload.payLoadType == 0) {
-							printf("\nPayload is text\n");
-							printf("\nMessage recieved: %s\n", (char*)rxPayload);		// May need to set rxPayload[bytesRead - 1] = '\0'
-							// Enqueue()
-							free(HeaderForPayload);											// malloc'd in the receive function
-						}
-						else if (HeaderForPayload.payLoadType == 1) {
-							printf("\nPayload is audio\n");
-							// Playbuffer();
-							// Enqueue
-							free(rxPayload);											// malloc'd in the receive function
-						}
-						else {
-							printf("\Payload is an image or something else ...\n");
-							// DisplayImage();
-							free(rxPayload);											// malloc'd in the receive function
-						}
-	*/
-				}
 
 
 			}
@@ -381,101 +383,17 @@ int	main(int argc, char* argv[]) {
 					printf("Invalid input. Please enter 1 or 2.\n");
 			}
 
-			/*
-			if (settings.compression == 1 && option == '1') {
-
-				short* tmpBuf[40000];
-				long lengthBuf = 40000;
-				encodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
-				//*iBigBuf = *tmpBuf;
-				//copy temp buf to ibigbuf
-				for (int i = 0; i < lBigBufSize; ++i) {
-					iBigBuf[i] = (*tmpBuf)[i];
-				}
-				lBigBufSize = lengthBuf / 2;
 
 
-			}
-			//transmitting without header
-			if (option == '1' && settings.header == 0) {
-				transmitAudio(iBigBuf, lBigBufSize);
-			}
-
-			//reciving without a header
-			else if (option == '2' && settings.header == 0) {
-				receiveAudio(iBigBuf, lBigBufSize); // Pass the buffer to store the received audio
-			}
-
-			//transmitt with header
-			else if (option == '2' && settings.header == 1) {
-				//char Payload[] = "\nHi there this is a great message for you\n"; 	// Payload is a text message in this example but could be any data	
-
-				// Header (sample data type is text but this should work with audio and images as well)
-				//HeaderForPayload.sid = 1;
-				//HeaderForPayload.rid = 2;
-				//HeaderForPayload.payloadSize = strlen(txPayload) + 1;				// Flexible payload size - Send size of payload inside header (payload can be anything) and enough memory will be malloc'd in the receive function
-				//HeaderForPayload.compression = 0;									// None
-				//HeaderForPayload.encryption = 0;									// None
-				//HeaderForPayload.payLoadType = 0;									// Text
-
-			//	transmitPayload(&HeaderForPayload, iBigBuf, &hComTx, settings.comPort, settings.baudRate, nComBits, timeout);  // Transmit header and payload
-
-
-			}
-
-			//recive with header
-			else if (option == '2' && settings.header == 1) {
-				/*****************************************************************************************************************************
-
-					bytesRead = receive(&rxHeader, &HeaderForPayload, &hComRx, COMPORT_Rx, nComRate, nComBits, timeout);		// Pass pointer to rxPayload so can access malloc'd memory inside the receive function from main()
-
-					// Use header info to determine if payload needs to be decrypted or decompressed
-					if (HeaderForPayload.encryption != 0) {
-						printf("\nMessage is encrypted so need to decrypt!\n");
-						// rxPayload = decrypt(rxPayload)
-					}
-					else {
-						printf("\nMessage is not encrypted\n");
-					}
-					if (HeaderForPayload.compression != 0) {
-						printf("\nMessage is compressed so need to decompress!\n");
-						// rxPayload = decompress(rxPayload)
-					}
-					else {
-						printf("\nMessage is not compressed\n");
-					}
-
-					// Determine type of payload from header data and corresponding action to complete (e.g. display text, play audio, etc)
-					if (HeaderForPayload.payLoadType == 0) {
-						printf("\nPayload is text\n");
-						printf("\nMessage recieved: %s\n", (char*)rxPayload);		// May need to set rxPayload[bytesRead - 1] = '\0'
-						// Enqueue()
-						free(HeaderForPayload);											// malloc'd in the receive function
-					}
-					else if (HeaderForPayload.payLoadType == 1) {
-						printf("\nPayload is audio\n");
-						// Playbuffer();
-						// Enqueue
-						free(rxPayload);											// malloc'd in the receive function
-					}
-					else {
-						printf("\Payload is an image or something else ...\n");
-						// DisplayImage();
-						free(rxPayload);											// malloc'd in the receive function
-					}
-*/
 			break;
 				
 
 		case 6:
 
-			InitQueue();
-			//isQueuesEmpty();
-
-
-
+			
 			system("cls");
 			char userResultTwo;
+
 
 			printf("Options:\n");
 			printf("1. Transmit\n");
@@ -483,20 +401,17 @@ int	main(int argc, char* argv[]) {
 			printf("Enter your choice (1 or 2): ");
 			scanf_s(" %c", &userResultTwo, 1);
 
+			//logic for text message transmission
 			if (userResultTwo == '1') {
 
-				//build the header for the message based on users predefined settings
+				//build the header for the message based on users predefined settings and for text message transmission
 				HeaderForPayload header;
 				header.sid = settings.sid;
 				header.rid = settings.rid;
 				header.priority = settings.priority;
-				//header.seqNum = 4;
-				//header.payloadSize = 1; //must be determined afrer message is constructed and with be lbigbuflength in audio
 				header.payLoadType = 0; //set as 0 for text
 				header.encryption = settings.encryption;
 				header.compression = settings.compression;
-				
-
 
 				// User input for text message
 				char userResultThree;
@@ -506,15 +421,18 @@ int	main(int argc, char* argv[]) {
 				printf("Enter your choice (1 or 2): ");
 				scanf_s(" %c", &userResultThree, 1);
 
-				char msgOut[250];
-				int msgSize = 249;
+				char msgOut[250];					//this should not be hardcoded to 250
+				int msgSize = 249;			//this should not be hardcoded to 250
 
+				//logic for cutom text message transmission CUSTOM
 				if (userResultThree == '1') {
-
 					printf("Enter the text message to transmit: ");
 					scanf(" %[^\n]s", msgOut);
 				}
+
+				//logic for auto genorating text message from random qoute in fourtion cookies file
 				else if (userResultThree == '2') {
+					InitQueue();
 
 					//code calls queues to q fourtion cookies and then randomly get a qoute
 					numberOfQuotes = fnumQuotes();
@@ -531,32 +449,28 @@ int	main(int argc, char* argv[]) {
 					free(quoteLengths);
 
 				}
+
 				else {
 					printf("Invalid input. Please enter 1 or 2.\n");
 				}
 
+				//set the msgSize depending on number of chars user entered.
 				msgSize = strlen(msgOut);
-				//encrypt transmitted message
-				//XOR encode funtion
-				//args in the following order to encrypt (message, messageLen, secretKey, secretKeyLen, encBuf
-
+				
+				//logic for compression of text message transmission
 				if (settings.compression == 1) {
-
-				//	printf("Huffman compressing message );
 
 					char tmpMsg[240];
 					strcpy(tmpMsg, msgOut);
-					
 					msgSize = compressTXT(tmpMsg, msgOut, msgSize);
 
 					//printf("\ntest\n");
 					printf("Length of input message: %d", msgSize);
 
-					
-				
 				}
 
-				if (settings.encryption == 1) {
+				//logic for encryption of text transmission
+				 if (settings.encryption == 1) {
 
 					char secretKey[10] = "314159265";
 					int keyLength = 10;
@@ -565,58 +479,47 @@ int	main(int argc, char* argv[]) {
 					xorCipher(msgOut, msgSize, secretKey, keyLength, tempBuf);
 				}
 
+				//logic for data correction and detection for text transmission
+				 if (settings.headerError || settings.payloadError) {
+
+
+				}
+
 				//set the payload size in the header after compression/encription etc are completed.
 				header.payloadSize = msgSize;
+
 
 				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				
-
-				printf("print");
 				transmitPayload(&header, (void*)msgOut);
 
 
-
 				
-				// Transmit text message
-				//transmitMessage(msgOut);
-
-
-
-
-				// RECIEVING TEXT MESSAGES
 			}
-			else if (userResultTwo == '2') {
 
-				setComRate(settings.baudRate);
-				initializePort(settings.comPort);
+			//logic for reciving text message
+			else if (userResultTwo == '2') {
 
 				int messageLength;
 				char messageBuffer[250];
-
-			//	void InitQueue(void);
-				//int IsQueueEmpty(void);
-
-			//	receiveMessages(messageBuffer, &messageLength);
 				DWORD incomingBytes;
-
 				HeaderForPayload recivedHeader;
 				void* receivedPayload;
 
-
+				//recive incoming header and payload
+				setComRate(settings.baudRate);
+				initializePort(settings.comPort);
 				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload);
 				
-				//printf("MSG recived from %d", recivedHeader.sid);
+				
 				printHeaderInfo(recivedHeader);
-
-
 
 				if (bytesRead == recivedHeader.payloadSize) {
 					// Cast the received payload back to a character array
 					char* receivedExample = (char*) (receivedPayload);
 					receivedExample[recivedHeader.payloadSize] = '\0';
-					//strcat(receivedExample, "\0");
+					
 					strcpy(messageBuffer, receivedExample);
 				//	printf("\nRecived Example var: %s\n", receivedExample);
 					
@@ -625,10 +528,11 @@ int	main(int argc, char* argv[]) {
 				}
 				
 
-				//void AddToQueue(link);
+					//print recived message prior to decryption
+					printf("\nRecived message: %s\n", messageBuffer);
 
-						printf("\nRecived message: %s\n", messageBuffer);
-						if (settings.compression == 1) {
+					//logice for reciving text message to decompress
+					if (settings.compression == 1) {
 
 						int resultLength = 0;
 						char tmpMsg[500];
@@ -639,8 +543,9 @@ int	main(int argc, char* argv[]) {
 
 						strcpy(messageBuffer, tmpMsg);
 						printf("\nUncompressed message: %s\n", messageBuffer);
-						//void decodeFile(const char* inputFileName, const char* outputFileName);
 					}
+
+					//logic to decrypt recived text message
 					if (settings.encryption == 1) {
 
 						char secretKey[10] = "314159265";
@@ -652,17 +557,6 @@ int	main(int argc, char* argv[]) {
 						printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 					}
 
-				//		void AddToQueue(link);
-				//	link DeQueue(void);
-
-					//	Item receivedMsg;
-					//	AddToQueue(receivedMSG);
-
-				//}
-
-						
-					
-				
 
 			}
 			else {
@@ -689,8 +583,8 @@ int	main(int argc, char* argv[]) {
 			printf("8. Priority Level (1-7): %d\n", settings.priority);
 			printf("9. Sender identification: %d\n", settings.sid);
 			printf("10. Reciver identification: %d\n", settings.rid);
-			printf("11. Header error detection and correction:%d\n", settings.headererror);
-			printf("12. Payload error detction:%d\n", settings.payloaderror);
+			printf("11. Header error detection and correction:%d\n", settings.headerError);
+			printf("12. Payload error detction:%d\n", settings.payloadError);
 			printf("13. Exit");
 
 
@@ -776,14 +670,14 @@ int	main(int argc, char* argv[]) {
 			case 11:
 
 				printf("Do you want error detection and correction on for the header?\n ");
-				scanf_s("%d", &settings.headererror);
+				scanf_s("%d", &settings.headerError);
 
 				break;
 
 			case 12:
 
 				printf("Do you want error detection for the message?\n");
-				scanf_s("%d", &settings.payloaderror);
+				scanf_s("%d", &settings.payloadError);
 
 				break;
 
