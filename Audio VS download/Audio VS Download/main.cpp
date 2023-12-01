@@ -495,7 +495,7 @@ int	main(int argc, char* argv[]) {
 					msgSize = compressTXT(tmpMsg, msgOut, msgSize);
 
 					//printf("\ntest\n");
-					printf("Length of input message: %d", msgSize);
+					printf("Length of input message: %d\n", msgSize);
 
 				}
 
