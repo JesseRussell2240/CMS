@@ -107,6 +107,7 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 	if (file != NULL) {
 		wchar_t line[256];
 
+
 		while (fgetws(line, sizeof(line) / sizeof(line[0]), file) != NULL) {
 			//use of swscanf because comport is stored as a wide char
 			swscanf(line, L"COMPORT=%s", settings->comPort);
@@ -257,6 +258,7 @@ int	main(int argc, char* argv[]) {
 
 		case 5:
 
+
 			system("cls");
 			//request transmission or reciving
 			printf("Options:\n");
@@ -302,8 +304,7 @@ int	main(int argc, char* argv[]) {
 				//logic for data correction and detection for audio transmission
 				if (settings.headerError || settings.payloadError) {
 
-
-					//add vote on iBigBuf
+				
 
 				}
 
@@ -368,13 +369,24 @@ int	main(int argc, char* argv[]) {
 				if (settings.encryption) {
 
 
+
 				}
 
 
 				//logic for data correction and detection for audio reciving
 				if (settings.headerError || settings.payloadError) {
 
-					//add vote header
+					int i;
+
+					struct header headerinfo1 = { 123, 456, 1, 987654, 8000, 'AUD', 'XOR', 'HUF' };
+					struct header headerinfo2 = { 123, 456, 1, 987654, 8000, 'AUD', 'XOR', 'HUF' };
+					struct header headerinfo3 = { 123, 456, 1, 987654, 8000, 'AUD', 'XOR', 'HUF' };
+
+					struct header* List1[] = { &headerinfo1, &headerinfo2, &headerinfo3 };	  // Identical shouldn't find changes
+					
+					//int result = VoteOn(List1[], lBigBufSize, iBigBuf);
+
+
 
 				}
 				
@@ -486,9 +498,8 @@ int	main(int argc, char* argv[]) {
 				//logic for data correction and detection for text transmission
 				 if (settings.headerError || settings.payloadError) {
 
-					 //add vote on for header
+					 //VoteOn(iBigBuf, lBigBufSize);
 
-					 //a
 
 				}
 
@@ -629,6 +640,8 @@ int	main(int argc, char* argv[]) {
 				//this can cause issues if user enters too low or two high
 				printf("Enter the sample rate in kHz (1-20): ");
 				scanf_s("%d", &settings.audioBitRate);
+
+				settings.audioBitRate *= 1000;
 				break;
 
 			case 4:
@@ -686,8 +699,6 @@ int	main(int argc, char* argv[]) {
 				printf("Do you want error detection for the message?\n");
 				scanf_s("%d", &settings.payloadError);
 
-				break;
-
 			case 13:
 				break;
 
@@ -696,7 +707,7 @@ int	main(int argc, char* argv[]) {
 				break;
 			}
 			//system("cls");
-			} while (ChangeSettings != 14);
+			} while (ChangeSettings != 13);
 
 			writeSettingsToFile(&settings, "settings.txt");
 

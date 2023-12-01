@@ -4,7 +4,7 @@
 #include <string.h>
 
 
-int VoteOn(void* Instances[], int nInstances, int nSize) {
+int VoteOn(void* Instances[], short nInstances, int nSize) {
     int i, j;
     int maxRepeats = 0;         //stores the number of repeats
     int maxIndex = -1;          //Index of the item in the majority - initialized to -1
