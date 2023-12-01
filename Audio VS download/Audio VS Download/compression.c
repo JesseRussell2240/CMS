@@ -202,7 +202,8 @@ int decompressTXT(char* msgIn, char* msgOut, int compressedSize, int decompresse
     }
 
     // Call Huffman decompression function
-    Huffman_Uncompress((unsigned char*)msgIn, (unsigned char*)msgOut, compressedSize, decompressedSize);
+    int outsize = decompressedSize;
+    Huffman_Uncompress((unsigned char*)msgIn, (unsigned char*)msgOut, compressedSize, outsize);
 
-    return decompressedSize;
+    return outsize;
 }

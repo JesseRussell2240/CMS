@@ -539,7 +539,7 @@ int	main(int argc, char* argv[]) {
 					// Receive incoming header and payload
 					setComRate(settings.baudRate);
 					initializePort(settings.comPort);
-					DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
+					DWORD bytesRead;// = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 					link newNode;
 					
 
@@ -548,7 +548,7 @@ int	main(int argc, char* argv[]) {
 
 					switch (choice) {
 					case 1:
-
+						bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
 
 						printHeaderInfo(recivedHeader);
@@ -573,8 +573,8 @@ int	main(int argc, char* argv[]) {
 
 							printf("\nCompression is ON!!!!!\n");
 
-							int resultLength = 0;
-							char tmpMsg[250];
+							int resultLength = 500;
+							char tmpMsg[500];
 							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 //
 							printf("Decompressed Size: %d\n", decompressedSize);
