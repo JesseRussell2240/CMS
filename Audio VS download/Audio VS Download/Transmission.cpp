@@ -12,6 +12,11 @@ Details: Contains various audio file functions such as , play, save, load, recor
 #include "Transmission.h"
 #include "AudioRecorder.h"
 #include "Queues.h"
+#include "VoteOn.h"
+
+
+
+#define voteOnCount 3
 
 
 //dosables warning for userinput
@@ -31,7 +36,8 @@ HANDLE hCom;										// Pointer to the selected COM port (Receiver)
 int nComRate = 9600;								// Baud (Bit) rate in bits/second 
 int nComBits = 8;									// Number of bits per frame
 COMMTIMEOUTS timeout;
-						// Declare the external variable
+extern short iBigBuf[];								// Declare the external variable
+extern long lBigBufSize;							// Declare the external variable
 
 
 //setter function for comBits
@@ -79,7 +85,7 @@ void transmitAudio(short* audioData, int dataSize) {
 	CloseHandle(hCom);
 }
 
-void receiveAudio(short* audioData, int dataSize, int sampleRate) {
+void receiveAudio(short* audioData, int dataSize) {
 
 	DWORD bytesRead;
 	printf("recive audio called\n");
@@ -88,7 +94,7 @@ void receiveAudio(short* audioData, int dataSize, int sampleRate) {
 	
 	if (bytesRead == dataSize * sizeof(short)) {
 		// The received data size matches the expected size
-		PlayAudio(audioData, dataSize, sampleRate);
+		PlayAudio(audioData, dataSize);
 		
 	}
 	else {
@@ -99,24 +105,45 @@ void receiveAudio(short* audioData, int dataSize, int sampleRate) {
 	CloseHandle(hCom);
 }
 
-void transmitPayload(HeaderForPayload* Header, void* Payload) {
+void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) {
 
 
+	//logic to check if vote on header is turned on and transmit the correct number of headers.
+	if (voteOnHeader == 1) {
+		for (int i = 1; i > voteOnCount; i++) {
+			outputToPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
+		}
+	}
+	else {
+		outputToPort(&hCom, Header, sizeof(Header) * 2);
+	}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
-	outputToPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
+						// Send Header
 	outputToPort(&hCom, Payload, (*Header).payloadSize);				// Send payload
 	//Sleep(500);															// Allow time for signal propagation on cable 
 	purgePort(&hCom);													// Purge the Tx port
 	CloseHandle(hCom);													// Close the handle to Tx port 
 }
 
-DWORD receivePayload(HeaderForPayload* Header, void** Payload) {
+DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader) {
 	// Note: Pointer to rxPayload buffer (pointer to a pointer) is passed to this function since this function malloc's the amount of memory required - need to free it in main()
 	DWORD bytesRead;
 
+	//logic to check if vote on header is turned on and transmit the correct number of headers.
+	if (voteOnHeader == 1) {
+		for (int i = 1; i > voteOnCount; i++) {
+			inputFromPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
+		}
+
+
+	}
+	else {
+		inputFromPort(&hCom, Header, sizeof(Header) * 2);
+	}
+
 	//initPort(&hCom, port, nComRate, nComBits, timeout);					// Initialize the Rx port
-	inputFromPort(&hCom, Header, sizeof(Header) * 2);						// Read in Header first (which is a standard number of bytes) to get size of payload 
+							// Read in Header first (which is a standard number of bytes) to get size of payload 
 	*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
 	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload 
 	purgePort(&hCom);														// Purge the Rx port
