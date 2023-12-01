@@ -31,8 +31,7 @@ HANDLE hCom;										// Pointer to the selected COM port (Receiver)
 int nComRate = 9600;								// Baud (Bit) rate in bits/second 
 int nComBits = 8;									// Number of bits per frame
 COMMTIMEOUTS timeout;
-extern short iBigBuf[];								// Declare the external variable
-extern long lBigBufSize;							// Declare the external variable
+						// Declare the external variable
 
 
 //setter function for comBits
@@ -80,7 +79,7 @@ void transmitAudio(short* audioData, int dataSize) {
 	CloseHandle(hCom);
 }
 
-void receiveAudio(short* audioData, int dataSize) {
+void receiveAudio(short* audioData, int dataSize, int sampleRate) {
 
 	DWORD bytesRead;
 	printf("recive audio called\n");
@@ -89,7 +88,7 @@ void receiveAudio(short* audioData, int dataSize) {
 	
 	if (bytesRead == dataSize * sizeof(short)) {
 		// The received data size matches the expected size
-		PlayAudio(audioData, dataSize);
+		PlayAudio(audioData, dataSize, sampleRate);
 		
 	}
 	else {
