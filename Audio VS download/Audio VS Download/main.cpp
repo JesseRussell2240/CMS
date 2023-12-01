@@ -482,6 +482,7 @@ int	main(int argc, char* argv[]) {
 
 					//printf("\ntest\n");
 					printf("Length of input message: %d\n", msgSize);
+					printf("Compressed message: %d\n", tmpMsg);
 
 				}
 
@@ -493,6 +494,8 @@ int	main(int argc, char* argv[]) {
 					char tempBuf[250];
 
 					xorCipher(msgOut, msgSize, secretKey, keyLength, tempBuf);
+					printf("Encrypted message: %d\n", msgOut);
+
 				}
 
 				//logic for data correction and detection for text transmission
@@ -504,13 +507,13 @@ int	main(int argc, char* argv[]) {
 				}
 
 				//set the payload size in the header after compression/encription etc are completed.
-				header.payloadSize = msgSize;
+				header.payloadSize = msgSize + 1;
 
 
 				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				transmitPayload(&header, (void*)msgOut, settings.headerError);
+				transmitPayload(&header, (void*)msgOut, 0);
 
 
 				
@@ -529,12 +532,17 @@ int	main(int argc, char* argv[]) {
 					printf("Enter your choice: ");
 					scanf("%d", &choice);
 
+					printf("\nYou entered %d\n", choice);
+
 					HeaderForPayload recivedHeader;
 					void* receivedPayload;
 					// Receive incoming header and payload
 					setComRate(settings.baudRate);
 					initializePort(settings.comPort);
 					DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
+					link newNode;
+					
+
 					int messageLength;
 					char messageBuffer[260];
 
@@ -548,10 +556,14 @@ int	main(int argc, char* argv[]) {
 						if (bytesRead == recivedHeader.payloadSize) {
 							// Cast the received payload back to a character array
 							char* receivedExample = (char*)(receivedPayload);
-							receivedExample[recivedHeader.payloadSize] = '\0';
+						//	receivedExample[recivedHeader.payloadSize - 1] = '\0';
+
+						
 
 							strcpy(messageBuffer, receivedExample);
 							printf("\nRecived Example var: %s\n", receivedExample);
+
+							printf("\nThe message buffer is: %s\n", messageBuffer);
 
 								// Free the allocated memory for the received payload
 							//free(receivedPayload);
@@ -559,32 +571,43 @@ int	main(int argc, char* argv[]) {
 						
 						if (settings.compression == 1) {
 
-					//		int resultLength = 0;
-					//		char tmpMsg[250];
-//int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
-//
-						//	printf("Decompressed Size: %d\n", decompressedSize);
-							//printf("Decompressed Message: %s\n", strlen(messageBuffer));
+							printf("\nCompression is ON!!!!!\n");
 
-						//	strcpy(messageBuffer, tmpMsg);
-					//		printf("\nUncompressed message: %s\n", messageBuffer);
+							int resultLength = 0;
+							char tmpMsg[250];
+							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
+//
+							printf("Decompressed Size: %d\n", decompressedSize);
+							printf("Decompressed Message: %s\n", strlen(messageBuffer));
+
+							strcpy(messageBuffer, tmpMsg);
+							printf("\nUncompressed message: %s\n", messageBuffer);
 						}
 
 						//logic to decrypt recived text message
 						if (settings.encryption == 1) {
 
-						//	char secretKey[10] = "314159265";
-						//	int keyLength = 10;
-						//	char tempBuf[250];
+							printf("\nEncryption is ON!!!!!\n");
+							char secretKey[10] = "314159265";
+							int keyLength = 10;
+							char tempBuf[250];
 
-						//	xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
 
-					//		printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 						}
 
+						// Create a new node for the received message
+						newNode = (link)malloc(sizeof(Node));
+						newNode->Data.sid = recivedHeader.sid;
+						newNode->Data.rid = recivedHeader.rid;
+						newNode->Data.priority = recivedHeader.priority; 
+						strcpy(newNode->Data.message, messageBuffer);  // Copy the received message
 
+						// Add the new node to the queue
+						AddToQueue(newNode);
 
-						
+						/*
 						if (bytesRead == recivedHeader.payloadSize) {
 							// Cast the received payload back to a character array
 							char* receivedExample = (char*)(receivedPayload);
@@ -611,9 +634,11 @@ int	main(int argc, char* argv[]) {
 
 
 						}
+						*/
 
 
 						// Process the items in the queue (you can modify this part based on your needs)
+						/*
 						while (!IsQueueEmpty()) {
 							link dequeuedNode = DeQueue();
 							Item dequeuedItem = dequeuedNode->Data;
@@ -625,6 +650,7 @@ int	main(int argc, char* argv[]) {
 							free(dequeuedNode);  // Free the memory allocated for the dequeued node
 							
 						}
+						*/
 
 						break;
 					case 2:
