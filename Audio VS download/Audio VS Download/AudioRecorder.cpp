@@ -8,24 +8,14 @@ Details: Contains various audio file functions such as , play, save, load, recor
 
 #include "sound.h"
 #include <stdio.h>
+#include "AudioRecorder.h"
 //#include <windows.h>
-
-
-// Function to record audio and store it in a buffer
-void RecordAudio(short* buffer, long bufferSize);
-void PlayAudio(short* buffer, long bufferSize);
-void SaveAudio(short* buffer, long bufferSize, const char* filePath);
-void LoadAudio(short* buffer, long bufferSize, const char* filePath);
-void RecordAudioTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate);
-void RecordBufferTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate);
-
-
 
 
 
 // Function to record audio and store it in a buffer with a specified duration (in seconds) and sample rate
 void RecordAudioTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate) {
-    InitializeRecording();
+    InitializeRecording(sampleRate, *buffer, bufferSize);
     RecordBufferTB(buffer, bufferSize, durationInSeconds, sampleRate);
     CloseRecording();
 }
@@ -43,18 +33,20 @@ void RecordBufferTB(short* buffer, long bufferSize, int durationInSeconds, int s
 }
 
 // Function to record audio and store it in a buffer
-void RecordAudio(short* buffer, long bufferSize) {
-    InitializeRecording();
+void RecordAudio(short* buffer, long bufferSize, int sampleRate) {
+    InitializeRecording(sampleRate, *buffer, bufferSize);
     RecordBuffer(buffer, bufferSize);
     CloseRecording();
 }
 
 // Function to play audio from a buffer
-void PlayAudio(short* buffer, long bufferSize) {
-    InitializePlayback();
+void PlayAudio(short* buffer, long bufferSize, int sampleRate) {
+    InitializePlayback(sampleRate);
     PlayBuffer(buffer, bufferSize);
     ClosePlayback();
 }
+
+
 
 // Function to save audio data to a file
 void SaveAudio(short* buffer, long bufferSize, const char* filePath) {

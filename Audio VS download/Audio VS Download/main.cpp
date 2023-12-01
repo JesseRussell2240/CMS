@@ -23,16 +23,17 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
-extern short iBigBuf[];								// Declare the external variable
-extern long lBigBufSize;							// Declare the external variable
+//extern short * iBigBuf[];								// Declare the external variable
+//extern long lBigBufSize;							// Declare the external variable
+
 
 
 // Define a structure to store COM port, bit rate, external variables, and audio settings
 typedef struct {
 	wchar_t comPort[20];
 	int baudRate;
-	short* bigBuf;
-	long bigBufSize;
+	//short* bigBuf;
+	//long bigBufSize;
 	int audioMessageLength;
 	int audioBitRate;
 	int encryption;
@@ -50,10 +51,9 @@ ComSettings settings;
 // Function to write settings to a file
 void writeSettingsToFile(ComSettings* settings, const char* filename) {
 	FILE* file = fopen(filename, "w");
-	printf("test");
 	if (file != NULL) {
 		fwprintf(file, L"COMPORT=%s\n", settings->comPort);
-		fwprintf(file, L"BITRATE=%d\n", settings->baudRate);
+		fwprintf(file, L"BAUDRATE=%d\n", settings->baudRate);
 		fwprintf(file, L"AUDIOMESSAGELENGTH=%d\n", settings->audioMessageLength);
 		fwprintf(file, L"AUDIOBITRATE=%d\n", settings->audioBitRate);
 		fwprintf(file, L"ENCRYPTION=%d\n", settings->encryption);
@@ -90,11 +90,6 @@ void ReceiveMessagesInBackground() {
 
 
 
-
-
-
-
-
 		std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	}
 }
@@ -109,7 +104,7 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 		while (fgetws(line, sizeof(line) / sizeof(line[0]), file) != NULL) {
 			//use of swscanf because comport is stored as a wide char
 			swscanf(line, L"COMPORT=%s", settings->comPort);
-			swscanf(line, L"BITRATE=%d", &settings->baudRate);
+			swscanf(line, L"BAUDRATE=%d", &settings->baudRate);
 			swscanf(line, L"AUDIOMESSAGELENGTH=%d", &settings->audioMessageLength);
 			swscanf(line, L"AUDIOBITRATE=%d", &settings->audioBitRate);
 			swscanf(line, L"ENCRYPTION=%d", &settings->encryption);
@@ -151,9 +146,19 @@ int	main(int argc, char* argv[]) {
 
 	srand((unsigned int)time(NULL));
 
-
 	// Read settings from file
 	readSettingsFromFile(&settings, "settings.txt");
+
+	// short * iBigBuf[];								// Declare the external variable
+//	 long lBigBufSize;	
+
+	// Obtain bitLength and settings as needed
+	//int64_t bitLength = (int64_t)settings.audioBitRate * settings.audioMessageLength * 1000;
+	
+	//uncomment for 
+	long lBigBufSize = settings.audioBitRate * settings.audioMessageLength;
+	short *iBigBuf = (short*)malloc(lBigBufSize * sizeof(short));
+	
 
 	//menu loop
 	do {
@@ -195,7 +200,7 @@ int	main(int argc, char* argv[]) {
 
 				if (playback == 1) {
 					printf("playing audio recording:\n");
-					PlayAudio(iBigBuf, lBigBufSize);
+					PlayAudio(iBigBuf, lBigBufSize, settings.audioBitRate);
 					rerecord = 0;
 				}
 				else if (playback == 2) {
@@ -217,7 +222,7 @@ int	main(int argc, char* argv[]) {
 			system("cls");
 			//calls helper to play audio
 			printf("\nPlaying recording from buffer\n");
-			PlayAudio(iBigBuf, lBigBufSize);
+			PlayAudio(iBigBuf, lBigBufSize, settings.audioBitRate);
 			break;
 		}
 		case 3:
@@ -235,7 +240,7 @@ int	main(int argc, char* argv[]) {
 
 			//calls helper function to play audio recording
 			printf("\nPlaying recording from loaded file ...\n");
-			PlayAudio(iBigBuf, lBigBufSize);
+			PlayAudio(iBigBuf, lBigBufSize, settings.audioBitRate);
 			break;
 
 		case 4:
@@ -294,6 +299,15 @@ int	main(int argc, char* argv[]) {
 
 				//Logic for enctrypted audio transmission
 				if (settings.encryption) {
+
+
+					
+
+					char secretKey[10] = "314159265";
+					int keyLength = 10;
+					char tempBuf[250];
+
+				//	xorCipher(msgOut, msgSize, secretKey, keyLength, tempBuf);
 
 
 				}
@@ -475,8 +489,9 @@ int	main(int argc, char* argv[]) {
 					char secretKey[10] = "314159265";
 					int keyLength = 10;
 					char tempBuf[250];
+					strcpy(tempBuf, msgOut);
 
-					xorCipher(msgOut, msgSize, secretKey, keyLength, tempBuf);
+					xorCipher(tempBuf, msgSize, secretKey, keyLength, msgOut);
 				}
 
 				//logic for data correction and detection for text transmission
@@ -676,6 +691,7 @@ int	main(int argc, char* argv[]) {
 
 				printf("Do you want error detection for the message?\n");
 				scanf_s("%d", &settings.payloadError);
+				break;
 
 			default:
 				printf("Error changing settings\n");
