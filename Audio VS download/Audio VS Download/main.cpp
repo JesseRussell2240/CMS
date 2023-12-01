@@ -715,8 +715,6 @@ int	main(int argc, char* argv[]) {
 				scanf_s("%d", &settings.payloadError);
 				break;
 
-				break;
-
 			case 13:
 				break;
 
@@ -725,7 +723,7 @@ int	main(int argc, char* argv[]) {
 				break;
 			}
 			//system("cls");
-			} while (ChangeSettings != 14);
+			} while (ChangeSettings != 13);
 
 			writeSettingsToFile(&settings, "settings.txt");
 
