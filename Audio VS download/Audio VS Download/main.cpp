@@ -384,7 +384,7 @@ int	main(int argc, char* argv[]) {
 
 					struct header* List1[] = { &headerinfo1, &headerinfo2, &headerinfo3 };	  // Identical shouldn't find changes
 					
-					int result = VoteOn(List1[], , );
+				//	int result = VoteOn(List1[], , );
 
 
 
