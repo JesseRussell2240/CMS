@@ -115,7 +115,7 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) 
 	//	}
 //	}
 	//else {
-		outputToPort(&hCom, Header, sizeof(Header) * 2);
+		outputToPort(&hCom, Header, sizeof(struct header));
 //	/}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
@@ -139,13 +139,13 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 
 //	}
 	//else {
-		inputFromPort(&hCom, Header, sizeof(Header) * 2);
+		inputFromPort(&hCom, Header, 16);
+		*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
+		bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload
 //	}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);					// Initialize the Rx port
-							// Read in Header first (which is a standard number of bytes) to get size of payload 
-	*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
-	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload 
+							// Read in Header first (which is a standard number of bytes) to get size of payload 	 
 	purgePort(&hCom);														// Purge the Rx port
 	CloseHandle(hCom);														// Close the handle to Rx port 
 	return bytesRead;														// Number of bytes read

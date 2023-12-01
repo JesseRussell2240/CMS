@@ -544,7 +544,6 @@ int	main(int argc, char* argv[]) {
 				//	printf("\nRecived Example var: %s\n", receivedExample);
 					
 					// Free the allocated memory for the received payload
-					free(receivedPayload);
 				}
 				
 
