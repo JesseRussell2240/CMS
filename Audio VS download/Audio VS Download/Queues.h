@@ -32,3 +32,4 @@ void InitQueue(void);
 int IsQueueEmpty(void);
 void AddToQueue(link);
 link DeQueue(void);
+void PrintQueueContents(void);

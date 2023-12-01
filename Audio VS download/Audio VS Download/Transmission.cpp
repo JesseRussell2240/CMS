@@ -115,7 +115,7 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) 
 	//	}
 //	}
 	//else {
-		outputToPort(&hCom, Header, sizeof(Header) * 2);
+		outputToPort(&hCom, Header, sizeof(struct header));
 //	/}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
@@ -139,7 +139,7 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 
 //	}
 	//else {
-		inputFromPort(&hCom, Header, sizeof(Header) * 2);
+		inputFromPort(&hCom, Header, sizeof(struct header));
 //	}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);					// Initialize the Rx port

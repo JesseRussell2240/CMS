@@ -438,7 +438,7 @@ int	main(int argc, char* argv[]) {
 				scanf_s(" %c", &userResultThree, 1);
 
 				char msgOut[250];					//this should not be hardcoded to 250
-				int msgSize = 249;			//this should not be hardcoded to 250
+				int msgSize = 250;			//this should not be hardcoded to 250
 
 				//logic for cutom text message transmission CUSTOM
 				if (userResultThree == '1') {
@@ -476,7 +476,7 @@ int	main(int argc, char* argv[]) {
 				//logic for compression of text message transmission
 				if (settings.compression == 1) {
 
-					char tmpMsg[240];
+					char tmpMsg[250];
 					strcpy(tmpMsg, msgOut);
 					msgSize = compressTXT(tmpMsg, msgOut, msgSize);
 
@@ -535,7 +535,8 @@ int	main(int argc, char* argv[]) {
 					setComRate(settings.baudRate);
 					initializePort(settings.comPort);
 					DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
-
+					int messageLength;
+					char messageBuffer[260];
 
 					switch (choice) {
 					case 1:
@@ -544,35 +545,46 @@ int	main(int argc, char* argv[]) {
 
 						printHeaderInfo(recivedHeader);
 
+						if (bytesRead == recivedHeader.payloadSize) {
+							// Cast the received payload back to a character array
+							char* receivedExample = (char*)(receivedPayload);
+							receivedExample[recivedHeader.payloadSize] = '\0';
 
-						//logic for decompressing audio upon reciving
+							strcpy(messageBuffer, receivedExample);
+							printf("\nRecived Example var: %s\n", receivedExample);
+
+								// Free the allocated memory for the received payload
+							//free(receivedPayload);
+						}
+						
 						if (settings.compression == 1) {
 
-							short* tmpBuf[40000];						//this should not be hardcoded to 40000 fix this with either a define or a function to calculate and set this value
-							long lengthBuf = 40000;
-							decodeShorts(iBigBuf, lBigBufSize, tmpBuf, &lengthBuf);
+					//		int resultLength = 0;
+					//		char tmpMsg[250];
+//int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
+//
+						//	printf("Decompressed Size: %d\n", decompressedSize);
+							//printf("Decompressed Message: %s\n", strlen(messageBuffer));
 
-							for (int i = 0; i < lBigBufSize; ++i) {
-								iBigBuf[i] = (*tmpBuf)[i];
-							}
-							lBigBufSize = lengthBuf;
+						//	strcpy(messageBuffer, tmpMsg);
+					//		printf("\nUncompressed message: %s\n", messageBuffer);
 						}
 
-						//logic for encryption audio reciving
-						if (settings.encryption) {
+						//logic to decrypt recived text message
+						if (settings.encryption == 1) {
 
+						//	char secretKey[10] = "314159265";
+						//	int keyLength = 10;
+						//	char tempBuf[250];
+
+						//	xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+
+					//		printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 						}
 
 
-						//logic for data correction and detection for audio reciving
-						if (settings.headerError || settings.payloadError) {
 
-
-
-
-						}
-
-
+						
 						if (bytesRead == recivedHeader.payloadSize) {
 							// Cast the received payload back to a character array
 							char* receivedExample = (char*)(receivedPayload);
@@ -585,13 +597,14 @@ int	main(int argc, char* argv[]) {
 							newNode->Data.rid = recivedHeader.rid;
 							newNode->Data.priority = recivedHeader.priority;
 							//newNode->Data.seqNum = recivedHeader.sequenceNumber;  
-							strcpy(newNode->Data.message, receivedExample);  // Copy the received message
+							strcpy(newNode->Data.message, messageBuffer);  // Copy the received message
 
 							// Add the new node to the queue
 							AddToQueue(newNode);
 
 							// Free the allocated memory for the received payload
 							free(receivedPayload);
+							free(newNode);
 
 							//		strcpy(messageBuffer, receivedExample);
 									//	printf("\nRecived Example var: %s\n", receivedExample);
@@ -610,11 +623,19 @@ int	main(int argc, char* argv[]) {
 								dequeuedItem.priority, dequeuedItem.seqNum, dequeuedItem.later);
 
 							free(dequeuedNode);  // Free the memory allocated for the dequeued node
+							
 						}
 
 						break;
 					case 2:
-						printf("code to display the info ");
+						
+
+
+						system("cls");
+
+						//printf("code to display the info ");
+						PrintQueueContents();
+
 						//displayMessages();
 						break;
 					case 3:
