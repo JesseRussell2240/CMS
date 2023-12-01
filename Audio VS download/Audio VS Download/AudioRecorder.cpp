@@ -23,6 +23,7 @@ void RecordBufferTB(short* buffer, long bufferSize, int durationInSeconds, int s
 
 
 
+
 // Function to record audio and store it in a buffer with a specified duration (in seconds) and sample rate
 void RecordAudioTB(short* buffer, long bufferSize, int durationInSeconds, int sampleRate) {
     InitializeRecording();

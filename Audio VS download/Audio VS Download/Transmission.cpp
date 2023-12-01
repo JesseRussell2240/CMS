@@ -115,11 +115,12 @@ void transmitPayload(HeaderForPayload* Header, void* Payload) {
 DWORD receivePayload(HeaderForPayload* Header, void** Payload) {
 	// Note: Pointer to rxPayload buffer (pointer to a pointer) is passed to this function since this function malloc's the amount of memory required - need to free it in main()
 	DWORD bytesRead;
-	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Rx port
+
+	//initPort(&hCom, port, nComRate, nComBits, timeout);					// Initialize the Rx port
 	inputFromPort(&hCom, Header, sizeof(Header) * 2);						// Read in Header first (which is a standard number of bytes) to get size of payload 
-	*Payload = (void*)malloc((*Header).payloadSize);				// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
-	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);// Receive payload 
-	purgePort(&hCom);													// Purge the Rx port
-	CloseHandle(hCom);													// Close the handle to Rx port 
-	return bytesRead;													// Number of bytes read
+	*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
+	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload 
+	purgePort(&hCom);														// Purge the Rx port
+	CloseHandle(hCom);														// Close the handle to Rx port 
+	return bytesRead;														// Number of bytes read
 }
