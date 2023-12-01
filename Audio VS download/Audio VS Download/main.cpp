@@ -384,7 +384,7 @@ int	main(int argc, char* argv[]) {
 
 					struct header* List1[] = { &headerinfo1, &headerinfo2, &headerinfo3 };	  // Identical shouldn't find changes
 					
-				//	int result = VoteOn(List1[], , );
+//					int result = VoteOn(List1[], , );
 
 
 
@@ -519,21 +519,30 @@ int	main(int argc, char* argv[]) {
 			//logic for reciving text message
 			else if (userResultTwo == '2') {
 
+				InitQueue();
+
+				int choice;
+				do {
+					printf("\n1. Receive Message\n");
+					printf("2. Display Received Messages\n");
+					printf("3. Exit\n");
+					printf("Enter your choice: ");
+					scanf("%d", &choice);
+
+					HeaderForPayload recivedHeader;
+					void* receivedPayload;
+					// Receive incoming header and payload
+					setComRate(settings.baudRate);
+					initializePort(settings.comPort);
+					DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
 
-				int messageLength;
-				char messageBuffer[250];
-				DWORD incomingBytes;
-				HeaderForPayload recivedHeader;
-				void* receivedPayload;
+					switch (choice) {
+					case 1:
 
-				//recive incoming header and payload
-				setComRate(settings.baudRate);
-				initializePort(settings.comPort);
-				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
-				
-				
-				printHeaderInfo(recivedHeader);
+
+
+						printHeaderInfo(recivedHeader);
 
 				if (bytesRead == recivedHeader.payloadSize) {
 					// Cast the received payload back to a character array
@@ -544,38 +553,38 @@ int	main(int argc, char* argv[]) {
 				//	printf("\nRecived Example var: %s\n", receivedExample);
 					
 					// Free the allocated memory for the received payload
+					free(receivedPayload);
 				}
 				
 
-					//print recived message prior to decryption
-					printf("\nRecived message: %s\n", messageBuffer);
 
-					//logice for reciving text message to decompress
-					if (settings.compression == 1) {
+						}
 
-						int resultLength = 0;
-						char tmpMsg[500];
-						int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 
-						printf("Decompressed Size: %d\n", decompressedSize);
-						//printf("Decompressed Message: %s\n", strlen(messageBuffer));
+						// Process the items in the queue (you can modify this part based on your needs)
+						while (!IsQueueEmpty()) {
+							link dequeuedNode = DeQueue();
+							Item dequeuedItem = dequeuedNode->Data;
 
-						strcpy(messageBuffer, tmpMsg);
-						printf("\nUncompressed message: %s\n", messageBuffer);
+							printf("Message: %s, Sender ID: %d, Receiver ID: %d, Priority: %c, SeqNum: %d, Extra: %s\n",
+								dequeuedItem.message, dequeuedItem.sid, dequeuedItem.rid,
+								dequeuedItem.priority, dequeuedItem.seqNum, dequeuedItem.later);
+
+							free(dequeuedNode);  // Free the memory allocated for the dequeued node
+						}
+
+						break;
+					case 2:
+						printf("code to display the info ");
+						//displayMessages();
+						break;
+					case 3:
+						printf("Exiting the program.\n");
+						break;
+					default:
+						printf("Invalid choice. Please try again.\n");
 					}
-
-					//logic to decrypt recived text message
-					if (settings.encryption == 1) {
-
-						char secretKey[10] = "314159265";
-						int keyLength = 10;
-						char tempBuf[250];
-
-						xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
-
-						printf("\nXOR Decrypted Message: %s\n", messageBuffer);
-					}
-
+				} while (choice != 3);
 
 			}
 			else {
