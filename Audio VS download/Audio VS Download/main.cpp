@@ -302,7 +302,7 @@ int	main(int argc, char* argv[]) {
 				}
 
 				//logic for data correction and detection for audio transmission
-				if (settings.headerError || settings.payloadError) {
+				if (settings.payloadError) {
 
 				
 
@@ -320,7 +320,7 @@ int	main(int argc, char* argv[]) {
 				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				transmitPayload(&header, (void*)iBigBuf);
+				transmitPayload(&header, (void*)iBigBuf, settings.headerError);
 
 			}
 
