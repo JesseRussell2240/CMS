@@ -139,9 +139,7 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 
 //	}
 	//else {
-		inputFromPort(&hCom, Header, 16);
-		*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
-		bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload
+		inputFromPort(&hCom, Header, sizeof(struct header));
 //	}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);					// Initialize the Rx port
