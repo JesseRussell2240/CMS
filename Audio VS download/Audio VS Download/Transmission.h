@@ -25,5 +25,5 @@ void transmitAudio( short* audioData, int dataSize);
 void receiveAudio(short* audioData, int dataSize);
 //DWORD receivePayload(Header* Header, void** Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout);
 //void transmitPayload(Header* Header, void* Payload, HANDLE* hCom, wchar_t* COMPORT, int nComRate, int nComBits, COMMTIMEOUTS timeout);
-DWORD receivePayload(HeaderForPayload* Header, void** Payload);
+DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader);
 void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader);

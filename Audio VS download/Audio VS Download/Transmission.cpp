@@ -109,14 +109,14 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) 
 
 
 	//logic to check if vote on header is turned on and transmit the correct number of headers.
-	if (voteOnHeader == 1) {
-		for (int i = 1; i > voteOnCount; i++) {
-			outputToPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
-		}
-	}
-	else {
+	//if (voteOnHeader == 1) {
+	//	for (int i = 1; i < voteOnCount; i++) {
+	//		outputToPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
+	//	}
+//	}
+	//else {
 		outputToPort(&hCom, Header, sizeof(Header) * 2);
-	}
+//	/}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
 						// Send Header
@@ -131,16 +131,16 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 	DWORD bytesRead;
 
 	//logic to check if vote on header is turned on and transmit the correct number of headers.
-	if (voteOnHeader == 1) {
-		for (int i = 1; i > voteOnCount; i++) {
-			inputFromPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
-		}
+//	if (voteOnHeader == 1) {
+	//	for (int i = 1; i > voteOnCount; i++) {
+		//	inputFromPort(&hCom, Header, sizeof(Header) * );						// Send Header
+//		}
 
 
-	}
-	else {
+//	}
+	//else {
 		inputFromPort(&hCom, Header, sizeof(Header) * 2);
-	}
+//	}
 
 	//initPort(&hCom, port, nComRate, nComBits, timeout);					// Initialize the Rx port
 							// Read in Header first (which is a standard number of bytes) to get size of payload 

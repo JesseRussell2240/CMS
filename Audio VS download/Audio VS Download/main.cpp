@@ -333,7 +333,7 @@ int	main(int argc, char* argv[]) {
 				//recive incoming header and payload
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload);
+				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
 
 				printHeaderInfo(recivedHeader);
@@ -510,7 +510,7 @@ int	main(int argc, char* argv[]) {
 				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				transmitPayload(&header, (void*)msgOut);
+				transmitPayload(&header, (void*)msgOut, settings.headerError);
 
 
 				
@@ -518,6 +518,8 @@ int	main(int argc, char* argv[]) {
 
 			//logic for reciving text message
 			else if (userResultTwo == '2') {
+
+
 
 				int messageLength;
 				char messageBuffer[250];
@@ -528,7 +530,7 @@ int	main(int argc, char* argv[]) {
 				//recive incoming header and payload
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload);
+				DWORD bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 				
 				
 				printHeaderInfo(recivedHeader);
