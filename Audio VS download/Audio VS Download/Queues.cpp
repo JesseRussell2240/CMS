@@ -56,9 +56,9 @@ void PrintQueueContents(void) {
 	while (currentNode != NULL) {
 		Item currentItem = currentNode->Data;
 
-		printf("Message: %s, Sender ID: %d, Receiver ID: %d, Priority: %c, SeqNum: %d, Extra: %s\n",
+		printf("Message: %s, Sender ID: %d, Receiver ID: %d, Priority: %c\n",
 			currentItem.message, currentItem.sid, currentItem.rid,
-			currentItem.priority, currentItem.seqNum, currentItem.later);
+			currentItem.priority);
 
 		currentNode = currentNode->pNext;
 	}
