@@ -100,9 +100,6 @@ void receiveAudio(short* audioData, int dataSize, int sampleRate) {
 }
 
 void transmitPayload(HeaderForPayload* Header, void* Payload) {
-
-
-
 	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
 	outputToPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
 	outputToPort(&hCom, Payload, (*Header).payloadSize);				// Send payload

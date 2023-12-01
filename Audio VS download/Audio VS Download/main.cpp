@@ -20,7 +20,6 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "compression.c"
 #include "Queues.h"
 #include <thread>
-#include "VoteOn.h"
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
@@ -317,8 +316,6 @@ int	main(int argc, char* argv[]) {
 				if (settings.headerError || settings.payloadError) {
 
 
-					//add vote on iBigBuf
-
 				}
 
 				/*
@@ -388,7 +385,6 @@ int	main(int argc, char* argv[]) {
 				//logic for data correction and detection for audio reciving
 				if (settings.headerError || settings.payloadError) {
 
-					//add vote header
 
 				}
 				
@@ -501,9 +497,6 @@ int	main(int argc, char* argv[]) {
 				//logic for data correction and detection for text transmission
 				 if (settings.headerError || settings.payloadError) {
 
-					 //add vote on for header
-
-					 //a
 
 				}
 

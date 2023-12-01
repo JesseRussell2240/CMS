@@ -45,9 +45,6 @@
     <ClCompile Include="Queues.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="VoteOn.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sound.h">
@@ -75,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Queues.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="VoteOn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

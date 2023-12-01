@@ -138,7 +138,6 @@
     <ClCompile Include="RS232Comm.cpp" />
     <ClCompile Include="sound.cpp" />
     <ClCompile Include="Transmission.cpp" />
-    <ClCompile Include="VoteOn.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioRecorder.h" />
@@ -150,7 +149,6 @@
     <ClInclude Include="RS232Comm.h" />
     <ClInclude Include="sound.h" />
     <ClInclude Include="Transmission.h" />
-    <ClInclude Include="VoteOn.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
