@@ -9,4 +9,4 @@
 
 
 // Function Declaration
-int VoteOn(void* Instances[], int nInstances, int nSize);   //void**Instances
+int VoteOn(void* Instances[], short nInstances, int nSize);   //void**Instances

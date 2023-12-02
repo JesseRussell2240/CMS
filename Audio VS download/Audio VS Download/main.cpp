@@ -21,6 +21,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "Queues.h"
 #include <thread>
 #include "VoteOn.h"
+#include "main.h"
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
@@ -281,6 +282,8 @@ int	main(int argc, char* argv[]) {
 				header.encryption = settings.encryption;
 				header.compression = settings.compression;
 
+				
+
 				//logic for audio compression 
 				if (settings.compression == 1) {
 
@@ -376,15 +379,7 @@ int	main(int argc, char* argv[]) {
 				//logic for data correction and detection for audio reciving
 				if (settings.headerError || settings.payloadError) {
 
-					int i;
-
-					struct header headerinfo1 = { 123, 456, 1, 987654, 8000, 'AUD', 'XOR', 'HUF' };
-					struct header headerinfo2 = { 123, 456, 1, 987654, 8000, 'AUD', 'XOR', 'HUF' };
-					struct header headerinfo3 = { 123, 456, 1, 987654, 8000, 'AUD', 'XOR', 'HUF' };
-
-					struct header* List1[] = { &headerinfo1, &headerinfo2, &headerinfo3 };	  // Identical shouldn't find changes
-					
-//					int result = VoteOn(List1[], , );
+					//
 
 
 
@@ -427,6 +422,9 @@ int	main(int argc, char* argv[]) {
 				header.priority = settings.priority;
 				header.payLoadType = 0; //set as 0 for text
 				header.encryption = settings.encryption;
+				header.compression = settings.compression;
+
+			//	header.voteOn = settings.headerError;
 				
 
 				// User input for text message
@@ -475,7 +473,7 @@ int	main(int argc, char* argv[]) {
 				char tmpMsg[250];
 
 				//logic for compression of text message transmission
-				if (settings.compression == 1) {
+				if (settings.compression != 0) {
 					header.compression = msgSize;
 					
 					strcpy(tmpMsg, msgOut);
@@ -499,14 +497,7 @@ int	main(int argc, char* argv[]) {
 
 				}
 
-				//logic for data correction and detection for text transmission
-				 if (settings.headerError || settings.payloadError) {
-
-					 //VoteOn(iBigBuf, lBigBufSize);
-
-
-				}
-
+				
 				//set the payload size in the header after compression/encription etc are completed.
 				header.payloadSize = msgSize + 1;
 
@@ -514,7 +505,7 @@ int	main(int argc, char* argv[]) {
 				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
-				transmitPayload(&header, (void*)msgOut, 0);
+				transmitPayload(&header, (void*)msgOut, settings.headerError);
 
 
 				
@@ -533,9 +524,11 @@ int	main(int argc, char* argv[]) {
 					printf("Enter your choice: ");
 					scanf("%d", &choice);
 
-					printf("\nYou entered %d\n", choice);
 
 					HeaderForPayload recivedHeader;
+					
+
+
 					void* receivedPayload;
 					// Receive incoming header and payload
 					setComRate(settings.baudRate);
@@ -551,7 +544,6 @@ int	main(int argc, char* argv[]) {
 					case 1:
 						bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
-
 						printHeaderInfo(recivedHeader);
 
 						if (bytesRead == recivedHeader.payloadSize) {
@@ -559,10 +551,8 @@ int	main(int argc, char* argv[]) {
 							char* receivedExample = (char*)(receivedPayload);
 						//	receivedExample[recivedHeader.payloadSize - 1] = '\0';
 
-						
 
 							strcpy(messageBuffer, receivedExample);
-							printf("\nRecived Example var: %s\n", receivedExample);
 
 							printf("\nThe message buffer is: %s\n", messageBuffer);
 
@@ -570,27 +560,25 @@ int	main(int argc, char* argv[]) {
 							//free(receivedPayload);
 						}
 						
+						
 						char tmpMsg[250];
-
+						printf("compression status :%d", recivedHeader.compression);
 						if (recivedHeader.compression != 0) {
 
 							int resultLength = 250;
-							
 							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 
 							tmpMsg[recivedHeader.compression] = '\0';
-						
-
 							printf("\nUncompressed message: %s\n", tmpMsg);
-							//printf("\nUncompressed message: %s\n", messageBuffer);
+			
 							strcpy(messageBuffer, tmpMsg);
-						//	printf("\nUncompressed message: %s\n", messageBuffer);
 						}
 
+						printf("encryption status :%d", recivedHeader.encryption);
 						//logic to decrypt recived text message
-						if (settings.encryption == 1) {
+						if (recivedHeader.encryption == 1) {
 							strcpy(messageBuffer, tmpMsg);
-							printf("\nEncryption is ON!!!!!\n");
+							//printf("\nEncryption is ON!!!!!\n");
 							char secretKey[10] = "314159265";
 							int keyLength = 10;
 							
@@ -600,6 +588,8 @@ int	main(int argc, char* argv[]) {
 							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 						}
 
+						
+						printf("adding to queue");
 						// Create a new node for the received message
 						newNode = (link)malloc(sizeof(Node));
 						newNode->Data.sid = recivedHeader.sid;
@@ -610,62 +600,60 @@ int	main(int argc, char* argv[]) {
 						// Add the new node to the queue
 						AddToQueue(newNode);
 
-						/*
-						if (bytesRead == recivedHeader.payloadSize) {
-							// Cast the received payload back to a character array
-							char* receivedExample = (char*)(receivedPayload);
-							receivedExample[recivedHeader.payloadSize] = '\0';
-
-
-							// Create a new node for the received message
-							link newNode = (link)malloc(sizeof(Node));
-							newNode->Data.sid = recivedHeader.sid;
-							newNode->Data.rid = recivedHeader.rid;
-							newNode->Data.priority = recivedHeader.priority;
-							//newNode->Data.seqNum = recivedHeader.sequenceNumber;  
-							strcpy(newNode->Data.message, messageBuffer);  // Copy the received message
-
-							// Add the new node to the queue
-							AddToQueue(newNode);
-
-							// Free the allocated memory for the received payload
-							free(receivedPayload);
-							free(newNode);
-
-							//		strcpy(messageBuffer, receivedExample);
-									//	printf("\nRecived Example var: %s\n", receivedExample);
-
-
-						}
-						*/
-
-
-						// Process the items in the queue (you can modify this part based on your needs)
-						/*
-						while (!IsQueueEmpty()) {
-							link dequeuedNode = DeQueue();
-							Item dequeuedItem = dequeuedNode->Data;
-
-							printf("Message: %s, Sender ID: %d, Receiver ID: %d, Priority: %c, SeqNum: %d, Extra: %s\n",
-								dequeuedItem.message, dequeuedItem.sid, dequeuedItem.rid,
-								dequeuedItem.priority, dequeuedItem.seqNum, dequeuedItem.later);
-
-							free(dequeuedNode);  // Free the memory allocated for the dequeued node
-							
-						}
-						*/
-
 						break;
 					case 2:
-						
+						if (IsQueueEmpty()) {
+							printf("Queue is empty. Nothing to dequeue.\n");
+							break;
+						}
 
 
 						system("cls");
+						
+						printf("\n1. Display Entire Queue\n");
+						printf("2. Display Queue by Priority\n");
+						printf("3. Dequeue in FIFO\n");
+						printf("4. Dequeue in LIFO\n");
+						printf("5. Dequeue by Priority\n");
+						printf("6. Exit\n");
+						printf("Enter your choice: ");
+						scanf("%d", &choice);
 
-						//printf("code to display the info ");
-						PrintQueueContents();
+						link dequeuedNode;
 
-						//displayMessages();
+						switch (choice) {
+						case 1:
+							printf("\nDisplaying Entire Queue:\n");
+							PrintQueueContents();
+							break;
+						case 2:
+							printf("\nDisplaying Queue by Priority:\n");
+							PrintQueueContentsByPriority();
+							break;
+						case 3:
+
+							dequeuedNode = DeQueue();
+							printf("Dequeued in FIFO: Message: %s, Sender ID: %d, Receiver ID: %d, Priority: %c\n",
+								dequeuedNode->Data.message, dequeuedNode->Data.sid, dequeuedNode->Data.rid,
+								dequeuedNode->Data.priority);
+							free(dequeuedNode);
+
+							break;
+						case 4:
+							DequeueLIFO();
+							break;
+						case 5:
+							DequeueByPriority();
+							break;
+						case 6:
+							printf("Exiting the program.\n");
+							break;
+						default:
+							printf("Invalid choice. Please try again.\n");
+						}
+					
+
+
 						break;
 					case 3:
 						printf("Exiting the program.\n");

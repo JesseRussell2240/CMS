@@ -33,3 +33,7 @@ int IsQueueEmpty(void);
 void AddToQueue(link);
 link DeQueue(void);
 void PrintQueueContents(void);
+void PrintQueueContentsByPriority(void);
+
+void DequeueLIFO(void);
+void DequeueByPriority(void);

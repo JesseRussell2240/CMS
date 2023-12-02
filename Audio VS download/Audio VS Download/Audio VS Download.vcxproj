@@ -146,6 +146,7 @@
     <ClInclude Include="encrypt.h" />
     <ClInclude Include="compression.h" />
     <ClInclude Include="huffman.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="message.h" />
     <ClInclude Include="Queues.h" />
     <ClInclude Include="RS232Comm.h" />
