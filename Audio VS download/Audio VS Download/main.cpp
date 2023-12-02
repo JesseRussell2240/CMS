@@ -472,11 +472,12 @@ int	main(int argc, char* argv[]) {
 
 				//set the msgSize depending on number of chars user entered.
 				msgSize = strlen(msgOut);
-				
+				char tmpMsg[250];
+
 				//logic for compression of text message transmission
 				if (settings.compression == 1) {
 					header.compression = msgSize;
-					char tmpMsg[250];
+					
 					strcpy(tmpMsg, msgOut);
 					msgSize = compressTXT(tmpMsg, msgOut, msgSize);
 
@@ -491,9 +492,9 @@ int	main(int argc, char* argv[]) {
 
 					char secretKey[10] = "314159265";
 					int keyLength = 10;
-					char tempBuf[250];
+					strcpy(tmpMsg, msgOut);
 
-					xorCipher(msgOut, msgSize, secretKey, keyLength, tempBuf);
+					xorCipher(msgOut, msgSize, secretKey, keyLength, tmpMsg);
 					printf("Encrypted message: %d\n", msgOut);
 
 				}
@@ -569,19 +570,17 @@ int	main(int argc, char* argv[]) {
 							//free(receivedPayload);
 						}
 						
+						char tmpMsg[250];
+
 						if (recivedHeader.compression != 0) {
 
-							//printf("\nCompression is ON!!!!!\n");
-
 							int resultLength = 250;
-							char tmpMsg[250];
+							
 							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
-//							tmpMs
-							tmpMsg[recivedHeader.compression] = '\0';
-						//	printf("Decompressed Size: %d\n", decompressedSize);
-						//	printf("Decompressed Message: %s\n", strlen(messageBuffer));
 
-							//tmpMsg
+							tmpMsg[recivedHeader.compression] = '\0';
+						
+
 							printf("\nUncompressed message: %s\n", tmpMsg);
 							//printf("\nUncompressed message: %s\n", messageBuffer);
 							strcpy(messageBuffer, tmpMsg);
@@ -590,13 +589,13 @@ int	main(int argc, char* argv[]) {
 
 						//logic to decrypt recived text message
 						if (settings.encryption == 1) {
-
+							strcpy(messageBuffer, tmpMsg);
 							printf("\nEncryption is ON!!!!!\n");
 							char secretKey[10] = "314159265";
 							int keyLength = 10;
-							char tempBuf[250];
+							
 
-							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tempBuf);
+							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tmpMsg);
 
 							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 						}

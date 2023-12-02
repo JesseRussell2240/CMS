@@ -127,23 +127,14 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) 
 }
 
 DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader) {
-	// Note: Pointer to rxPayload buffer (pointer to a pointer) is passed to this function since this function malloc's the amount of memory required - need to free it in main()
+	
 	DWORD bytesRead;
 
-	//logic to check if vote on header is turned on and transmit the correct number of headers.
-//	if (voteOnHeader == 1) {
-	//	for (int i = 1; i > voteOnCount; i++) {
-		//	inputFromPort(&hCom, Header, sizeof(Header) * );						// Send Header
-//		}
 
-
-//	}
-	//else {
 		inputFromPort(&hCom, Header, sizeof(struct header));
 //	}
 
-	//initPort(&hCom, port, nComRate, nComBits, timeout);					// Initialize the Rx port
-							// Read in Header first (which is a standard number of bytes) to get size of payload 
+	
 	*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
 	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload 
 	purgePort(&hCom);														// Purge the Rx port
