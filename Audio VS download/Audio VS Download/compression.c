@@ -183,6 +183,7 @@ int compressTXT(char* msgIn, char* msgOut, int msgSize) {
     }
 
     // Call Huffman compression function
+    printf("compresing message :%c", &msgIn);
     int compressedSize = Huffman_Compress((unsigned char*)msgIn, (unsigned char*)msgOut, msgSize);
 
     if (compressedSize <= 0) {
@@ -192,7 +193,9 @@ int compressTXT(char* msgIn, char* msgOut, int msgSize) {
 
 
     return compressedSize;
+
 }
+
 
 // Function to decompress a message using Huffman coding
 int decompressTXT(char* msgIn, char* msgOut, int compressedSize, int decompressedSize) {
@@ -201,9 +204,15 @@ int decompressTXT(char* msgIn, char* msgOut, int compressedSize, int decompresse
         return -1;
     }
 
+   // printf("compresed message :%c", &msgIn);
+  
     // Call Huffman decompression function
-    int outsize = decompressedSize;
-    Huffman_Uncompress((unsigned char*)msgIn, (unsigned char*)msgOut, compressedSize, outsize);
+    //int outsize;
 
-    return outsize;
+
+    Huffman_Uncompress((unsigned char*)msgIn, (unsigned char*)msgOut, compressedSize, decompressedSize);
+
+//    printf("decompressed message :%c", &msgOut);
+
+    return decompressedSize;
 }
