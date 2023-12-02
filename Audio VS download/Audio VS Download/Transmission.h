@@ -9,9 +9,9 @@ struct header {
 	char priority;				//0-7 prioaty of importance in 
 	short int seqNum;				
 	long int payloadSize;		// Number of bytes in payload after this header
-	char payLoadType;			// 0: Text, 1: Audio, 2: Image etc.
-	char encryption;			// 0: None, 1: XOR,	  2: Vigenere	3: Both
-	char compression;			// 0: None, 1: RLE,	  2: Huffman,	3: Both
+	int payLoadType;			// 0: Text, 1: Audio, 2: Image etc.
+	int encryption;			// 0: None, 1: XOR,	  2: Vigenere	3: Both
+	int compression;			// 0: None, 1: RLE,	  2: Huffman,	3: Both
 	
 };
 

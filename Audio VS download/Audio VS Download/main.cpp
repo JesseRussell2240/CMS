@@ -427,7 +427,7 @@ int	main(int argc, char* argv[]) {
 				header.priority = settings.priority;
 				header.payLoadType = 0; //set as 0 for text
 				header.encryption = settings.encryption;
-				header.compression = settings.compression;
+				
 
 				// User input for text message
 				char userResultThree;
@@ -475,7 +475,7 @@ int	main(int argc, char* argv[]) {
 				
 				//logic for compression of text message transmission
 				if (settings.compression == 1) {
-
+					header.compression = msgSize;
 					char tmpMsg[250];
 					strcpy(tmpMsg, msgOut);
 					msgSize = compressTXT(tmpMsg, msgOut, msgSize);
@@ -569,19 +569,23 @@ int	main(int argc, char* argv[]) {
 							//free(receivedPayload);
 						}
 						
-						if (settings.compression == 1) {
+						if (recivedHeader.compression != 0) {
 
-							printf("\nCompression is ON!!!!!\n");
+							//printf("\nCompression is ON!!!!!\n");
 
-							int resultLength = 500;
-							char tmpMsg[500];
-							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, strlen(messageBuffer), resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
-//
-							printf("Decompressed Size: %d\n", decompressedSize);
-							printf("Decompressed Message: %s\n", strlen(messageBuffer));
+							int resultLength = 250;
+							char tmpMsg[250];
+							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
+//							tmpMs
+							tmpMsg[recivedHeader.compression] = '\0';
+						//	printf("Decompressed Size: %d\n", decompressedSize);
+						//	printf("Decompressed Message: %s\n", strlen(messageBuffer));
 
+							//tmpMsg
+							printf("\nUncompressed message: %s\n", tmpMsg);
+							//printf("\nUncompressed message: %s\n", messageBuffer);
 							strcpy(messageBuffer, tmpMsg);
-							printf("\nUncompressed message: %s\n", messageBuffer);
+						//	printf("\nUncompressed message: %s\n", messageBuffer);
 						}
 
 						//logic to decrypt recived text message
