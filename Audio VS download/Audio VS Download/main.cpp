@@ -170,7 +170,8 @@ int	main(int argc, char* argv[]) {
 		printf("5. Transmit audio in buffer\n");
 		printf("6. Transmit text message in buffer\n");
 		printf("7. Settings\n");
-		printf("8. Exit\n");
+		printf("8. Diagnostic Testing\n");
+		printf("9. Exit\n");
 		printf("Enter your choice: ");
 		scanf_s("%d", &option);
 
@@ -806,9 +807,158 @@ int	main(int argc, char* argv[]) {
 			printf("Invalid option. Please choose a valid option.\n");
 			break;
 
+		case 8:
+
+			do {
+				//printf("Option 7 coming soon.\n");
+				printf("\n\nDiagnostic Testing\n\n");
+				printf("1. Compression/Decompression\n");
+				printf("2. Encryption/Dencryption\n");
+				printf("3. Generate a custom message\n");
+				printf("4. Queues\n");
+				printf("5. Exit\n");
+
+				char testSecretKey[10] = "314159265";
+				
+
+				scanf_s("%d", &ChangeSettings);
+				//int 
+				switch (ChangeSettings) {
+
+				case 1: //compression Testing
+
+					char inputFileName[256];
+					char outputFileName[256];
+					int choice;
+
+					printf("Enter the input filename: ");
+					scanf("%s", inputFileName);
+
+					// Check if the file ends with ".huff"
+					if (strstr(inputFileName, ".huff") != NULL) {                       //Check if compressed file
+						printf("decoding....\n");
+						printf("Enter the output filename: ");                          //Name of file to compress
+						scanf("%s", outputFileName);
+						// outputFileName* = strstr(inputFileName, "_compressed.huff");
+						 //calls helper function
+						decodeFile(inputFileName, outputFileName);
+
+					}
+					else {
+						printf("encoding...\n");
+						strcpy(outputFileName, inputFileName);
+						strcat(outputFileName, "_compressed.huff");
+						encodeFile(inputFileName, outputFileName);
+					}
+
+
+
+					break;
+
+				case 2:
+
+					
+
+					char encryptionTesting[25];	
+					char encryptionTmpMsg[25];
+					char encryptionMsgOut[25];
+					char dencryptionMsgOut[25];
+					char ecryptionMessageBuffer[25];
+
+					printf("Enter the text message to decrypt: ");
+					scanf("%s", encryptionTesting);
+					encryptionTesting[sizeof(encryptionTesting) - 1] = '\0';
+
+
+					strcpy(encryptionTmpMsg, encryptionTesting);
+
+					xorCipher(encryptionTesting, strlen(encryptionTesting), testSecretKey, 10, encryptionTmpMsg);
+					printf("Encrypted message: %d\n", encryptionTmpMsg);
+
+		
+					
+
+					xorCipher(encryptionTmpMsg, strlen(encryptionTmpMsg), testSecretKey, 10, dencryptionMsgOut);
+
+					printf("\nXOR Decrypted Message: %s\n", dencryptionMsgOut);
+
+					break;
+
+				case 3:
+
+					numberOfQuotes = fnumQuotes();
+					quoteIndices = fquoteIndices(numberOfQuotes);
+					quoteLengths = fquoteLength(numberOfQuotes, quoteIndices);
+					randomNum = frandNum(0, numberOfQuotes - 1);
+					char messageBuffer[MAX_QUOTE_LENGTH];
+					bytesRead = GetMessageFromFile(messageBuffer, MAX_QUOTE_LENGTH, randomNum, numberOfQuotes, quoteIndices, quoteLengths);
+
+					// Print the random message
+					printf("\nRandom Message:\n%s\n", messageBuffer);
+
+					break;
+
+				case 4:
+
+					InitQueue();
+				
+					int numMessages;
+					printf("How many structures would you like to queue? ");
+					scanf("%d", &numMessages);
+					getchar();
+
+					for (int i = 0; i < numMessages; ++i) {
+						link newNode = (link)malloc(sizeof(Node)); // Allocate memory for a new node
+
+						if (newNode == NULL) {
+							printf("Memory allocation failed. Exiting...\n");
+						
+						}
+
+						Item newItem;
+
+						printf("Enter message: ");
+						fgets(newItem.message, ilength, stdin);
+						newItem.message[strcspn(newItem.message, "\n")] = '\0'; 
+
+						printf("Enter Sender ID: ");
+						scanf("%hd", &newItem.sid);
+						getchar(); // Clears the newline character from the input buffer
+
+						printf("Enter Receiver ID: ");
+						scanf("%hd", &newItem.rid);
+						getchar(); // Clears the newline character from the input buffer
+
+						printf("Enter Priority: ");
+						scanf(" %c", &newItem.priority);
+						getchar(); // Clears the newline character from the input buffer
+
+
+						newItem.seqNum = i + 1; // Setting sequence number
+
+						// Add the item to the queue
+						newNode->Data = newItem;
+						newNode->pNext = NULL;
+						AddToQueue(newNode);
+					}
+						PrintQueueContents();
+
+					break;
+
+				default:
+					printf("Error testing\n");
+					break;
+				}
+				//system("cls");
+			} while (ChangeSettings != 5);
+
+			
+
+			break;
+
 
 		//Close output window
-		case 8:
+		case 9:
 
 			exit(0);
 
