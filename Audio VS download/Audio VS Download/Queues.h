@@ -16,7 +16,7 @@ struct item {
 	char message[ilength];
 	short int sid;				// Sender ID
 	short int rid;				// Reciever ID
-	char priority;				// Priority of message
+	int priority;				// Priority of message
 	short int seqNum;			//sequence number of the message
 	char later[25];				//characters we might use later
 };

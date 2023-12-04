@@ -22,6 +22,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include <thread>
 #include "VoteOn.h"
 #include "main.h"
+#include "RS232Comm.h"
 //include "Huffmain.h"
 		
 extern HeaderForPayload;
@@ -48,6 +49,16 @@ typedef struct {
 } ComSettings;
 
 ComSettings settings;
+
+
+
+/**************************************************************************************************************************
+
+Helper functions for 
+
+
+**************************************************************************************************************************/
+
 
 // Function to write settings to a file
 void writeSettingsToFile(ComSettings* settings, const char* filename) {
@@ -84,22 +95,7 @@ void printHeaderInfo(const header& h) {
 	printf("Compression: %d\n", h.compression);
 }
 
-void ReceiveMessagesInBackground() {
-	while (true) {
 
-
-		////this is eventuially where multithreading of recivie will go. I hate this idea...
-
-
-
-
-
-
-
-
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	}
-}
 
 // Function to read settings from a file
 void readSettingsFromFile(ComSettings* settings, const char* filename) {
@@ -133,12 +129,19 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 }
 
 
+
+
+
+/**************************************************************************************************************************
+
+Helper functions for
+
+
+**************************************************************************************************************************/
+
+
 int	main(int argc, char* argv[]) {
 
-	std::thread receiveThread(ReceiveMessagesInBackground);
-
-	char transmit = 'T';
-	char receive = 'R';
 	char filePath[150];
 	char save;
 	char replay;
@@ -151,12 +154,14 @@ int	main(int argc, char* argv[]) {
 	int bytesRead = 0;
 	int option;
 	int ChangeSettings = -1;
-
+	
+	//seed random number so fortion cookies qoute can be genorated
 	srand((unsigned int)time(NULL));
 
 
-	// Read settings from file
+	// Read settings from file on start up
 	readSettingsFromFile(&settings, "settings.txt");
+
 
 	//menu loop
 	do {
@@ -181,6 +186,19 @@ int	main(int argc, char* argv[]) {
 
 		//switch case for various user inputs
 		switch (option) {
+
+
+
+
+
+			/**************************************************************************************************************************
+
+			case 1 recording audio and storing in local buffer.
+
+
+			**************************************************************************************************************************/
+
+
 
 		case 1:	// Recording audio case
 		{
@@ -216,6 +234,15 @@ int	main(int argc, char* argv[]) {
 		}
 			break;
 
+
+			/**************************************************************************************************************************
+
+			calls audio recording and plays contents of buffer
+
+
+			**************************************************************************************************************************/
+
+
 		case 2:
 		{
 			system("cls");
@@ -224,6 +251,16 @@ int	main(int argc, char* argv[]) {
 			PlayAudio(iBigBuf, lBigBufSize);
 			break;
 		}
+
+
+		/**************************************************************************************************************************
+
+		loads audio file from file and overwrites buffer
+
+
+		**************************************************************************************************************************/
+
+
 		case 3:
 			system("cls");
 			//user option for loading into buff from audio file
@@ -242,11 +279,20 @@ int	main(int argc, char* argv[]) {
 			PlayAudio(iBigBuf, lBigBufSize);
 			break;
 
+
+			/**************************************************************************************************************************
+
+			allows user to save audio file from buffer into a file
+
+
+			**************************************************************************************************************************/
+
+
 		case 4:
 
 			system("cls");
 			//file loading code
-			printf("Enter the path to save the audio file to load: ");
+			printf("Enter the path to save the audio file: ");
 			fgets(filePath, sizeof(filePath), stdin);
 
 			//remove line end char
@@ -257,6 +303,15 @@ int	main(int argc, char* argv[]) {
 			SaveAudio(iBigBuf, lBigBufSize, filePath);
 			printf("\Saved audio to file ...\n");
 			break;
+
+
+			/**************************************************************************************************************************
+
+			case 5 for transmitting and reciving audio files over rs232
+
+
+			**************************************************************************************************************************/
+
 
 		case 5:
 
@@ -271,7 +326,12 @@ int	main(int argc, char* argv[]) {
 			scanf("%d", &option, 1);
 
 
-			//Transmission
+
+
+
+			//
+			//***********************************************************************************************************************
+			//									audio Trasmission
 			if (option == 1) {
 
 				//build the header for the message based on users predefined settings and for text message transmission
@@ -328,7 +388,14 @@ int	main(int argc, char* argv[]) {
 
 			}
 
-			//Recieve audio
+
+			//
+			//***********************************************************************************************************************
+			//	
+			//									Recieve audio
+
+
+
 			else if (option == 2) {
 
 				HeaderForPayload recivedHeader;
@@ -377,17 +444,6 @@ int	main(int argc, char* argv[]) {
 				}
 
 
-				//logic for data correction and detection for audio reciving
-				if (settings.headerError || settings.payloadError) {
-
-					//
-
-
-
-				}
-				
-
-
 
 			}
 
@@ -395,10 +451,16 @@ int	main(int argc, char* argv[]) {
 					printf("Invalid input. Please enter 1 or 2.\n");
 			}
 
-
-
 			break;
 				
+
+			/**************************************************************************************************************************
+
+			case 6 for transmitting and reciving messages
+
+
+			**************************************************************************************************************************/
+
 
 		case 6:
 
@@ -412,6 +474,14 @@ int	main(int argc, char* argv[]) {
 			printf("2. Receive\n");
 			printf("Enter your choice (1 or 2): ");
 			scanf_s(" %c", &userResultTwo, 1);
+
+
+
+			//
+			//***********************************************************************************************************************
+			//	
+			//									transmit txt message
+
 
 			//logic for text message transmission
 			if (userResultTwo == '1') {
@@ -512,7 +582,14 @@ int	main(int argc, char* argv[]) {
 				
 			}
 
-			//logic for reciving text message
+
+			
+
+			//
+			//***********************************************************************************************************************
+			//	
+			//									logic for reciving text message
+
 			else if (userResultTwo == '2') {
 
 				InitQueue();
@@ -534,14 +611,18 @@ int	main(int argc, char* argv[]) {
 					// Receive incoming header and payload
 					setComRate(settings.baudRate);
 					initializePort(settings.comPort);
-					DWORD bytesRead;// = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
+					DWORD bytesRead;
 					link newNode;
 					
 
 					int messageLength;
 					char messageBuffer[260];
 
+
+					//switch case for queuing results of reciving
 					switch (choice) {
+
+						//case 1 for reciving text and adding to queue
 					case 1:
 						bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
@@ -550,15 +631,8 @@ int	main(int argc, char* argv[]) {
 						if (bytesRead == recivedHeader.payloadSize) {
 							// Cast the received payload back to a character array
 							char* receivedExample = (char*)(receivedPayload);
-						//	receivedExample[recivedHeader.payloadSize - 1] = '\0';
-
-
 							strcpy(messageBuffer, receivedExample);
-
 							printf("\nThe message buffer is: %s\n", messageBuffer);
-
-								// Free the allocated memory for the received payload
-							//free(receivedPayload);
 						}
 						
 						
@@ -602,6 +676,9 @@ int	main(int argc, char* argv[]) {
 						AddToQueue(newNode);
 
 						break;
+
+
+						//case 2 options for dequeuing or displaying queue.
 					case 2:
 						if (IsQueueEmpty()) {
 							printf("Queue is empty. Nothing to dequeue.\n");
@@ -622,6 +699,8 @@ int	main(int argc, char* argv[]) {
 
 						link dequeuedNode;
 
+
+						//queue display option control
 						switch (choice) {
 						case 1:
 							printf("\nDisplaying Entire Queue:\n");
@@ -634,10 +713,10 @@ int	main(int argc, char* argv[]) {
 						case 3:
 
 							dequeuedNode = DeQueue();
-							printf("Dequeued in FIFO: Message: %s, Sender ID: %d, Receiver ID: %d, Priority: %c\n",
+							printf("Dequeued in FIFO:\n\n Message: %s\n, Sender ID: %d\n, Receiver ID: %d\n, Priority: %c\n\n\n",
 								dequeuedNode->Data.message, dequeuedNode->Data.sid, dequeuedNode->Data.rid,
 								dequeuedNode->Data.priority);
-							free(dequeuedNode);
+							//free(dequeuedNode);
 
 							break;
 						case 4:
@@ -652,9 +731,6 @@ int	main(int argc, char* argv[]) {
 						default:
 							printf("Invalid choice. Please try again.\n");
 						}
-					
-
-
 						break;
 					case 3:
 						printf("Exiting the program.\n");
@@ -662,7 +738,7 @@ int	main(int argc, char* argv[]) {
 					default:
 						printf("Invalid choice. Please try again.\n");
 					}
-				} while (choice != 3);
+				} while (choice != 6);
 
 			}
 			else {
@@ -670,6 +746,17 @@ int	main(int argc, char* argv[]) {
 			}
 
 			break;
+
+
+
+
+			/**************************************************************************************************************************
+
+			case 7 for updating settings
+
+
+			**************************************************************************************************************************/
+
 
 		case 7:
 
@@ -807,6 +894,19 @@ int	main(int argc, char* argv[]) {
 			printf("Invalid option. Please choose a valid option.\n");
 			break;
 
+
+
+
+
+			/**************************************************************************************************************************
+
+			case 8 for diagnostic functionallity
+
+
+			**************************************************************************************************************************/
+
+
+
 		case 8:
 
 			do {
@@ -816,14 +916,18 @@ int	main(int argc, char* argv[]) {
 				printf("2. Encryption/Dencryption\n");
 				printf("3. Generate a custom message\n");
 				printf("4. Queues\n");
-				printf("5. Exit\n");
+				printf("5. Test Baudrates\n");
+				printf("6. Exit\n");
 
 				char testSecretKey[10] = "314159265";
+				char* message = new char[40000]; //used in finding and optimizing baudrate
 				
 
 				scanf_s("%d", &ChangeSettings);
 				//int 
 				switch (ChangeSettings) {
+					
+
 
 				case 1: //compression Testing
 
@@ -851,13 +955,12 @@ int	main(int argc, char* argv[]) {
 						encodeFile(inputFileName, outputFileName);
 					}
 
-
-
 					break;
 
-				case 2:
 
-					
+
+
+				case 2:
 
 					char encryptionTesting[25];	
 					char encryptionTmpMsg[25];
@@ -868,21 +971,17 @@ int	main(int argc, char* argv[]) {
 					printf("Enter the text message to decrypt: ");
 					scanf("%s", encryptionTesting);
 					encryptionTesting[sizeof(encryptionTesting) - 1] = '\0';
-
-
 					strcpy(encryptionTmpMsg, encryptionTesting);
 
 					xorCipher(encryptionTesting, strlen(encryptionTesting), testSecretKey, 10, encryptionTmpMsg);
 					printf("Encrypted message: %d\n", encryptionTmpMsg);
 
-		
-					
-
 					xorCipher(encryptionTmpMsg, strlen(encryptionTmpMsg), testSecretKey, 10, dencryptionMsgOut);
-
 					printf("\nXOR Decrypted Message: %s\n", dencryptionMsgOut);
-
 					break;
+
+
+
 
 				case 3:
 
@@ -944,7 +1043,82 @@ int	main(int argc, char* argv[]) {
 						PrintQueueContents();
 
 					break;
+				case 5:
+					//adds alphabet to 40000 bits
+					for (int i = 0; i < 40000; ++i) {
+						message[i] = 'A' + (i % 26);
+					}
 
+					int operation;
+
+					// Prompt user for operation
+					printf("1. Transmit \n2. Receive : ");
+					scanf("%d", &operation);
+
+					for (int baudRate = 9600; baudRate <= 115200; baudRate *= 2) {
+						// Move handle creation and initialization inside the loop
+						HANDLE hCom;
+						initializePort(settings.comPort);
+						setComRate(baudRate);
+
+						if (operation == 1) {
+							//build the header for the message based on users predefined settings and for text message transmission
+							HeaderForPayload header;
+							header.sid = settings.sid;
+							header.rid = settings.rid;
+							header.priority = settings.priority;
+							header.payLoadType = 0; //set as 0 for text
+							header.encryption = settings.encryption;
+							header.compression = settings.compression;
+
+							//set the msgSize depending on number of chars user entered.
+							int msgSize = strlen(message);
+
+							header.payloadSize = 40000;
+							transmitPayload(&header, (void*)message, 0);
+							printf("Transmit | Baud Rate: %d bps\n", baudRate);
+						
+
+						}
+						else if (operation == 2) {
+
+							HeaderForPayload recivedHeader;
+							void* receivedPayload;
+							DWORD bytesRead;
+							int messageLength;
+							char messageBuffer[40000];
+
+					
+								bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
+
+								if (bytesRead == recivedHeader.payloadSize) {
+									// Cast the received payload back to a character array
+									char* receivedExample = (char*)(receivedPayload);
+									receivedExample[recivedHeader.payloadSize - 1] = '\0';
+									strcpy(messageBuffer, receivedExample);
+
+								}
+								int correctBits = 0;
+								for (int i = 0; i < 40000; ++i) {
+									if (message[i] == messageBuffer[i]) {
+										correctBits++;
+									}
+								}
+
+								double accuracy = (double)(correctBits) / 40000 * 100.0;
+								printf("Receive  | Baud Rate: %6d bps | Accuracy: %f%\n", baudRate, accuracy);
+
+
+						}
+						else {
+							printf("Invalid operation. Please enter 1 for Transmission or 2 for Reception.\n");
+							break;
+						}
+
+					}
+
+
+					break;
 				default:
 					printf("Error testing\n");
 					break;

@@ -6,7 +6,7 @@ typedef struct header HeaderForPayload;
 struct header {
 	short int sid;				//sender ID
 	short int rid;				//reciver ID 
-	char priority;				//0-7 prioaty of importance in 
+	int priority;				//0-7 prioaty of importance in 
 	short int seqNum;				
 	long int payloadSize;		// Number of bytes in payload after this header
 	int payLoadType;			// 0: Text, 1: Audio, 2: Image etc.

@@ -62,13 +62,13 @@ void transmitMessage(const char* msg) {
 	//snprintf(msgWithSenderID, BUFSIZE, "%s %s", msg, senderID); // Append the sender ID to the message
 
 	outputToPort(&hCom, msg, strlen(msg) + 1);
-	Sleep(500);
+	//Sleep(500);
 	purgePort(&hCom);
 	CloseHandle(hCom);
 }
 
 void receiveMessages(char* msgBuffer, int* msgLength) {
-	Sleep(1500);
+	//Sleep(1500);
 	DWORD bytesRead;
 	bytesRead = inputFromPort(&hCom, msgBuffer, BUFSIZE);
 	msgBuffer[bytesRead] = '\0';
@@ -128,7 +128,7 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) 
 
 
 DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader) {
-	printf("transmitt called and vote for header is %d", voteOnHeader);
+
 	DWORD bytesRead;
 	if (voteOnHeader == 1) {
 
