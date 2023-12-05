@@ -2,6 +2,7 @@
 
 
 */
+#pragma warning	(disable:4996)
 
 #include "Queues.h"
 #include <stdlib.h>
@@ -181,4 +182,50 @@ void DequeueByPriority(void) {
 		// Free the allocated memory for the array
 		free(queueArray);
 	
+}
+
+void savePhoneBook(const char* filename) {
+	FILE* file = fopen(filename, "w");
+	if (file == NULL) {
+		perror("Error opening file");
+		return;
+	}
+
+	link currentNode = phead;
+
+	while (currentNode != NULL) {
+		Item currentItem = currentNode->Data;
+
+		fprintf(file, "@@%s@@\n%d\n%d\n%d\n\n\n",
+			currentItem.message, currentItem.sid, currentItem.rid, currentItem.priority);
+
+		currentNode = currentNode->pNext;
+	}
+
+	fclose(file);
+}
+
+void loadPhoneBook(const char* filename) {
+	FILE* file = fopen(filename, "r");
+	if (file == NULL) {
+		perror("Error opening file");
+		return;
+	}
+
+	// Read data from the file and reconstruct the queue
+	while (!feof(file)) {
+		Item newItem;
+		if (fscanf(file, " @@%[^@]@@\n%d\n%d\n%d\n\n\n",
+			newItem.message, &newItem.sid, &newItem.rid, &newItem.priority) == 4) {
+			// Create a new node for each item read from the file
+			link newNode = (link)malloc(sizeof(Node));
+			newNode->Data = newItem;
+			newNode->pNext = NULL;
+
+			// Add the node to the queue
+			AddToQueue(newNode);
+		}
+	}
+
+	fclose(file);
 }

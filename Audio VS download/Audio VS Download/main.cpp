@@ -77,6 +77,8 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 		fwprintf(file, L"PAYLOADERROR=%d\n", settings->payloadError);
 		fwprintf(file, L"RID=%d\n", settings->headerError);
 		fclose(file);
+
+
 	}
 	else {
 		printf("Write settings function failed");
@@ -156,7 +158,6 @@ int	main(int argc, char* argv[]) {
 	
 	//seed random number so fortion cookies qoute can be genorated
 	srand((unsigned int)time(NULL));
-
 
 	// Read settings from file on start up
 	readSettingsFromFile(&settings, "settings.txt");
@@ -518,6 +519,8 @@ int	main(int argc, char* argv[]) {
 				else if (userResultThree == '2') {
 					InitQueue();
 
+					//loadPhoneBook("PhoneBook.txt");
+
 					//code calls queues to q fourtion cookies and then randomly get a qoute
 					numberOfQuotes = fnumQuotes();
 					quoteIndices = fquoteIndices(numberOfQuotes);
@@ -592,6 +595,8 @@ int	main(int argc, char* argv[]) {
 			else if (userResultTwo == '2') {
 
 				InitQueue();
+				//load file into queue
+				loadPhoneBook("PhoneBook.txt");
 
 				int choice;
 				do {
@@ -673,6 +678,8 @@ int	main(int argc, char* argv[]) {
 
 						// Add the new node to the queue
 						AddToQueue(newNode);
+						
+						savePhoneBook("PhoneBook.txt");
 
 						break;
 
@@ -716,13 +723,16 @@ int	main(int argc, char* argv[]) {
 								dequeuedNode->Data.message, dequeuedNode->Data.sid, dequeuedNode->Data.rid,
 								dequeuedNode->Data.priority);
 							//free(dequeuedNode);
+							savePhoneBook("PhoneBook.txt");
 
 							break;
 						case 4:
 							DequeueLIFO();
+							savePhoneBook("PhoneBook.txt");
 							break;
 						case 5:
 							DequeueByPriority();
+					    	savePhoneBook("PhoneBook.txt");
 							break;
 						case 6:
 							printf("Exiting the program.\n");
@@ -962,7 +972,6 @@ int	main(int argc, char* argv[]) {
 				case 2:
 
 					char encryptionTesting[25];	
-					char encryptionTmpMsg[25];
 					char encryptionMsgOut[25];
 					char dencryptionMsgOut[25];
 					char ecryptionMessageBuffer[25];
@@ -970,17 +979,22 @@ int	main(int argc, char* argv[]) {
 					printf("Enter the text message to decrypt: ");
 					scanf("%s", encryptionTesting);
 					encryptionTesting[sizeof(encryptionTesting) - 1] = '\0';
-					strcpy(encryptionTmpMsg, encryptionTesting);
 
-					xorCipher(encryptionTesting, strlen(encryptionTesting), testSecretKey, 10, encryptionTmpMsg);
-					printf("Encrypted message: %d\n", encryptionTmpMsg);
 
-					xorCipher(encryptionTmpMsg, strlen(encryptionTmpMsg), testSecretKey, 10, dencryptionMsgOut);
-					printf("\nXOR Decrypted Message: %s\n", dencryptionMsgOut);
+				
+
+					xorCipher(encryptionTesting, strlen(encryptionTesting), testSecretKey, 10, encryptionMsgOut);
+					printf("Encrypted message in hex:");                               // Will not print as a string so print in HEX, one byte at a time
+					for (int i = 0; i < strlen(encryptionTesting); i++) {
+						printf("%02x", encryptionMsgOut[i]);
+					}
+		
+					
+
+					xorCipher(encryptionMsgOut, strlen(encryptionMsgOut), testSecretKey, 10, dencryptionMsgOut);
+					printf("\nDecrypted message: %s\n", dencryptionMsgOut);
+
 					break;
-
-
-
 
 				case 3:
 
