@@ -23,7 +23,6 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "VoteOn.h"
 #include "main.h"
 #include "RS232Comm.h"
-//include "Huffmain.h"
 		
 extern HeaderForPayload;
 extern short iBigBuf[];								// Declare the external variable
