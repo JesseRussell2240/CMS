@@ -319,14 +319,14 @@ int	main(int argc, char* argv[]) {
 
 
 			system("cls");
-			char userResultTwo;
+			char userResultthree;
 
 
 			printf("Options:\n");
 			printf("1. Transmit\n");
 			printf("2. Receive\n");
 			printf("Enter your choice (1 or 2): ");
-			scanf_s(" %c", &userResultTwo, 1);
+			scanf_s(" %c", &userResultthree, 1);
 
 
 
@@ -337,7 +337,7 @@ int	main(int argc, char* argv[]) {
 
 
 			//logic for audio message transmission
-			if (userResultTwo == '1') {
+			if (userResultthree == '1') {
 
 				//build the header for the message based on users predefined settings and for audio transmission
 				HeaderForPayload header;
@@ -376,7 +376,7 @@ int	main(int argc, char* argv[]) {
 
 
 				//	xorCipher(msgOut, msgSize, secretKey, keyLength, tmpMsg);
-					printf("Encrypted message: %d\n", msgOut);
+				//	printf("Encrypted message: %d\n", msgOut);
 
 				}
 
@@ -385,7 +385,7 @@ int	main(int argc, char* argv[]) {
 			//	header.payloadSize = lBigBufSize + 1;
 
 
-				printHeaderInfo(header);
+				//printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				transmitPayload(&header, (void*)iBigBuf, settings.headerError);
@@ -395,182 +395,75 @@ int	main(int argc, char* argv[]) {
 			}
 
 
-
-
 			//
 			//***********************************************************************************************************************
 			//	
 			//									logic for reciving text message
 
-			else if (userResultTwo == '2') {
-
-				InitQueue();
-				//load file into queue
-				loadPhoneBook("PhoneBook.txt");
-
-				int choice;
-				do {
-					printf("\n1. Receive Message\n");
-					printf("2. Display Received Messages\n");
-					printf("3. Exit\n");
-					printf("Enter your choice: ");
-					scanf("%d", &choice);
+			else if (userResultthree == '2') {
 
 
-					HeaderForPayload recivedHeader;
+				HeaderForPayload recivedHeader;
+				void* receivedPayload;
+				// Receive incoming header and payload
+				setComRate(settings.baudRate);
+				initializePort(settings.comPort);
+				DWORD bytesRead;
+				link newNode;
+
+				bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
 
+				if (bytesRead == recivedHeader.payloadSize) {
+					// Cast the received payload back to a character array
+					char* receivedExample = (char*)(receivedPayload);
+			//		strcpy(messageBuffer, receivedExample);
+				//	printf("\nThe message buffer is: %s\n", messageBuffer);
+				}
 
-					void* receivedPayload;
-					// Receive incoming header and payload
-					setComRate(settings.baudRate);
-					initializePort(settings.comPort);
-					DWORD bytesRead;
-					link newNode;
-
-
-				//	int messageLength;
-				//	char messageBuffer[260];
-
-
-					//switch case for queuing results of reciving
-					switch (choice) {
-
-						//case 1 for reciving text and adding to queue
-					case 1:
-						bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
-
-						printHeaderInfo(recivedHeader);
-
-						if (bytesRead == recivedHeader.payloadSize) {
-							// Cast the received payload back to a character array
-							char* receivedExample = (char*)(receivedPayload);
-							strcpy(messageBuffer, receivedExample);
-							printf("\nThe message buffer is: %s\n", messageBuffer);
-						}
-
-						if (recivedHeader.payLoadType == 1) {
-							printf("recived data was audio not text\n");
-							break;
-						}
-
-						char tmpMsg[250];
-						printf("compression status :%d", recivedHeader.compression);
-						if (recivedHeader.compression != 0) {
-
-							int resultLength = 250;
-							int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
-
-							tmpMsg[recivedHeader.compression] = '\0';
-							printf("\nUncompressed message: %s\n", tmpMsg);
-
-							strcpy(messageBuffer, tmpMsg);
-						}
-
-						printf("encryption status :%d", recivedHeader.encryption);
-						//logic to decrypt recived text message
-						if (recivedHeader.encryption == 1) {
-							strcpy(messageBuffer, tmpMsg);
-							//printf("\nEncryption is ON!!!!!\n");
-							char secretKey[10] = "314159265";
-							int keyLength = 10;
+				if (recivedHeader.payLoadType == 0) {
+					printf("recived data was text not audio\n");
+					break;
+				}
 
 
-							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tmpMsg);
+				printf("compression status :%d", recivedHeader.compression);
+				if (recivedHeader.compression != 0) {
 
-							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
-						}
+					int resultLength = 250;
+				//	int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 
+				//	tmpMsg[recivedHeader.compression] = '\0';
+				//	printf("\nUncompressed message: %s\n", tmpMsg);
 
-						printf("adding to queue");
-						// Create a new node for the received message
-						newNode = (link)malloc(sizeof(Node));
-						newNode->Data.sid = recivedHeader.sid;
-						newNode->Data.rid = recivedHeader.rid;
-						newNode->Data.priority = recivedHeader.priority;
-						strcpy(newNode->Data.message, messageBuffer);  // Copy the received message
+			//		strcpy(messageBuffer, tmpMsg);
+				}
 
-						// Add the new node to the queue
-						AddToQueue(newNode);
-
-						savePhoneBook("PhoneBook.txt");
-
-						break;
-
-
-						//case 2 options for dequeuing or displaying queue.
-					case 2:
-						if (IsQueueEmpty()) {
-							printf("Queue is empty. Nothing to dequeue.\n");
-							break;
-						}
+				printf("encryption status :%d", recivedHeader.encryption);
+				//logic to decrypt recived text message
+				if (recivedHeader.encryption == 1) {
+					//strcpy(messageBuffer, tmpMsg);
+					//printf("\nEncryption is ON!!!!!\n");
+					char secretKey[10] = "314159265";
+					int keyLength = 10;
 
 
-						system("cls");
+			//		xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tmpMsg);
 
-						printf("\n1. Display Entire Queue\n");
-						printf("2. Display Queue by Priority\n");
-						printf("3. Dequeue in FIFO\n");
-						printf("4. Dequeue in LIFO\n");
-						printf("5. Dequeue by Priority\n");
-						printf("6. Exit\n");
-						printf("Enter your choice: ");
-						scanf("%d", &choice);
+					//printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+				}
 
-						link dequeuedNode;
-
-
-						//queue display option control
-						switch (choice) {
-						case 1:
-							printf("\nDisplaying Entire Queue:\n");
-							PrintQueueContents();
-							break;
-						case 2:
-							printf("\nDisplaying Queue by Priority:\n");
-							PrintQueueContentsByPriority();
-							break;
-						case 3:
-
-							dequeuedNode = DeQueue();
-							printf("Dequeued in FIFO:\n\n Message: %s\n, Sender ID: %d\n, Receiver ID: %d\n, Priority: %c\n\n\n",
-								dequeuedNode->Data.message, dequeuedNode->Data.sid, dequeuedNode->Data.rid,
-								dequeuedNode->Data.priority);
-							//free(dequeuedNode);
-							savePhoneBook("PhoneBook.txt");
-
-							break;
-						case 4:
-							DequeueLIFO();
-							savePhoneBook("PhoneBook.txt");
-							break;
-						case 5:
-							DequeueByPriority();
-							savePhoneBook("PhoneBook.txt");
-							break;
-						case 6:
-							printf("Exiting the program.\n");
-							break;
-						default:
-							printf("Invalid choice. Please try again.\n");
-						}
-						break;
-					case 3:
-						printf("Exiting the program.\n");
-						break;
-					default:
-						printf("Invalid choice. Please try again.\n");
-					}
-				} while (choice != 6);
 
 			}
-			else {
-				printf("Invalid input. Please enter 1 or 2.\n");
-			}
-
-
-
+			
+			
 			break;
+
+
+
+
+
+		
 				
 
 			/**************************************************************************************************************************
@@ -694,7 +587,7 @@ int	main(int argc, char* argv[]) {
 				header.payloadSize = msgSize + 1;
 
 
-				printHeaderInfo(header);
+				//printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				transmitPayload(&header, (void*)msgOut, settings.headerError);
