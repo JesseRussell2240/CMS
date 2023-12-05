@@ -872,7 +872,6 @@ int	main(int argc, char* argv[]) {
 					
 
 					char encryptionTesting[25];	
-					char encryptionTmpMsg[25];
 					char encryptionMsgOut[25];
 					char dencryptionMsgOut[25];
 					char ecryptionMessageBuffer[25];
@@ -882,15 +881,17 @@ int	main(int argc, char* argv[]) {
 					encryptionTesting[sizeof(encryptionTesting) - 1] = '\0';
 
 
-					strcpy(encryptionTmpMsg, encryptionTesting);
+					//strcpy(encryptionTmpMsg, encryptionTesting);
 
-					xorCipher(encryptionTesting, strlen(encryptionTesting), testSecretKey, 10, encryptionTmpMsg);
-					printf("Encrypted message: %d\n", encryptionTmpMsg);
+					xorCipher(encryptionTesting, strlen(encryptionTesting), testSecretKey, 10, encryptionMsgOut);
+					printf("Encrypted message in hex : ");
+						for (int i = 0; i < strlen(encryptionTesting); i++) {
+							printf("%02x", encryptionMsgOut[i]);
+						}
 
 		
-					
 
-					xorCipher(encryptionTmpMsg, strlen(encryptionTmpMsg), testSecretKey, 10, dencryptionMsgOut);
+					xorCipher(encryptionMsgOut, strlen(encryptionMsgOut), testSecretKey, 10, dencryptionMsgOut);
 
 					printf("\nXOR Decrypted Message: %s\n", dencryptionMsgOut);
 
