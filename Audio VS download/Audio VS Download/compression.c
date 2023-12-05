@@ -127,6 +127,7 @@ void decodeFile(const char* inputFileName, const char* outputFileName) {
     free(inputBuffer);
     free(outputBuffer);
 }
+
 void encodeShorts(const short* inputArray, int inputSize, short** compressedData, long* compressedSize) {
     unsigned char* inputBuffer;
     unsigned char* outputBuffer;

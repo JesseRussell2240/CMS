@@ -229,3 +229,15 @@ void loadPhoneBook(const char* filename) {
 
 	fclose(file);
 }
+
+int numOfMessages(void) {
+	int count = 0;
+	link currentNode = phead;
+
+	while (currentNode != NULL) {
+		count++;
+		currentNode = currentNode->pNext;
+	}
+
+	return count;
+}

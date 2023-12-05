@@ -134,7 +134,6 @@
     <ClCompile Include="huffman.c" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="message.cpp" />
-    <ClCompile Include="phoneBook.cpp" />
     <ClCompile Include="Queues.cpp" />
     <ClCompile Include="RS232Comm.cpp" />
     <ClCompile Include="sound.cpp" />
