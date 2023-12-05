@@ -347,9 +347,12 @@ int	main(int argc, char* argv[]) {
 				header.payLoadType = 1; 
 				header.encryption = settings.encryption;
 				header.compression = settings.compression;
-
-				short* tempBuf[40000];
-				long tempSize;
+				header.payloadSize = lBigBufSize + 1;
+				/*
+				
+				
+			//	short* tempBuf[40000];
+			//	long tempSize;
 				
 
 				//logic for compression of text message transmission
@@ -382,10 +385,10 @@ int	main(int argc, char* argv[]) {
 
 
 				//set the payload size in the header after compression/encription etc are completed.
-			//	header.payloadSize = lBigBufSize + 1;
+				
+			*/
 
-
-				//printHeaderInfo(header);
+				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				transmitPayload(&header, (void*)iBigBuf, settings.headerError);
@@ -413,14 +416,20 @@ int	main(int argc, char* argv[]) {
 
 				bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
+				printHeaderInfo(recivedHeader);
 
 				if (bytesRead == recivedHeader.payloadSize) {
 					// Cast the received payload back to a character array
-					char* receivedExample = (char*)(receivedPayload);
+					memcpy(iBigBuf, receivedPayload, recivedHeader.payloadSize);
+					free(receivedPayload);
 			//		strcpy(messageBuffer, receivedExample);
 				//	printf("\nThe message buffer is: %s\n", messageBuffer);
 				}
 
+
+				/*
+				
+				
 				if (recivedHeader.payLoadType == 0) {
 					printf("recived data was text not audio\n");
 					break;
@@ -452,6 +461,7 @@ int	main(int argc, char* argv[]) {
 
 					//printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 				}
+				*/
 
 
 			}
