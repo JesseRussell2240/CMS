@@ -62,13 +62,13 @@ void transmitMessage(const char* msg) {
 	//snprintf(msgWithSenderID, BUFSIZE, "%s %s", msg, senderID); // Append the sender ID to the message
 
 	outputToPort(&hCom, msg, strlen(msg) + 1);
-	Sleep(500);
+	//Sleep(500);
 	purgePort(&hCom);
 	CloseHandle(hCom);
 }
 
 void receiveMessages(char* msgBuffer, int* msgLength) {
-	Sleep(1500);
+	//Sleep(1500);
 	DWORD bytesRead;
 	bytesRead = inputFromPort(&hCom, msgBuffer, BUFSIZE);
 	msgBuffer[bytesRead] = '\0';
@@ -106,32 +106,66 @@ void receiveAudio(short* audioData, int dataSize) {
 }
 
 void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) {
-
-
-	//logic to check if vote on header is turned on and transmit the correct number of headers.
-	//if (voteOnHeader == 1) {
-	//	for (int i = 1; i < voteOnCount; i++) {
-	//		outputToPort(&hCom, Header, sizeof(Header) * 2);						// Send Header
-	//	}
-//	}
-	//else {
+	
+	if (voteOnHeader == 1) {
+		for (int i = 0; i < 3; ++i) {
+			printf("transmitting header %d", i);
+			outputToPort(&hCom, Header, sizeof(struct header));
+		}
+		
+	}
+	else {
 		outputToPort(&hCom, Header, sizeof(struct header));
-//	/}
+	}
 
-	//initPort(&hCom, port, nComRate, nComBits, timeout);				// Initialize the Tx port
-						// Send Header
+	
+	
 	outputToPort(&hCom, Payload, (*Header).payloadSize);				// Send payload
 	//Sleep(500);															// Allow time for signal propagation on cable 
 	purgePort(&hCom);													// Purge the Tx port
 	CloseHandle(hCom);													// Close the handle to Tx port 
 }
 
+
 DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader) {
-	
+
 	DWORD bytesRead;
+	if (voteOnHeader == 1) {
+
+		HeaderForPayload* Header1 = (HeaderForPayload*)malloc(sizeof(HeaderForPayload));
+		HeaderForPayload* Header2 = (HeaderForPayload*)malloc(sizeof(HeaderForPayload));
+		HeaderForPayload* Header3 = (HeaderForPayload*)malloc(sizeof(HeaderForPayload));
 
 
+
+		inputFromPort(&hCom, Header1, sizeof(struct header));
+		inputFromPort(&hCom, Header2, sizeof(struct header));
+		inputFromPort(&hCom, Header3, sizeof(struct header));
+	
+		void* headerPointers[3] = { Header1, Header2, Header3 };
+
+		int result  = VoteOn(headerPointers, 3, sizeof(struct header));
+		memcpy(Header, headerPointers[result], sizeof(HeaderForPayload));
+
+		free(Header1);
+		free(Header2);
+		free(Header3);
+
+
+
+		if (result != -1) {
+			printf("Header with the most repeats is at index %d\n", result);
+		}
+		else {
+			printf("No repeats found\n");
+		}
+
+	}
+	else {
 		inputFromPort(&hCom, Header, sizeof(struct header));
+	}
+
+		
 //	}
 
 	

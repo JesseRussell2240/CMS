@@ -46,17 +46,14 @@ link DeQueue(void) {
 void PrintQueueContents(void) {
 	link currentNode = phead;
 
-	if (IsQueueEmpty()) {
-		printf("Queue is empty.\n");
-		return;
-	}
 
-	printf("Queue contents:\n");
+
+	printf("Queue contents:\n\n");
 
 	while (currentNode != NULL) {
 		Item currentItem = currentNode->Data;
 
-		printf("Message: %s, Sender ID: %d, Receiver ID: %d, Priority: %c\n",
+		printf("Message: %s\nSender ID: %d\nReceiver ID: %d\nPriority: %d\n\n\n",
 			currentItem.message, currentItem.sid, currentItem.rid,
 			currentItem.priority);
 
@@ -64,3 +61,124 @@ void PrintQueueContents(void) {
 	}
 }
 
+void PrintQueueContentsByPriority(void) {
+
+	// Create an array to store pointers to nodes for sorting
+	int queueSize = 0;
+	link* queueArray = (link*)malloc(sizeof(link) * queueSize);
+
+	link currentNode = phead;
+	while (currentNode != NULL) {
+		queueArray = (link*) realloc(queueArray, sizeof(link) * (queueSize + 1));
+
+
+		queueArray[queueSize] = currentNode;
+		queueSize++;
+		currentNode = currentNode->pNext;
+	}
+
+
+	//blup-blup-blup
+	for (int i = 0; i < queueSize - 1; i++) {
+		for (int j = 0; j < queueSize - i - 1; j++) {
+			if (queueArray[j]->Data.priority > queueArray[j + 1]->Data.priority) {
+				// I need sleep
+				link temp = queueArray[j];
+				queueArray[j] = queueArray[j + 1];
+				queueArray[j + 1] = temp;
+			}
+		}
+	}
+
+	// Display the sorted messages
+	printf("Queue contents (Priority Order):\n");
+	for (int i = 0; i < queueSize; i++) {
+		Item currentItem = queueArray[i]->Data;
+		printf("Message: %s\nSender ID: %d\nReceiver ID: %d\nPriority: %d\n\n\n",
+			currentItem.message, currentItem.sid, currentItem.rid,
+			currentItem.priority);
+
+	}
+
+	// Free the allocated memory for the array
+	free(queueArray);
+}
+
+
+void DequeueLIFO(void) {
+		link currentNode = phead;
+		link previousNode = NULL;
+
+		// Traverse to the last node
+		while (currentNode->pNext != NULL) {
+			previousNode = currentNode;
+			currentNode = currentNode->pNext;
+		}
+
+		// checkf there is only one node in the queue
+		if (previousNode == NULL) {
+			phead = ptail = NULL;
+		}
+		else {
+			previousNode->pNext = NULL;
+			ptail = previousNode;
+		}
+
+		printf("Dequeued in LIFO: \nMessage: %s\nSender ID: %d\nReceiver ID: %d\nPriority: %d\n\n\n",currentNode->Data.message, currentNode->Data.sid, currentNode->Data.rid, currentNode->Data.priority);
+
+		free(currentNode);  // Free the memory allocated for the dequeued node
+	
+}
+
+void DequeueByPriority(void) {
+	
+	
+		link* queueArray = (link*)malloc(sizeof(link) * 0);
+
+		if (queueArray == NULL) {
+			perror("Memory allocation error");
+			exit(EXIT_FAILURE);
+		}
+
+		link currentNode = phead;
+		int queueSize = 0;
+
+		while (currentNode != NULL) {
+			queueArray = (link*)realloc(queueArray, sizeof(link) * (queueSize + 1));
+
+			if (queueArray == NULL) {
+				perror("Memory reallocation error");
+				exit(EXIT_FAILURE);
+			}
+
+			queueArray[queueSize] = currentNode;
+			queueSize++;
+			currentNode = currentNode->pNext;
+		}
+
+		//I LOVE BUBBLE SORT
+		for (int i = 0; i < queueSize - 1; i++) {
+			for (int j = 0; j < queueSize - i - 1; j++) {
+				if (queueArray[j]->Data.priority > queueArray[j + 1]->Data.priority) {
+					// pointer swap!
+					link temp = queueArray[j];
+					queueArray[j] = queueArray[j + 1];
+					queueArray[j + 1] = temp;
+				}
+			}
+		}
+
+		// Dequeue the highest priority item
+		link dequeuedNode = queueArray[0];
+		printf("Dequeued by Priority: \nMessage: %s\nSender ID: %d\nReceiver ID: %d\nPriority: %d\n\n\n",
+			dequeuedNode->Data.message, dequeuedNode->Data.sid, dequeuedNode->Data.rid,
+			dequeuedNode->Data.priority);
+
+		// Update the queue (remove the dequeued item)
+		phead = dequeuedNode->pNext;
+		free(dequeuedNode);
+
+		// Free the allocated memory for the array
+		free(queueArray);
+	
+}

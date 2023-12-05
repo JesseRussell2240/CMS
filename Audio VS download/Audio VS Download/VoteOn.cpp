@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <malloc.h>
 #include <string.h>
+#include "VoteOn.h"
 
 
 int VoteOn(void* Instances[], short nInstances, int nSize) {
@@ -24,3 +25,4 @@ int VoteOn(void* Instances[], short nInstances, int nSize) {
     }
     return(maxIndex);
 }
+
