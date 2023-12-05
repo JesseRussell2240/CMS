@@ -1,0 +1,16 @@
+@@egrep patterns are full regular expressions; it uses a fast deterministic
+algorithm that sometimes needs exponential space.
+-- unix manuals@@
+14
+0
+2
+
+
+@@"Life, loathe it or ignore it, you can't like it."
+-- Marvin the paranoid android
+@@
+14
+0
+2
+
+
