@@ -389,9 +389,12 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				header.payLoadType = 1; 
 				header.encryption = settings.encryption;
 				header.compression = settings.compression;
-
-				short* tempBuf[40000];
-				long tempSize;
+				header.payloadSize = lBigBufSize + 1;
+				/*
+				
+				
+			//	short* tempBuf[40000];
+			//	long tempSize;
 				
 
 				//logic for compression of text message transmission
@@ -424,10 +427,10 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 
 				//set the payload size in the header after compression/encription etc are completed.
-			//	header.payloadSize = lBigBufSize + 1;
+				
+			*/
 
-
-				//printHeaderInfo(header);
+				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
 				transmitPayload(&header, (void*)iBigBuf, settings.headerError);
@@ -455,14 +458,20 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
+				printHeaderInfo(recivedHeader);
 
 				if (bytesRead == recivedHeader.payloadSize) {
 					// Cast the received payload back to a character array
-					char* receivedExample = (char*)(receivedPayload);
+					memcpy(iBigBuf, receivedPayload, recivedHeader.payloadSize);
+					free(receivedPayload);
 			//		strcpy(messageBuffer, receivedExample);
 				//	printf("\nThe message buffer is: %s\n", messageBuffer);
 				}
 
+
+				/*
+				
+				
 				if (recivedHeader.payLoadType == 0) {
 					printf("recived data was text not audio\n");
 					break;
