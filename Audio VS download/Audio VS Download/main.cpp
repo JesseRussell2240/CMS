@@ -177,7 +177,8 @@ int	main(int argc, char* argv[]) {
 	int bytesRead = 0;
 	int option;
 	int ChangeSettings = -1;
-	
+	int choice2;
+
 	//seed random number so fortion cookies qoute can be genorated
 	srand((unsigned int)time(NULL));
 
@@ -668,21 +669,21 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					scanf("%d", &choice);
 
 					HeaderForPayload recivedHeader;
-					
+
 					void* receivedPayload;
 					// Receive incoming header and payload
 					setComRate(settings.baudRate);
 					initializePort(settings.comPort);
 					DWORD bytesRead;
 					link newNode;
-					
+
 					int messageLength;
 					char messageBuffer[260];
 					int senderIDSearch;
 
 					//switch case for queuing results of reciving
 					switch (choice) {
-					//case 1 for reciving text and adding to queue
+						//case 1 for reciving text and adding to queue
 					case 1:
 						bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
@@ -698,7 +699,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 							printf("recived data was audio not text\n");
 							break;
 						}
-						
+
 						char tmpMsg[250];
 						printf("compression status :%d", recivedHeader.compression);
 						if (recivedHeader.compression != 0) {
@@ -708,24 +709,24 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 							tmpMsg[recivedHeader.compression] = '\0';
 							printf("\nUncompressed message: %s\n", tmpMsg);
-			
+
 							strcpy(messageBuffer, tmpMsg);
 						}
 
 						printf("encryption status :%d", recivedHeader.encryption);
 						//logic to decrypt recived text message
 						if (recivedHeader.encryption == 1) {
-							
-							
+
+
 							char secretKey[10] = "314159265";
 							int keyLength = 10;
-							
+
 
 							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tmpMsg);
 							strcpy(messageBuffer, tmpMsg);
 
 							printf("\nDecrypted message: %s\n", messageBuffer);
-							
+
 						}
 
 						if (recivedHeader.crcOnPayload == 1) {
@@ -736,12 +737,12 @@ case 2 will call the function Play audio and and play the most recent audio reco
 								//add a print statment saying what the orgional message is
 						}
 
-					//	printf("adding to queue");
-						// Create a new node for the received message
+						//	printf("adding to queue");
+							// Create a new node for the received message
 						newNode = (link)malloc(sizeof(Node));
 						newNode->Data.sid = recivedHeader.sid;
 						newNode->Data.rid = recivedHeader.rid;
-						newNode->Data.priority = recivedHeader.priority; 
+						newNode->Data.priority = recivedHeader.priority;
 						strcpy(newNode->Data.message, messageBuffer);  // Copy the received message
 
 						// Add the new node to the queue
@@ -758,77 +759,77 @@ case 2 will call the function Play audio and and play the most recent audio reco
 						}
 
 						system("cls");
-						
-						printf("\n1. Search Queue by Sender ID\n");
-						printf("2. Display Entire Queue\n");
-						printf("3. Display Queue by Priority\n");
-						printf("4. Dequeue in FIFO\n");
-						printf("5. Dequeue in LIFO\n");
-						printf("6. Dequeue by Priority\n");
-						printf("7. Exit\n");
-						printf("Enter your choice: ");
-						scanf("%d", &choice);
+						do {
+							printf("\n1. Search Queue by Sender ID\n");
+							printf("2. Display Entire Queue\n");
+							printf("3. Display Queue by Priority\n");
+							printf("4. Dequeue in FIFO\n");
+							printf("5. Dequeue in LIFO\n");
+							printf("6. Dequeue by Priority\n");
+							printf("7. Exit\n");
+							printf("Enter your choice: ");
+							scanf("%d", &choice2);
 
-						link dequeuedNode;
+							link dequeuedNode;
 
-						//queue display option control
-						switch (choice) {
-						case 1:
-							printf("\nEnter a sender ID to view their message count:");
-							scanf("%d", &senderIDSearch);
-							printf("\nUser %d has sent you %d messages", senderIDSearch, numOfUserMessages(senderIDSearch));
-							break;
-						case 2:
-							printf("\nDisplaying Entire Queue:\n");
-							PrintQueueContents();
-							break;
-						case 3:
-							printf("\nDisplaying Queue by Priority:\n");
-							PrintQueueContentsByPriority();
-							break;
-						case 4:
+							//queue display option control
+							switch (choice2) {
+							case 1:
+								printf("\nEnter a sender ID to view their message count:");
+								scanf("%d", &senderIDSearch);
+								printf("\nUser %d has sent you %d messages", senderIDSearch, numOfUserMessages(senderIDSearch));
+								break;
+							case 2:
+								printf("\nDisplaying Entire Queue:\n");
+								PrintQueueContents();
+								break;
+							case 3:
+								printf("\nDisplaying Queue by Priority:\n");
+								PrintQueueContentsByPriority();
+								break;
+							case 4:
 
-							dequeuedNode = DeQueue();
-							printf("Dequeued in FIFO:\n\n Message: %s\n, Sender ID: %d\n, Receiver ID: %d\n, Priority: %c\n\n\n",
-								dequeuedNode->Data.message, dequeuedNode->Data.sid, dequeuedNode->Data.rid,
-								dequeuedNode->Data.priority);
-							//free(dequeuedNode);
-							savePhoneBook("PhoneBook.txt");
+								dequeuedNode = DeQueue();
+								printf("Dequeued in FIFO:\n\n Message: %s\n, Sender ID: %d\n, Receiver ID: %d\n, Priority: %c\n\n\n",
+									dequeuedNode->Data.message, dequeuedNode->Data.sid, dequeuedNode->Data.rid,
+									dequeuedNode->Data.priority);
+								//free(dequeuedNode);
+								savePhoneBook("PhoneBook.txt");
 
-							break;
-						case 5:
-							DequeueLIFO();
-							savePhoneBook("PhoneBook.txt");
-							break;
-						case 6:
-							DequeueByPriority();
-					    	savePhoneBook("PhoneBook.txt");
-							break;
-						case 7:
-							printf("Exiting the program.\n");
-							break;
-						default:
-							printf("Invalid choice. Please try again.\n");
-						}
+								break;
+							case 5:
+								DequeueLIFO();
+								savePhoneBook("PhoneBook.txt");
+								break;
+							case 6:
+								DequeueByPriority();
+								savePhoneBook("PhoneBook.txt");
+								break;
+							case 7:
+								printf("Exiting the program.\n");
+								break;
+							default:
+								system("cls");
+								printf("Please enter a valid option\n");
+							}
+
+						} while (choice2 != 7);
 						break;
+						//system("cls");
 					case 3:
-						printf("Exiting the program.\n");
+						printf("Exiting\n");
 						break;
 					default:
-						printf("Invalid choice. Please try again.\n");
+						system("cls");
+						printf("Please enter a valid option\n");
 					}
-				} while (choice != 7);
 
-			}
-			else {
-				printf("Invalid input. Please enter 1 or 2.\n");
+				} while (choice != 3);
+				system("cls");
+
 			}
 
 			break;
-
-
-
-
 			/**************************************************************************************************************************
 
 			case 7 for updating settings
@@ -841,8 +842,9 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 
 
-			//system("cls");
+			system("cls");
 			do{
+				
 			//printf("Option 7 coming soon.\n");
 			printf("\n\n(ON: 1 || OFF: 0)\n\n");
 			wprintf(L"1. Current COM port: %s\n", settings.comPort);
@@ -950,28 +952,23 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				printf("Do you want error detection for the message?\n");
 				scanf_s("%d", &settings.payloadError);
+				break;
 
 			case 13:
 				break;
 
 			default:
-				printf("Error changing settings\n");
-				break;
+				system("cls");
+				printf("Please enter a valid option\n");
 			}
-			//system("cls");
+
 			} while (ChangeSettings != 13);
+			system("cls");
 
 			writeSettingsToFile(&settings, "settings.txt");
+			
 
 			break;
-
-		default:
-
-			system("cls");
-			printf("Invalid option. Please choose a valid option.\n");
-			break;
-
-
 
 
 
@@ -985,7 +982,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 
 		case 8:
-
+			system("cls");
 			do {
 				//printf("Option 7 coming soon.\n");
 				printf("\n\nDiagnostic Testing\n\n");
@@ -1133,7 +1130,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					int operation;
 
 					// Prompt user for operation
-					printf("1. Transmit \n2. Receive : ");
+					printf("1. Transmit \n2. Receive\nEnter Choice: ");
 					scanf("%d", &operation);
 
 					for (int baudRate = 9600; baudRate <= 115200; baudRate *= 2) {
@@ -1200,14 +1197,16 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 
 					break;
-				default:
-					printf("Error testing\n");
+				case 6:
 					break;
-				}
-				//system("cls");
-			} while (ChangeSettings != 5);
 
-			
+				default:
+					system("cls");
+					printf("Please enter a valid option\n");
+			}
+
+			} while (ChangeSettings != 6);
+			system("cls");
 
 			break;
 
