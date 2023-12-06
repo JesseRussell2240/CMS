@@ -430,6 +430,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				
 			*/
 
+
 				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
