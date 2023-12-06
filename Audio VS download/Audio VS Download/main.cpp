@@ -545,6 +545,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				header.payLoadType = 0; //set as 0 for text
 				header.encryption = settings.encryption;
 				header.compression = settings.compression;
+				header.crcOnPayload = settings.payloadError;
 
 			//	header.voteOn = settings.headerError;
 				
@@ -593,6 +594,14 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				//set the msgSize depending on number of chars user entered.
 				msgSize = strlen(msgOut);
 				char tmpMsg[250];
+
+				if (settings.payloadError == 1) {
+
+					//zach CRC code for transmission goes here
+
+					//use msgOut as input and when you are done set msgOut to the new CRC message use tmpMsg
+					//
+				}
 
 				//logic for encryption of text transmission
 				if (settings.encryption == 1) {
@@ -708,6 +717,14 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 							printf("\nDecrypted message: %s\n", messageBuffer);
 							
+						}
+
+						if (recivedHeader.crcOnPayload == 1) {
+						
+								//zach crc check of recived message goes here
+								//input should be messageBuffer and when you are done you need to set the messageBuffer back to the actual message
+
+								//add a print statment saying what the orgional message is
 						}
 
 					//	printf("adding to queue");
