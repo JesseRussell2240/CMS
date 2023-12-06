@@ -838,6 +838,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 			system("cls");
 			do{
+				
 			//printf("Option 7 coming soon.\n");
 			printf("\n\n(ON: 1 || OFF: 0)\n\n");
 			wprintf(L"1. Current COM port: %s\n", settings.comPort);
@@ -945,28 +946,23 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				printf("Do you want error detection for the message?\n");
 				scanf_s("%d", &settings.payloadError);
+				break;
 
 			case 13:
 				break;
 
 			default:
-				printf("Error changing settings\n");
-				break;
+				system("cls");
+				printf("Please enter a valid option\n");
 			}
-			//system("cls");
+
 			} while (ChangeSettings != 13);
+			system("cls");
 
 			writeSettingsToFile(&settings, "settings.txt");
+			
 
 			break;
-
-		default:
-
-			system("cls");
-			printf("Invalid option. Please choose a valid option.\n");
-			break;
-
-
 
 
 
@@ -1128,7 +1124,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					int operation;
 
 					// Prompt user for operation
-					printf("1. Transmit \n2. Receive : ");
+					printf("1. Transmit \n2. Receive\nEnter Choice: ");
 					scanf("%d", &operation);
 
 					for (int baudRate = 9600; baudRate <= 115200; baudRate *= 2) {
@@ -1195,15 +1191,16 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 
 					break;
-				default:
-					//printf("Error testing\n");
-					system("cls");
+				case 6:
 					break;
-				}
-				//system("cls");
-			} while (ChangeSettings != 6);
 
-			
+				default:
+					system("cls");
+					printf("Please enter a valid option\n");
+			}
+
+			} while (ChangeSettings != 6);
+			system("cls");
 
 			break;
 
