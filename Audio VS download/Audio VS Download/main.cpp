@@ -836,7 +836,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 
 
-			//system("cls");
+			system("cls");
 			do{
 			//printf("Option 7 coming soon.\n");
 			printf("\n\n(ON: 1 || OFF: 0)\n\n");
@@ -980,7 +980,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 
 		case 8:
-
+			system("cls");
 			do {
 				//printf("Option 7 coming soon.\n");
 				printf("\n\nDiagnostic Testing\n\n");
@@ -1196,7 +1196,8 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 					break;
 				default:
-					printf("Error testing\n");
+					//printf("Error testing\n");
+					system("cls");
 					break;
 				}
 				//system("cls");
