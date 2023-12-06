@@ -53,13 +53,22 @@ ComSettings settings;
 
 /**************************************************************************************************************************
 
-Helper functions for 
+												HELPER FUNCTIONS FOR MAIN
 
+***************************************************************************************************************************/
 
+/**************************************************************************************************************************
+-Write to settings
+-Print the information inside the header
+-Read last updated settings from text file
+These function are used by the main to help store and retrieve user inputted data from the setting as well as print some of 
+these edited setting that are in the header
 **************************************************************************************************************************/
 
 
-// Function to write settings to a file
+//This function is called everytime a user updates a setting and immeadiatly accesses the settings.txt file and changes it to
+//To the user desired settings
+
 void writeSettingsToFile(ComSettings* settings, const char* filename) {
 	FILE* file = fopen(filename, "w");
 	printf("test");
@@ -85,6 +94,10 @@ void writeSettingsToFile(ComSettings* settings, const char* filename) {
 	}
 }
 
+
+//This function will print the most up to date header info
+//that theser would have updated in the settings
+
 void printHeaderInfo(const header& h) {
 	printf("Sender ID: %d\n", h.sid);
 	printf("Receiver ID: %d\n", h.rid);
@@ -97,14 +110,15 @@ void printHeaderInfo(const header& h) {
 }
 
 
+// This function is called at the start of the main to retirve 
+// the most recent setting from the settings.txt file 
 
-// Function to read settings from a file
 void readSettingsFromFile(ComSettings* settings, const char* filename) {
+
 	FILE* file = fopen(filename, "r");
 
 	if (file != NULL) {
 		wchar_t line[256];
-
 
 		while (fgetws(line, sizeof(line) / sizeof(line[0]), file) != NULL) {
 			//use of swscanf because comport is stored as a wide char
@@ -121,7 +135,6 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 			swscanf(line, L"PAYLOADERROR=%d", &settings->payloadError);
 			swscanf(line, L"HEADERERROR=%d", &settings->headerError);
 		}
-
 		fclose(file);
 	}
 	else {
@@ -130,23 +143,31 @@ void readSettingsFromFile(ComSettings* settings, const char* filename) {
 }
 
 
-
-
-
 /**************************************************************************************************************************
 
-Helper functions for
+											Coded Messaging System - MAIN
 
+***************************************************************************************************************************/
+
+/**************************************************************************************************************************
+ main is split up into 9 different cases
+ 1. Record Audio
+ 2. Play last saved recording form buffer
+ 3. Load audio file from and seperate file into buffer
+ 4. Save most recent recording into file directory
+ 5. Transmit or recieve audio messages
+ 6. Transmit or recieve text messages
+ 7. Update settings in settings.txt file
+ 8. Run dignostics check on different features
 
 **************************************************************************************************************************/
-
 
 int	main(int argc, char* argv[]) {
 
 	char filePath[150];
 	char save;
 	char replay;
-	char c;                     // used to flush extra input
+	char c;						 // used to flush extra input
 	int n;                       // Declare 'n' here
 	int randomNum;
 	int numberOfQuotes;
@@ -191,12 +212,19 @@ int	main(int argc, char* argv[]) {
 
 
 
-			/**************************************************************************************************************************
+/**************************************************************************************************************************
 
-			case 1 recording audio and storing in local buffer.
+											CASE 1: RECODRING AUDIO
+**************************************************************************************************************************/
 
+/**************************************************************************************************************************
+	
+	Recording audio and storing in local buffer.
+	Case 1 is where the user will record messages, before choosing what to do with them
+	from here the user can either record, rerecord their message or leave the case
+	Recording audio will overwrite other audio files in buffer unless saves otherwise. Buffer is just meant to hold temporarly
 
-			**************************************************************************************************************************/
+**************************************************************************************************************************/
 
 
 
@@ -235,13 +263,17 @@ int	main(int argc, char* argv[]) {
 			break;
 
 
-			/**************************************************************************************************************************
+/**************************************************************************************************************************
 
-			calls audio recording and plays contents of buffer
+											CASE 2: PLAY RECODRING FROM BUFFER 
 
+**************************************************************************************************************************/
 
-			**************************************************************************************************************************/
+/*************************************************************************************************************************
 
+case 2 will call the function Play audio and and play the most recent audio recording fomr the buffer.
+
+**************************************************************************************************************************/
 
 		case 2:
 		{
@@ -253,14 +285,18 @@ int	main(int argc, char* argv[]) {
 		}
 
 
-		/**************************************************************************************************************************
+/**************************************************************************************************************************
 
-		loads audio file from file and overwrites buffer
+											CASE 3: LOAD SAVED AUDIO RECORDING FILE INTO BUFFER
 
+***************************************************************************************************************************/
 
-		**************************************************************************************************************************/
-
-
+/**************************************************************************************************************************
+* 
+* Case 3 loads a file from a user specidfied file directory into the audio buffer
+* Loading a file will overwrite any other audio recodings currently in the buffer 
+* 
+***************************************************************************************************************************/
 		case 3:
 			system("cls");
 			//user option for loading into buff from audio file
@@ -280,12 +316,18 @@ int	main(int argc, char* argv[]) {
 			break;
 
 
-			/**************************************************************************************************************************
+/**************************************************************************************************************************
+* 
+*										CASE 4: SAVE AUDIO INTO USER DESIRED FILE DIRECTORY
+* 
+**************************************************************************************************************************/
 
-			allows user to save audio file from buffer into a file
-
-
-			**************************************************************************************************************************/
+/*************************************************************************************************************************
+* 
+* case 4 allows user to take the audio recoding that is stored in the buffer, and save it to a desier 
+* file directory
+* 
+* ************************************************************************************************************************/
 
 
 		case 4:
@@ -305,22 +347,22 @@ int	main(int argc, char* argv[]) {
 			break;
 
 
-			/**************************************************************************************************************************
+/**************************************************************************************************************************
+* 
+*									CASE 5: TRANSMITTING AND RECIEVING AUDIO MESSAGES
+* 
+**************************************************************************************************************************/
 
-			case 5 for transmitting and reciving audio files over rs232
-
-
-			**************************************************************************************************************************/
-
+/*************************************************************************************************************************
+* 
+* In the case the user will select what statio they are operating in. Transmit or recieve station.
+* 
+***************************************************************************************************************************/ 
 
 		case 5:
 
-			
-
-
 			system("cls");
 			char userResultthree;
-
 
 			printf("Options:\n");
 			printf("1. Transmit\n");
@@ -452,34 +494,30 @@ int	main(int argc, char* argv[]) {
 
 					//printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 				}
-
-
 			}
-			
-			
 			break;
 
+/***************************************************************************************************************************
+* 
+*									CASE 6: TRANSMITTING AND RECIEVING TEXT MESSAGES
+* 
+***************************************************************************************************************************/
 
-
-
-
-		
-				
-
-			/**************************************************************************************************************************
-
-			case 6 for transmitting and reciving messages
-
-
-			**************************************************************************************************************************/
-
+/**************************************************************************************************************************
+* 
+* Case 6 will allow the user to choose their home station. Transmission or recieving. 
+* Transmitting the user will have the option:
+* - Send Custom message
+* - Generate a random quote from a text file and send it
+* The reciever will have the option:
+* 
+* 
+***************************************************************************************************************************/
 
 		case 6:
-
 			
 			system("cls");
 			char userResultTwo;
-
 
 			printf("Options:\n");
 			printf("1. Transmit\n");
@@ -487,15 +525,7 @@ int	main(int argc, char* argv[]) {
 			printf("Enter your choice (1 or 2): ");
 			scanf_s(" %c", &userResultTwo, 1);
 
-
-
-			//
-			//***********************************************************************************************************************
-			//	
-			//									transmit txt message
-
-
-			//logic for text message transmission
+			//Transmit Text
 			if (userResultTwo == '1') {
 
 				//build the header for the message based on users predefined settings and for text message transmission
@@ -532,7 +562,6 @@ int	main(int argc, char* argv[]) {
 					InitQueue();
 
 					//loadPhoneBook("PhoneBook.txt");
-
 					//code calls queues to q fourtion cookies and then randomly get a qoute
 					numberOfQuotes = fnumQuotes();
 					quoteIndices = fquoteIndices(numberOfQuotes);
@@ -546,7 +575,6 @@ int	main(int argc, char* argv[]) {
 					strcpy(msgOut, messageBuffer);
 					free(quoteIndices);
 					free(quoteLengths);
-
 				}
 
 				else {
@@ -596,19 +624,11 @@ int	main(int argc, char* argv[]) {
 				
 			}
 
-
-			
-
-			//
-			//***********************************************************************************************************************
-			//	
-			//									logic for reciving text message
-
+			//Recieve Text
 			else if (userResultTwo == '2') {
 
-				InitQueue();
-				//load file into queue
-				loadPhoneBook("PhoneBook.txt");
+				InitQueue(); //Initialize the queue
+				loadPhoneBook("PhoneBook.txt"); //Access phonebook.txt and load data
 
 				int choice;
 				do {
@@ -618,11 +638,8 @@ int	main(int argc, char* argv[]) {
 					printf("Enter your choice: ");
 					scanf("%d", &choice);
 
-
 					HeaderForPayload recivedHeader;
 					
-
-
 					void* receivedPayload;
 					// Receive incoming header and payload
 					setComRate(settings.baudRate);
@@ -630,15 +647,12 @@ int	main(int argc, char* argv[]) {
 					DWORD bytesRead;
 					link newNode;
 					
-
 					int messageLength;
 					char messageBuffer[260];
 
-
 					//switch case for queuing results of reciving
 					switch (choice) {
-
-						//case 1 for reciving text and adding to queue
+					//case 1 for reciving text and adding to queue
 					case 1:
 						bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
@@ -650,7 +664,6 @@ int	main(int argc, char* argv[]) {
 							strcpy(messageBuffer, receivedExample);
 							printf("\nThe message buffer is: %s\n", messageBuffer);
 						}
-
 						if (recivedHeader.payLoadType == 1) {
 							printf("recived data was audio not text\n");
 							break;
@@ -683,7 +696,6 @@ int	main(int argc, char* argv[]) {
 							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 						}
 
-						
 						printf("adding to queue");
 						// Create a new node for the received message
 						newNode = (link)malloc(sizeof(Node));
@@ -694,11 +706,9 @@ int	main(int argc, char* argv[]) {
 
 						// Add the new node to the queue
 						AddToQueue(newNode);
-						
 						savePhoneBook("PhoneBook.txt");
 
 						break;
-
 
 						//case 2 options for dequeuing or displaying queue.
 					case 2:
@@ -706,7 +716,6 @@ int	main(int argc, char* argv[]) {
 							printf("Queue is empty. Nothing to dequeue.\n");
 							break;
 						}
-
 
 						system("cls");
 						
@@ -720,7 +729,6 @@ int	main(int argc, char* argv[]) {
 						scanf("%d", &choice);
 
 						link dequeuedNode;
-
 
 						//queue display option control
 						switch (choice) {
