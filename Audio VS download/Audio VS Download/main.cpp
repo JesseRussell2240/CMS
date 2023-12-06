@@ -650,9 +650,11 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				InitQueue(); //Initialize the queue
 				loadPhoneBook("PhoneBook.txt"); //Access phonebook.txt and load data
+				int userMessageCount = numOfMessages();
 
 				int choice;
 				do {
+					printf("\nYou have %d messages in the queue", userMessageCount);
 					printf("\n1. Receive Message\n");
 					printf("2. Display Received Messages\n");
 					printf("3. Exit\n");
@@ -670,6 +672,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					
 					int messageLength;
 					char messageBuffer[260];
+					int senderIDSearch;
 
 					//switch case for queuing results of reciving
 					switch (choice) {
@@ -750,12 +753,13 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 						system("cls");
 						
-						printf("\n1. Display Entire Queue\n");
-						printf("2. Display Queue by Priority\n");
-						printf("3. Dequeue in FIFO\n");
-						printf("4. Dequeue in LIFO\n");
-						printf("5. Dequeue by Priority\n");
-						printf("6. Exit\n");
+						printf("\n1. Search Queue by Sender ID\n");
+						printf("2. Display Entire Queue\n");
+						printf("3. Display Queue by Priority\n");
+						printf("4. Dequeue in FIFO\n");
+						printf("5. Dequeue in LIFO\n");
+						printf("6. Dequeue by Priority\n");
+						printf("7. Exit\n");
 						printf("Enter your choice: ");
 						scanf("%d", &choice);
 
@@ -764,14 +768,19 @@ case 2 will call the function Play audio and and play the most recent audio reco
 						//queue display option control
 						switch (choice) {
 						case 1:
+							printf("\nEnter a sender ID to view their message count:");
+							scanf("%d", &senderIDSearch);
+							printf("\nUser %d has sent you %d messages", senderIDSearch, numOfUserMessages(senderIDSearch));
+							break;
+						case 2:
 							printf("\nDisplaying Entire Queue:\n");
 							PrintQueueContents();
 							break;
-						case 2:
+						case 3:
 							printf("\nDisplaying Queue by Priority:\n");
 							PrintQueueContentsByPriority();
 							break;
-						case 3:
+						case 4:
 
 							dequeuedNode = DeQueue();
 							printf("Dequeued in FIFO:\n\n Message: %s\n, Sender ID: %d\n, Receiver ID: %d\n, Priority: %c\n\n\n",
@@ -781,15 +790,15 @@ case 2 will call the function Play audio and and play the most recent audio reco
 							savePhoneBook("PhoneBook.txt");
 
 							break;
-						case 4:
+						case 5:
 							DequeueLIFO();
 							savePhoneBook("PhoneBook.txt");
 							break;
-						case 5:
+						case 6:
 							DequeueByPriority();
 					    	savePhoneBook("PhoneBook.txt");
 							break;
-						case 6:
+						case 7:
 							printf("Exiting the program.\n");
 							break;
 						default:
@@ -802,7 +811,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					default:
 						printf("Invalid choice. Please try again.\n");
 					}
-				} while (choice != 6);
+				} while (choice != 7);
 
 			}
 			else {

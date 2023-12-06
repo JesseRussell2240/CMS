@@ -39,3 +39,5 @@ void DequeueLIFO(void);
 void DequeueByPriority(void);
 void savePhoneBook(const char* filename);
 void loadPhoneBook(const char* filename);
+int numOfMessages(void);
+int numOfUserMessages(int userID);
