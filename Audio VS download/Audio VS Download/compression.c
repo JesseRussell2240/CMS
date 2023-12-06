@@ -184,7 +184,7 @@ int compressTXT(char* msgIn, char* msgOut, int msgSize) {
     }
 
     // Call Huffman compression function
-    printf("compresing message :%c", &msgIn);
+   
     int compressedSize = Huffman_Compress((unsigned char*)msgIn, (unsigned char*)msgOut, msgSize);
 
     if (compressedSize <= 0) {

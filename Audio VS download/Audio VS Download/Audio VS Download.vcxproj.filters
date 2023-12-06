@@ -48,9 +48,6 @@
     <ClCompile Include="VoteOn.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="treefunc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="sound.h">
@@ -81,15 +78,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="VoteOn.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="treefunc.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="treenode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="phoneBook.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="main.h">
