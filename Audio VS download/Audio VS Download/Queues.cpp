@@ -241,3 +241,18 @@ int numOfMessages(void) {
 
 	return count;
 }
+
+
+int numOfUserMessages(int userID) {
+	int messageCount = 0;
+	link currentNode = phead;
+
+	while (currentNode != NULL) {
+		if (currentNode->Data.sid == userID) {
+			messageCount++;
+			currentNode = currentNode->pNext;
+		}
+	}
+
+	return messageCount;
+}
