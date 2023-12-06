@@ -388,6 +388,7 @@ int	main(int argc, char* argv[]) {
 				
 			*/
 
+
 				printHeaderInfo(header);
 				setComRate(settings.baudRate);
 				initializePort(settings.comPort);
