@@ -23,6 +23,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "VoteOn.h"
 #include "main.h"
 #include "RS232Comm.h"
+//#include "crc.h"
 		
 extern HeaderForPayload;
 extern short iBigBuf[];								// Declare the external variable
@@ -601,7 +602,11 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					//zach CRC code for transmission goes here
 
 					//use msgOut as input and when you are done set msgOut to the new CRC message use tmpMsg
-					//
+					strcpy(tmpMsg, msgOut);
+					//CRC(msgOut);
+
+					printf("The computed CRC message is: %s\n", msgOut);
+
 				}
 
 				//logic for encryption of text transmission
@@ -727,7 +732,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 						
 								//zach crc check of recived message goes here
 								//input should be messageBuffer and when you are done you need to set the messageBuffer back to the actual message
-
+							
 								//add a print statment saying what the orgional message is
 						}
 

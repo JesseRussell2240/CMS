@@ -153,6 +153,8 @@ crc  crcTable[256];
  *
  *********************************************************************/
 void
+
+
 crcInit(void)
 {
     crc			   remainder;
@@ -160,9 +162,9 @@ crcInit(void)
 	unsigned char  bit;
 
 
-    /*
-     * Compute the remainder of each possible dividend.
-     */
+    
+      //Compute the remainder of each possible dividend.
+     
     for (dividend = 0; dividend < 256; ++dividend)
     {
         /*
@@ -194,8 +196,7 @@ crcInit(void)
         crcTable[dividend] = remainder;
     }
 
-}   /* crcInit() */
-
+} 
 
 /*********************************************************************
  *
@@ -231,3 +232,36 @@ crcFast(unsigned char const message[], int nBytes)
     return (REFLECT_REMAINDER(remainder) ^ FINAL_XOR_VALUE);
 
 }   /* crcFast() */
+
+void CRC(const char* tmpMsg) {
+
+
+        crcInit();
+
+        unsigned char message[250];
+        strcpy((char*)message, tmpMsg);
+
+        //unsigned char message[] = "Hello";  //Define the message as an unsigned char (0-255)
+        int nBytes = strlen((char*)message);    //Calculate the number of bytes in the message
+        crc compCRC;                            //Declare a varibale to hold the CRC (Variable type is crc)
+        char CRCstring[8];                      //Declare an array of characters to store the CRC as a string
+        char* sentMessage = (char*)malloc((nBytes + 8) * sizeof(unsigned char)); //Allocate memory for the array and the CRC is only 6 bytes
+        int i;                                  //Declare a loop counter
+
+        //compute CRCs and send message
+
+        // Zap bits to see effect on CRC
+        for (i = 0; i <= nBytes; i++) {
+            compCRC = crcFast(message, nBytes); //Compute the CRC for the message using crcSlow
+            sprintf(CRCstring, " 0x%x", compCRC);//Format the CRC as a string. storing as a hexidecimal. adding deliminator and /0
+            strcpy(sentMessage, (char*)message);//copy the message to the sentMessage buffer
+            strcat(sentMessage, CRCstring);     //Add the CRC string to the message
+            printf("Sent message with CRC: %s\n", sentMessage); //Print the string message with the CRC
+            message[i] = '0';                    //
+        }
+
+
+        free(sentMessage); //Free the allocated memory for sentMessage
+        return(0);
+
+    }
