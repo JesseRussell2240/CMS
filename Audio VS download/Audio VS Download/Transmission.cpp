@@ -118,8 +118,6 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) 
 		outputToPort(&hCom, Header, sizeof(struct header));
 	}
 
-	
-	
 	outputToPort(&hCom, Payload, (*Header).payloadSize);				// Send payload
 	//Sleep(500);															// Allow time for signal propagation on cable 
 	purgePort(&hCom);													// Purge the Tx port
@@ -132,12 +130,12 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 	DWORD bytesRead;
 	if (voteOnHeader == 1) {
 
+		//Three different header we will vote on
 		HeaderForPayload* Header1 = (HeaderForPayload*)malloc(sizeof(HeaderForPayload));
 		HeaderForPayload* Header2 = (HeaderForPayload*)malloc(sizeof(HeaderForPayload));
 		HeaderForPayload* Header3 = (HeaderForPayload*)malloc(sizeof(HeaderForPayload));
 
-
-
+		//Take input for all 3 header
 		inputFromPort(&hCom, Header1, sizeof(struct header));
 		inputFromPort(&hCom, Header2, sizeof(struct header));
 		inputFromPort(&hCom, Header3, sizeof(struct header));
@@ -147,11 +145,10 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 		int result  = VoteOn(headerPointers, 3, sizeof(struct header));
 		memcpy(Header, headerPointers[result], sizeof(HeaderForPayload));
 
+		//Free allocated memory for headers
 		free(Header1);
 		free(Header2);
 		free(Header3);
-
-
 
 		if (result != -1) {
 			printf("Header with the most repeats is at index %d\n", result);
@@ -164,10 +161,6 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 	else {
 		inputFromPort(&hCom, Header, sizeof(struct header));
 	}
-
-		
-//	}
-
 	
 	*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
 	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload 

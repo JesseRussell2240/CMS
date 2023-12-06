@@ -215,6 +215,7 @@ int	main(int argc, char* argv[]) {
 /**************************************************************************************************************************
 
 											CASE 1: RECODRING AUDIO
+
 **************************************************************************************************************************/
 
 /**************************************************************************************************************************
@@ -878,7 +879,6 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				scanf_s("%d", &settings.compression);
 				break;
 
-
 			case 7:
 				printf("Do you want to send your message with a header: ");
 				scanf_s("%d", &settings.header);
@@ -888,7 +888,6 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				printf("What priority message are you sending (1-7)? \n");
 				scanf_s("%d", &settings.priority);
-
 				break;
 			
 			case 9:
