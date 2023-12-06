@@ -215,6 +215,7 @@ int	main(int argc, char* argv[]) {
 /**************************************************************************************************************************
 
 											CASE 1: RECODRING AUDIO
+
 **************************************************************************************************************************/
 
 /**************************************************************************************************************************
@@ -390,11 +391,9 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				header.encryption = settings.encryption;
 				header.compression = settings.compression;
 				header.payloadSize = lBigBufSize + 1;
-				/*
 				
 				
-			//	short* tempBuf[40000];
-			//	long tempSize;
+				
 				
 
 				//logic for compression of text message transmission
@@ -402,13 +401,13 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					header.compression = lBigBufSize;
 
 					
-					encodeShorts(iBigBuf, sizeof(lBigBufSize) / sizeof(short), tempBuf, &tempSize);
+				//	encodeShorts(iBigBuf, sizeof(lBigBufSize) / sizeof(short), tempBuf, &tempSize);
 
-					memcpy(iBigBuf, tempBuf, tempSize);
+				//	memcpy(iBigBuf, tempBuf, tempSize);
 
 					//printf("\ntest\n");
-					printf("Length of input message: %d\n", header.compression);
-					printf("Compressed message: %d\n", tempSize);
+				//	printf("Length of input message: %d\n", header.compression);
+				//	printf("Compressed message: %d\n", tempSize);
 
 				}
 
@@ -417,7 +416,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 					char secretKey[10] = "314159265";
 					int keyLength = 10;
-					memcpy(iBigBuf, tempBuf, tempSize);
+				//	memcpy(iBigBuf, tempBuf, tempSize);
 
 
 				//	xorCipher(msgOut, msgSize, secretKey, keyLength, tmpMsg);
@@ -428,7 +427,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				//set the payload size in the header after compression/encription etc are completed.
 				
-			*/
+			
 
 
 				printHeaderInfo(header);
@@ -547,6 +546,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				header.payLoadType = 0; //set as 0 for text
 				header.encryption = settings.encryption;
 				header.compression = settings.compression;
+				header.crcOnPayload = settings.payloadError;
 
 			//	header.voteOn = settings.headerError;
 				
@@ -596,6 +596,27 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				msgSize = strlen(msgOut);
 				char tmpMsg[250];
 
+				if (settings.payloadError == 1) {
+
+					//zach CRC code for transmission goes here
+
+					//use msgOut as input and when you are done set msgOut to the new CRC message use tmpMsg
+					//
+				}
+
+				//logic for encryption of text transmission
+				if (settings.encryption == 1) {
+
+					char secretKey[10] = "314159265";
+					int keyLength = 10;
+					strcpy(tmpMsg, msgOut);
+
+					xorCipher(tmpMsg, msgSize, secretKey, keyLength, msgOut);
+
+					printf("Encrypted message: %d\n", msgOut);
+
+				}
+
 				//logic for compression of text message transmission
 				if (settings.compression != 0) {
 					header.compression = msgSize;
@@ -609,17 +630,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				}
 
-				//logic for encryption of text transmission
-				 if (settings.encryption == 1) {
-
-					char secretKey[10] = "314159265";
-					int keyLength = 10;
-					strcpy(tmpMsg, msgOut);
-
-					xorCipher(msgOut, msgSize, secretKey, keyLength, tmpMsg);
-					printf("Encrypted message: %d\n", msgOut);
-
-				}
+				
 
 				
 				//set the payload size in the header after compression/encription etc are completed.
@@ -699,18 +710,28 @@ case 2 will call the function Play audio and and play the most recent audio reco
 						printf("encryption status :%d", recivedHeader.encryption);
 						//logic to decrypt recived text message
 						if (recivedHeader.encryption == 1) {
-							strcpy(messageBuffer, tmpMsg);
-							//printf("\nEncryption is ON!!!!!\n");
+							
+							
 							char secretKey[10] = "314159265";
 							int keyLength = 10;
 							
 
 							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tmpMsg);
+							strcpy(messageBuffer, tmpMsg);
 
-							printf("\nXOR Decrypted Message: %s\n", messageBuffer);
+							printf("\nDecrypted message: %s\n", messageBuffer);
+							
 						}
 
-						printf("adding to queue");
+						if (recivedHeader.crcOnPayload == 1) {
+						
+								//zach crc check of recived message goes here
+								//input should be messageBuffer and when you are done you need to set the messageBuffer back to the actual message
+
+								//add a print statment saying what the orgional message is
+						}
+
+					//	printf("adding to queue");
 						// Create a new node for the received message
 						newNode = (link)malloc(sizeof(Node));
 						newNode->Data.sid = recivedHeader.sid;
@@ -887,7 +908,6 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				scanf_s("%d", &settings.compression);
 				break;
 
-
 			case 7:
 				printf("Do you want to send your message with a header: ");
 				scanf_s("%d", &settings.header);
@@ -897,7 +917,6 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				printf("What priority message are you sending (1-7)? \n");
 				scanf_s("%d", &settings.priority);
-
 				break;
 			
 			case 9:
