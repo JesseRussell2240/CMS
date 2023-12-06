@@ -1181,7 +1181,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					break;
 				}
 				//system("cls");
-			} while (ChangeSettings != 5);
+			} while (ChangeSettings != 6);
 
 			
 
