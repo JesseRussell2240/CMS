@@ -652,12 +652,8 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				}
 
-				
-
-				
 				//set the payload size in the header after compression/encription etc are completed.
 				header.payloadSize = msgSize + 1;
-
 
 				//printHeaderInfo(header);
 				setComRate(settings.baudRate);
@@ -852,7 +848,6 @@ case 2 will call the function Play audio and and play the most recent audio reco
 			/**************************************************************************************************************************
 
 			case 7 for updating settings
-
 
 			**************************************************************************************************************************/
 
