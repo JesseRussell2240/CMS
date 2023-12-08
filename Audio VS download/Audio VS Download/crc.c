@@ -16,7 +16,11 @@
  **********************************************************************/
  
 #include "crc.h"
+#include <malloc.h>
+#include <string.h>
+#include <stdio.h>
 
+#pragma warning (disable: 4996)
 
 /*
  * Derive parameters from the standard-specific parameters in crc.h.
@@ -233,13 +237,13 @@ crcFast(unsigned char const message[], int nBytes)
 
 }   /* crcFast() */
 
-void CRC(const char* tmpMsg) {
+void ComputeCrc(const char* msgOut) {
 
 
         crcInit();
 
         unsigned char message[250];
-        strcpy((char*)message, tmpMsg);
+        strcpy((char*)message, msgOut);
 
         //unsigned char message[] = "Hello";  //Define the message as an unsigned char (0-255)
         int nBytes = strlen((char*)message);    //Calculate the number of bytes in the message
@@ -262,6 +266,6 @@ void CRC(const char* tmpMsg) {
 
 
         free(sentMessage); //Free the allocated memory for sentMessage
-        return(0);
+        //return(0);
 
     }

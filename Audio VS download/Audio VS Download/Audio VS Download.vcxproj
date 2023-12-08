@@ -129,6 +129,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioRecorder.cpp" />
+    <ClCompile Include="crc.c" />
     <ClCompile Include="encrypt.cpp" />
     <ClCompile Include="compression.c" />
     <ClCompile Include="huffman.c" />
@@ -142,6 +143,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioRecorder.h" />
+    <ClInclude Include="crc.h" />
     <ClInclude Include="encrypt.h" />
     <ClInclude Include="compression.h" />
     <ClInclude Include="huffman.h" />

@@ -23,7 +23,7 @@ Details: Tersting mainline for sub programs Transmission.cpp and AudioRecorder.c
 #include "VoteOn.h"
 #include "main.h"
 #include "RS232Comm.h"
-//#include "crc.h"
+#include "crc.c"
 		
 extern HeaderForPayload;
 extern short iBigBuf[];								// Declare the external variable
@@ -396,14 +396,33 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				
 				
 				
+				/*
 				
+*/
 
 				//logic for compression of text message transmission
+				/*
 				if (settings.compression != 0) {
+
+
 					header.compression = lBigBufSize;
 
 					
-				//	encodeShorts(iBigBuf, sizeof(lBigBufSize) / sizeof(short), tempBuf, &tempSize);
+
+					short* compressedData;
+					long compressedSize;
+
+					// Compress the short array
+					encodeShorts(iBigBuf, lBigBufSize, &compressedData, &compressedSize);
+
+					for (long i = 0; i < lBigBufSize / sizeof(short); i++) {
+						
+						iBigBuf[i] = compressedData[i];
+
+					}
+
+
+					encodeShorts(iBigBuf, sizeof(lBigBufSize) / sizeof(short), tempBuf, &tempSize);
 
 				//	memcpy(iBigBuf, tempBuf, tempSize);
 
@@ -412,7 +431,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				//	printf("Compressed message: %d\n", tempSize);
 
 				}
-
+				
 				//logic for encryption of text transmission
 				if (settings.encryption == 1) {
 
@@ -425,7 +444,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				//	printf("Encrypted message: %d\n", msgOut);
 
 				}
-
+				*/
 
 				//set the payload size in the header after compression/encription etc are completed.
 				
@@ -462,18 +481,14 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				printHeaderInfo(recivedHeader);
 
-				if (bytesRead == recivedHeader.payloadSize) {
-					// Cast the received payload back to a character array
-					memcpy(iBigBuf, receivedPayload, recivedHeader.payloadSize);
-					free(receivedPayload);
-			//		strcpy(messageBuffer, receivedExample);
-				//	printf("\nThe message buffer is: %s\n", messageBuffer);
-				}
+				
+
+				memcpy(iBigBuf, receivedPayload, recivedHeader.payloadSize * sizeof(short));
 
 
+				
+				
 				/*
-				
-				
 				if (recivedHeader.payLoadType == 0) {
 					printf("recived data was text not audio\n");
 					break;
@@ -484,10 +499,10 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				if (recivedHeader.compression != 0) {
 
 					int resultLength = 250;
-				//	int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
+					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
 
-				//	tmpMsg[recivedHeader.compression] = '\0';
-				//	printf("\nUncompressed message: %s\n", tmpMsg);
+					tmpMsg[recivedHeader.compression] = '\0';
+					printf("\nUncompressed message: %s\n", tmpMsg);
 
 			//		strcpy(messageBuffer, tmpMsg);
 				}
@@ -506,6 +521,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					//printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 				}
 				*/
+				
 			}
 			break;
 
@@ -604,7 +620,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 					//use msgOut as input and when you are done set msgOut to the new CRC message use tmpMsg
 					strcpy(tmpMsg, msgOut);
-					//CRC(msgOut);
+					ComputeCrc(msgOut);
 
 					printf("The computed CRC message is: %s\n", msgOut);
 
@@ -733,7 +749,10 @@ case 2 will call the function Play audio and and play the most recent audio reco
 						
 								//zach crc check of recived message goes here
 								//input should be messageBuffer and when you are done you need to set the messageBuffer back to the actual message
-							
+							strcpy(tmpMsg, messageBuffer);
+							ComputeCrc(messageBuffer);
+
+							printf("The computed CRC message is: %s\n", messageBuffer);
 								//add a print statment saying what the orgional message is
 						}
 
@@ -897,7 +916,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				printf("Enter the sample rate in kHz (1-20): ");
 				scanf_s("%d", &settings.audioBitRate);
 
-				settings.audioBitRate *= 1000;
+			//	settings.audioBitRate *= 1000;
 				break;
 
 			case 4:

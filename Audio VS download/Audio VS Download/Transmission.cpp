@@ -118,7 +118,15 @@ void transmitPayload(HeaderForPayload* Header, void* Payload, int voteOnHeader) 
 		outputToPort(&hCom, Header, sizeof(struct header));
 	}
 
-	outputToPort(&hCom, Payload, (*Header).payloadSize);				// Send payload
+	if (Header->payLoadType == 1) {
+		outputToPort(&hCom, Payload, (*Header).payloadSize * sizeof(short) -2);
+
+	}
+	else {
+		outputToPort(&hCom, Payload, (*Header).payloadSize);
+	}
+
+					// Send payload
 	//Sleep(500);															// Allow time for signal propagation on cable 
 	purgePort(&hCom);													// Purge the Tx port
 	CloseHandle(hCom);													// Close the handle to Tx port 
@@ -161,9 +169,22 @@ DWORD receivePayload(HeaderForPayload* Header, void** Payload, int voteOnHeader)
 	else {
 		inputFromPort(&hCom, Header, sizeof(struct header));
 	}
+
+
 	
-	*Payload = (void*)malloc((*Header).payloadSize);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
-	bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize);		// Receive payload 
+	*Payload = (void*)malloc((*Header).payloadSize * 2);						// Allocate buffer memory to receive payload. Will have to recast these bytess later to a specific data type / struct / etc - rembmer top free it in main()
+		// Receive payload 
+
+	if (Header->payLoadType == 1) {
+		printf("audio was recived with size %d or %d", Header->payloadSize, (*Header).payloadSize);
+		*Payload = (void*)malloc((*Header).payloadSize * 2);
+		bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize * sizeof(short));
+
+	}
+	else {
+		*Payload = (void*)malloc((*Header).payloadSize);
+		bytesRead = inputFromPort(&hCom, *Payload, (*Header).payloadSize * sizeof(short));
+	}
 	purgePort(&hCom);														// Purge the Rx port
 	CloseHandle(hCom);														// Close the handle to Rx port 
 	return bytesRead;														// Number of bytes read
