@@ -400,14 +400,12 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				
 */
 
-				//logic for compression of text message transmission
-				/*
+				//logic for compression of audio message transmission
+				
 				if (settings.compression != 0) {
 
 
 					header.compression = lBigBufSize;
-
-					
 
 					short* compressedData;
 					long compressedSize;
@@ -415,24 +413,25 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					// Compress the short array
 					encodeShorts(iBigBuf, lBigBufSize, &compressedData, &compressedSize);
 
-					for (long i = 0; i < lBigBufSize / sizeof(short); i++) {
-						
-						iBigBuf[i] = compressedData[i];
+					if (compressedSize > lBigBufSize) {
+						header.compression = 0;
+						printf("message compressed was larger then orgigonal. Not transmitting compressed msg");
 
 					}
-
-
-					encodeShorts(iBigBuf, sizeof(lBigBufSize) / sizeof(short), tempBuf, &tempSize);
-
-				//	memcpy(iBigBuf, tempBuf, tempSize);
+					else {
+						memcpy(iBigBuf, compressedData, compressedSize);
+					}
+					
 
 					//printf("\ntest\n");
-				//	printf("Length of input message: %d\n", header.compression);
-				//	printf("Compressed message: %d\n", tempSize);
+				printf("Length of input message: %d\n", header.compression);
+				printf("Compressed message: %d\n", compressedSize);
+			//	header.compression
 
 				}
 				
 				//logic for encryption of text transmission
+				/*
 				if (settings.encryption == 1) {
 
 					char secretKey[10] = "314159265";
@@ -444,11 +443,11 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				//	printf("Encrypted message: %d\n", msgOut);
 
 				}
-				*/
+				
 
 				//set the payload size in the header after compression/encription etc are completed.
 				
-			
+			*/
 
 
 				printHeaderInfo(header);
@@ -476,19 +475,20 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				initializePort(settings.comPort);
 				DWORD bytesRead;
 				link newNode;
+				short* tempAudioBuffer[40000];
+				long tempBufSize;
+
 
 				bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
 				printHeaderInfo(recivedHeader);
 
-				
-
 				memcpy(iBigBuf, receivedPayload, recivedHeader.payloadSize * sizeof(short));
 
+				lBigBufSize = recivedHeader.payloadSize;
+				
+				
 
-				
-				
-				/*
 				if (recivedHeader.payLoadType == 0) {
 					printf("recived data was text not audio\n");
 					break;
@@ -498,11 +498,16 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				printf("compression status :%d", recivedHeader.compression);
 				if (recivedHeader.compression != 0) {
 
-					int resultLength = 250;
-					int decompressedSize = decompressTXT(messageBuffer, tmpMsg, recivedHeader.payloadSize, resultLength); //was hardcoded so it always returned 250, changed it to resultLength for now idk if that solves it tho
+					memcpy(tempAudioBuffer, iBigBuf, recivedHeader.payloadSize);
 
-					tmpMsg[recivedHeader.compression] = '\0';
-					printf("\nUncompressed message: %s\n", tmpMsg);
+					//tempBufSize 
+					short* decompressedData;
+					long decompressedSize = (long)recivedHeader.compression;
+					decodeShorts((short*)tempAudioBuffer, lBigBufSize, &decompressedData, &decompressedSize);
+					memcpy(iBigBuf, decompressedData, decompressedSize);
+
+				//	tmpMsg[recivedHeader.compression] = '\0';
+					//.printf("\nUncompressed message: %s\n", tmpMsg);
 
 			//		strcpy(messageBuffer, tmpMsg);
 				}
@@ -520,7 +525,6 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 					//printf("\nXOR Decrypted Message: %s\n", messageBuffer);
 				}
-				*/
 				
 			}
 			break;
@@ -628,13 +632,14 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				//logic for encryption of text transmission
 				if (settings.encryption == 1) {
-
+					
 					char secretKey[10] = "314159265";
 					int keyLength = 10;
+
 					strcpy(tmpMsg, msgOut);
 
 					xorCipher(tmpMsg, msgSize, secretKey, keyLength, msgOut);
-
+					printf("Message being enctypted: %d\n", tmpMsg);
 					printf("Encrypted message: %d\n", msgOut);
 
 				}
@@ -737,7 +742,7 @@ case 2 will call the function Play audio and and play the most recent audio reco
 							char secretKey[10] = "314159265";
 							int keyLength = 10;
 
-
+							printf("\nMessage to be decrypted: %s\n", messageBuffer);
 							xorCipher(messageBuffer, strlen(messageBuffer), secretKey, keyLength, tmpMsg);
 							strcpy(messageBuffer, tmpMsg);
 
@@ -1188,13 +1193,13 @@ case 2 will call the function Play audio and and play the most recent audio reco
 					
 								bytesRead = receivePayload(&recivedHeader, &receivedPayload, settings.headerError);
 
-								if (bytesRead == recivedHeader.payloadSize) {
+							//	if (bytesRead == recivedHeader.payloadSize) {
 									// Cast the received payload back to a character array
 									char* receivedExample = (char*)(receivedPayload);
 									receivedExample[recivedHeader.payloadSize - 1] = '\0';
 									strcpy(messageBuffer, receivedExample);
 
-								}
+								//}
 								int correctBits = 0;
 								for (int i = 0; i < 40000; ++i) {
 									if (message[i] == messageBuffer[i]) {

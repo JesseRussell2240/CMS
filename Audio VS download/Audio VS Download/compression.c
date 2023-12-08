@@ -23,7 +23,7 @@ int Compressionmain() {
         printf("decoding....\n");
         printf("Enter the output filename: ");                          //Name of file to compress
         scanf("%s", outputFileName);
-       // outputFileName* = strstr(inputFileName, "_compressed.huff");
+       
         //calls helper function
         decodeFile(inputFileName, outputFileName);
         
@@ -31,7 +31,9 @@ int Compressionmain() {
     else {
         printf("encoding...\n");
         strcpy(outputFileName, inputFileName);
-        strcat(outputFileName, "_compressed.huff");                     
+        strcat(outputFileName, "_compressed.huff");   
+
+        //calls helper function
         encodeFile(inputFileName, outputFileName);
     }
 
@@ -143,6 +145,7 @@ void encodeShorts(const short* inputArray, int inputSize, short** compressedData
     // Call huff compress
     outputSize = Huffman_Compress(inputBuffer, outputBuffer, inputSize * sizeof(short));
 
+ 
     // Set external variables
     *compressedData = (short*)outputBuffer;
     *compressedSize = outputSize;

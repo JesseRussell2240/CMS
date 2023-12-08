@@ -120,8 +120,8 @@ static int SetComParms(HANDLE* hCom, int nComRate, int nComBits, COMMTIMEOUTS ti
 	timeout.ReadIntervalTimeout = 500;				// Maximum time allowed to elapse before arival of next byte in milliseconds. If the interval between the arrival of any two bytes exceeds this amount, the ReadFile operation is completed and buffered data is returned
 	timeout.ReadTotalTimeoutMultiplier = 1;			// The multiplier used to calculate the total time-out period for read operations in milliseconds. For each read operation this value is multiplied by the requested number of bytes to be read
 	timeout.ReadTotalTimeoutConstant = 5000;		// A constant added to the calculation of the total time-out period. This constant is added to the resulting product of the ReadTotalTimeoutMultiplier and the number of bytes (above).
-	timeout.WriteTotalTimeoutMultiplier = 0;
-	timeout.WriteTotalTimeoutConstant = 0;
+	timeout.WriteTotalTimeoutMultiplier = 1;
+	timeout.WriteTotalTimeoutConstant = 5000;
 
 	
 	SetCommTimeouts(*hCom, &timeout);
