@@ -1,92 +1,102 @@
-@@egrep patterns are full regular expressions; it uses a fast deterministic
-algorithm that sometimes needs exponential space.
--- unix manuals@@
+@@			HOW TO PROVE IT, PART 2
+
+proof by cumbersome notation:
+	Best done with access to at least four alphabets and special
+	symbols.
+
+proof by@@
 14
 0
 2
 
 
-@@"Life, loathe it or ignore it, you can't like it."
--- Marvin the paranoid android
+@@"Just think of a computer as hardware you caJpgednccoJ rh lucoeepn-uacoayolhge@@
+14
+0
+7
+
+
+@@N\ºNººN\NNºº\ºººNººººº\ºº\ººN\ºººº\\\ºº\\Nººº\ºNº\ºNºº@@
+14
+0
+7
+
+
+@@"All my life I wanted to be someone; I guess I should have been more specific."
+-- Jane Wagner
+@@
+14
+0
+7
+
+
+@@"May the forces of evil become confused on the way to your house."
+-- George Carlin
+@@
+14
+0
+7
+
+
+@@I find you lack of faith in the forth dithturbing.
+- Darse ("Darth") Vader
 @@
 14
 0
 2
 
 
-@@±±Ú±±zzz±”Úzzz±z”™zzz±zzzW”zz±Wz±z””±zz@@
+@@The computer can't tell you the emotional story.  It can give you the exact
+mathematical design, but what's missing is the eyebrows.
+- Fran@@
 14
 0
 2
 
 
-@@owntown!"
--- The Ghostbusters
+@@The computer can't tell you the emotional story.  It can give you the exact
+mathematical design, but what's missing is the eyebrows.
+- Fran@@
+14
+0
+2
+
+
+@@The computer can't tell you the emotional story.  It can give you the exact
+mathematical design, but what's missing is the eyebrows.
+- Fran@@
+14
+0
+2
+
+
+@@The computer can't tell you the emotional story.  It can give you the exact
+mathematical design, but what's missing is the eyebrows.
+- Fran@@
+14
+0
+2
+
+
+@@The computer can't tell you the emotional story.  It can give you the exact
+mathematical design, but what's missing is the eyebrows.
+- Fran@@
+14
+0
+2
+
+
+@@Blessed be those who initiate lively discussions with the hopelessly mute,
+for they shall be know as Dentists.
 @@
-14
+15
 0
 2
 
 
-@@e mind as mechanistic & duplicable,
-challenging basic assumptions about the nature of individuality & self.
-That seems all the better reaso@@
-14
-0
-2
-
-
-@@Galactic Civilization tends to pass through
-three distinct and recognizable phases, those of Survival, Inquiry and
-Sophistication, otherwis@@
-14
-0
-2
-
-
-@@ter of delights!
-You are stateog-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,r*C-C,K+D,@@
-14
+@@Hello World!@@
 1
-2
-
-
-@@as fighting"
---Stanley Sutton
-@@
-14
 0
-2
-
-
-@@ardi, football coach
-@@
-14
-0
-2
-
-
-@@rogrammer with a set of conceptual tools; if these are
-inadequate for the task, they will simply be ignored.  For example, seriously
-restri@@
-14
-0
-2
-
-
-@@and it is no more natural to us than a cage is to a 
-cockatoo."
--- George Bernard Shaw
-@@
-14
-0
-2
-
-
-@@dity, like virtue, is its own reward.
-@@
-14
-0
-2
+7
 
 

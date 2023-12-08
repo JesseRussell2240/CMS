@@ -79,11 +79,10 @@ void PrintQueueContentsByPriority(void) {
 	}
 
 
-	//blup-blup-blup
+	//bubble sort
 	for (int i = 0; i < queueSize - 1; i++) {
 		for (int j = 0; j < queueSize - i - 1; j++) {
 			if (queueArray[j]->Data.priority > queueArray[j + 1]->Data.priority) {
-				// I need sleep
 				link temp = queueArray[j];
 				queueArray[j] = queueArray[j + 1];
 				queueArray[j + 1] = temp;
@@ -250,8 +249,9 @@ int numOfUserMessages(int userID) {
 	while (currentNode != NULL) {
 		if (currentNode->Data.sid == userID) {
 			messageCount++;
-			currentNode = currentNode->pNext;
+			
 		}
+		currentNode = currentNode->pNext;
 	}
 
 	return messageCount;

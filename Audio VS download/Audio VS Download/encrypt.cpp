@@ -30,8 +30,6 @@ void encryption() {
         printf("%02x", encBuf[i]);
     }
 }
-
-
 void decryption() {
 
     printf("Now decrypting ...");

@@ -657,12 +657,8 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 				}
 
-				
-
-				
 				//set the payload size in the header after compression/encription etc are completed.
 				header.payloadSize = msgSize + 1;
-
 
 				//printHeaderInfo(header);
 				setComRate(settings.baudRate);
@@ -858,7 +854,6 @@ case 2 will call the function Play audio and and play the most recent audio reco
 
 			case 7 for updating settings
 
-
 			**************************************************************************************************************************/
 
 
@@ -1011,8 +1006,8 @@ case 2 will call the function Play audio and and play the most recent audio reco
 				//printf("Option 7 coming soon.\n");
 				printf("\n\nDiagnostic Testing\n\n");
 				printf("1. Compression/Decompression\n");
-				printf("2. Encryption/Dencryption\n");
-				printf("3. Generate a custom message\n");
+				printf("2. Encryption/Decryption\n");
+				printf("3. Generate a random message\n");
 				printf("4. Queues\n");
 				printf("5. Test Baudrates\n");
 				printf("6. Exit\n");

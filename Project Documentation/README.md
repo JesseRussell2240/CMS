@@ -90,7 +90,7 @@ Status report and added encryption files
 ________________________________________________________________________________________________________________
 Week 5
 Jesse
-Added headers into file
+Added headers into file. Ensures header were senf=ding with payload
 
 Hayden
 Starting implementing hashing//phonebook
@@ -103,6 +103,32 @@ Goals for week 6/7
 Finished
 
 ________________________________________________________________________________________________________________
+Week 6/7
+Jesse 
+Implimented encryption for text
+implimented compression and decompresion for text
+implimented compression for audio
+Spent time testing and debugging
+Begain working on presentation
+
+
+Hayden
+Implimented queues on recieve station
+Implimented PhoneBook with queues
+Finalized interface for dignostic functions
+Begain working on presentation
+commented underexplained code
+
+
+Zach
+Implimented error correction for header
+implimented error detection for payload
+refactored code
+Begain working on presentation
+begain recoding demo video for presentation
+
+----------------------------------------------------------------------------------------------------------------
+
 
 TO_DO
 -intgrate rs232 communications into GUI
